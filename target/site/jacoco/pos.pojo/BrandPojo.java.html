@@ -10,11 +10,11 @@ import javax.validation.constraints.NotNull;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @NotBlank
     private String brand;
-    @NotBlank
+    @NotBlank //TODO don't use validation lvl check here
     private String category;
 
     public String getBrand() {

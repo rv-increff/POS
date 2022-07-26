@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="21" failures="0" name="pos.services.ProductServiceTest" time="0.397" errors="0" skipped="0">
+<testsuite tests="21" failures="0" name="pos.services.ProductServiceTest" time="0.395" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -7,7 +7,7 @@
     <property name="java.vm.version" value="25.341-b10"/>
     <property name="gopherProxySet" value="false"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
-    <property name="maven.multiModuleProjectDirectory" value="/Users/rahulverma/Downloads/POS"/>
+    <property name="maven.multiModuleProjectDirectory" value="/Users/rahulverma/Downloads/git/POS"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
     <property name="path.separator" value=":"/>
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
@@ -17,7 +17,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/Users/rahulverma/Downloads/POS"/>
+    <property name="user.dir" value="/Users/rahulverma/Downloads/git/POS"/>
     <property name="java.runtime.version" value="1.8.0_341-b10"/>
     <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_341.jdk/Contents/Home/jre/lib/endorsed"/>
@@ -65,25 +65,25 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.services.ProductServiceTest" name="updateBarcodeUniqueError" time="0.039"/>
+  <testcase classname="pos.services.ProductServiceTest" name="updateBarcodeUniqueError" time="0.046"/>
   <testcase classname="pos.services.ProductServiceTest" name="checkIfBrandExist" time="0.018"/>
-  <testcase classname="pos.services.ProductServiceTest" name="bulkAddBarcodeFormatError" time="0.022"/>
-  <testcase classname="pos.services.ProductServiceTest" name="deleteInvError" time="0.063"/>
-  <testcase classname="pos.services.ProductServiceTest" name="delete" time="0.052"/>
-  <testcase classname="pos.services.ProductServiceTest" name="addUniqueError" time="0.013"/>
-  <testcase classname="pos.services.ProductServiceTest" name="getAll" time="0.017"/>
-  <testcase classname="pos.services.ProductServiceTest" name="update" time="0.015"/>
-  <testcase classname="pos.services.ProductServiceTest" name="bulkAddBarcodeUniqueError" time="0.01"/>
-  <testcase classname="pos.services.ProductServiceTest" name="addBarcodeFormatError" time="0.012"/>
-  <testcase classname="pos.services.ProductServiceTest" name="bulkAddBarcodeBrandError" time="0.01"/>
+  <testcase classname="pos.services.ProductServiceTest" name="bulkAddBarcodeFormatError" time="0.023"/>
+  <testcase classname="pos.services.ProductServiceTest" name="deleteInvError" time="0.083"/>
+  <testcase classname="pos.services.ProductServiceTest" name="delete" time="0.031"/>
+  <testcase classname="pos.services.ProductServiceTest" name="addUniqueError" time="0.011"/>
+  <testcase classname="pos.services.ProductServiceTest" name="getAll" time="0.019"/>
+  <testcase classname="pos.services.ProductServiceTest" name="update" time="0.019"/>
+  <testcase classname="pos.services.ProductServiceTest" name="bulkAddBarcodeUniqueError" time="0.013"/>
+  <testcase classname="pos.services.ProductServiceTest" name="addBarcodeFormatError" time="0.015"/>
+  <testcase classname="pos.services.ProductServiceTest" name="bulkAddBarcodeBrandError" time="0.007"/>
   <testcase classname="pos.services.ProductServiceTest" name="bulkAddEmptyObject" time="0.003"/>
-  <testcase classname="pos.services.ProductServiceTest" name="add" time="0.009"/>
-  <testcase classname="pos.services.ProductServiceTest" name="get" time="0.032"/>
-  <testcase classname="pos.services.ProductServiceTest" name="updateBarcodeSyntaxError" time="0.017"/>
-  <testcase classname="pos.services.ProductServiceTest" name="updateBrandError" time="0.016"/>
-  <testcase classname="pos.services.ProductServiceTest" name="updateNotInPojoError" time="0.007"/>
-  <testcase classname="pos.services.ProductServiceTest" name="bulkAdd" time="0.024"/>
+  <testcase classname="pos.services.ProductServiceTest" name="add" time="0.014"/>
+  <testcase classname="pos.services.ProductServiceTest" name="get" time="0.022"/>
+  <testcase classname="pos.services.ProductServiceTest" name="updateBarcodeSyntaxError" time="0.016"/>
+  <testcase classname="pos.services.ProductServiceTest" name="updateBrandError" time="0.011"/>
+  <testcase classname="pos.services.ProductServiceTest" name="updateNotInPojoError" time="0.006"/>
+  <testcase classname="pos.services.ProductServiceTest" name="bulkAdd" time="0.021"/>
   <testcase classname="pos.services.ProductServiceTest" name="addBrandError" time="0.01"/>
-  <testcase classname="pos.services.ProductServiceTest" name="updateEmptyBodyError" time="0.004"/>
+  <testcase classname="pos.services.ProductServiceTest" name="updateEmptyBodyError" time="0.003"/>
   <testcase classname="pos.services.ProductServiceTest" name="addEmptyObject" time="0.004"/>
 </testsuite>

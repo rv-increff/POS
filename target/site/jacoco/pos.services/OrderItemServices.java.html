@@ -48,188 +48,182 @@ import java.util.List;
 <span class="fc bfc" id="L48" title="All 2 branches covered.">        if (OrderId == -1) {</span>
 <span class="fc" id="L49">            throw new ApiException(&quot;Order with this id does not exist, id : &quot; + p.getOrderId());</span>
         }
-//        if(p.getOrderId()!=OrderId){
-//            throw new ApiException(&quot;Given orderList id does not have the given orderId insert order instead&quot;);
-//        }
-<span class="fc" id="L54">        int ProductId = pDao.checkProductId(p.getProductId());</span>
 
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (ProductId == -1) {</span>
-<span class="fc" id="L57">            throw new ApiException(&quot;Product with this id does not exist, id : &quot; + p.getProductId());</span>
+<span class="fc" id="L52">        int ProductId = pDao.checkProductId(p.getProductId());</span>
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (ProductId == -1) {</span>
+<span class="fc" id="L55">            throw new ApiException(&quot;Product with this id does not exist, id : &quot; + p.getProductId());</span>
         }
 
-//        if(p.getProductId()!=ProductId){
-//            throw new ApiException(&quot;Given orderList id does not have the given ProductId insert order instead&quot;);
-//        }
-
-<span class="fc" id="L64">        int invId = iDao.getIdFromProductId(p.getProductId());</span>
-<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (invId == -1) {</span>
-<span class="fc" id="L66">            throw new ApiException(&quot;Product with this id does not exist in the inventory, id : &quot; + p.getProductId());</span>
+<span class="fc" id="L58">        int invId = iDao.getIdFromProductId(p.getProductId());</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (invId == -1) {</span>
+<span class="fc" id="L60">            throw new ApiException(&quot;Product with this id does not exist in the inventory, id : &quot; + p.getProductId());</span>
         }
-<span class="fc" id="L68">        int availQty = iDao.select(invId).getQuantity();</span>
+<span class="fc" id="L62">        int availQty = iDao.select(invId).getQuantity();</span>
 
-<span class="fc bfc" id="L70" title="All 2 branches covered.">        if(p.getQuantity()&gt;availQty){</span>
-<span class="fc" id="L71">            throw new ApiException(&quot;Selected quantity more than available quantity, available quantity only &quot; + availQty );</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if(p.getQuantity()&gt;availQty){</span>
+<span class="fc" id="L65">            throw new ApiException(&quot;Selected quantity more than available quantity, available quantity only &quot; + availQty );</span>
         }
 
-<span class="fc" id="L74">        int orderId = p.getOrderId();</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if(checkOrderStatus(orderId)){</span>
-<span class="nc" id="L76">            throw new ApiException(&quot;Cannot add as order already placed for order id : &quot; + p.getOrderId());</span>
+<span class="fc" id="L68">        int orderId = p.getOrderId();</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if(checkOrderStatus(orderId)){</span>
+<span class="nc" id="L70">            throw new ApiException(&quot;Cannot add as order already placed for order id : &quot; + p.getOrderId());</span>
         }
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if(p.getQuantity()&lt;=0){</span>
-<span class="nc" id="L79">            throw new ApiException(&quot;Quantity must be greater than 1&quot;);</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if(p.getQuantity()&lt;=0){</span>
+<span class="nc" id="L73">            throw new ApiException(&quot;Quantity must be greater than 1&quot;);</span>
         }
-<span class="fc" id="L81">        OrderItemPojo ex = new OrderItemPojo();</span>
-<span class="fc" id="L82">        ex.setOrderId(p.getOrderId());</span>
-<span class="fc" id="L83">        ex.setProductId(p.getProductId());</span>
-<span class="fc" id="L84">        ex.setSellingPrice(p.getSellingPrice());</span>
-<span class="fc" id="L85">        ex.setQuantity(p.getQuantity());</span>
+<span class="fc" id="L75">        OrderItemPojo ex = new OrderItemPojo();</span>
+<span class="fc" id="L76">        ex.setOrderId(p.getOrderId());</span>
+<span class="fc" id="L77">        ex.setProductId(p.getProductId());</span>
+<span class="fc" id="L78">        ex.setSellingPrice(p.getSellingPrice());</span>
+<span class="fc" id="L79">        ex.setQuantity(p.getQuantity());</span>
         //remove from inventory
-<span class="fc" id="L87">        updateQtyInventory(p,availQty);</span>
+<span class="fc" id="L81">        updateQtyInventory(p,availQty);</span>
 
-<span class="fc" id="L89">        dao.insert(ex);</span>
+<span class="fc" id="L83">        dao.insert(ex);</span>
 
-<span class="fc" id="L91">        }</span>
+<span class="fc" id="L85">        }</span>
 
     @Transactional(rollbackOn = ApiException.class)
     public void updateQtyInventory(OrderItemInsertForm p,int availQty) throws ApiException {
-<span class="fc" id="L95">        InventoryUpdateForm inv = new InventoryUpdateForm();</span>
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if(p.getQuantity()&lt;=0){</span>
-<span class="nc" id="L97">            throw new ApiException(&quot;Quantity must be greater than 1&quot;);</span>
+<span class="fc" id="L89">        InventoryUpdateForm inv = new InventoryUpdateForm();</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if(p.getQuantity()&lt;=0){</span>
+<span class="nc" id="L91">            throw new ApiException(&quot;Quantity must be greater than 1&quot;);</span>
         }
-<span class="fc" id="L99">        int invId = iDao.getIdFromProductId(p.getProductId());</span>
-<span class="fc" id="L100">        inv.setId(invId);</span>
-<span class="fc" id="L101">        inv.setQuantity(availQty-p.getQuantity());</span>
-<span class="fc" id="L102">        invService.update(inv);</span>
-<span class="fc" id="L103">    }</span>
+<span class="fc" id="L93">        int invId = iDao.getIdFromProductId(p.getProductId());</span>
+<span class="fc" id="L94">        inv.setId(invId);</span>
+<span class="fc" id="L95">        inv.setQuantity(availQty-p.getQuantity());</span>
+<span class="fc" id="L96">        invService.update(inv);</span>
+<span class="fc" id="L97">    }</span>
     @Transactional(rollbackOn = ApiException.class)
     public List&lt;OrderItemData&gt; getAll() throws ApiException {
-<span class="fc" id="L106">        List&lt;OrderItemPojo&gt; p =  dao.selectAll();</span>
-<span class="fc" id="L107">        List&lt;OrderItemData&gt; b = new ArrayList&lt;OrderItemData&gt;();</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        for( OrderItemPojo pj : p){</span>
-<span class="fc" id="L109">            b.add(convertPojoToOrderForm(pj));</span>
-<span class="fc" id="L110">        }</span>
-<span class="fc" id="L111">        return b;</span>
+<span class="fc" id="L100">        List&lt;OrderItemPojo&gt; p =  dao.selectAll();</span>
+<span class="fc" id="L101">        List&lt;OrderItemData&gt; b = new ArrayList&lt;OrderItemData&gt;();</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for( OrderItemPojo pj : p){</span>
+<span class="fc" id="L103">            b.add(convertPojoToOrderForm(pj));</span>
+<span class="fc" id="L104">        }</span>
+<span class="fc" id="L105">        return b;</span>
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public OrderItemData get(int id) throws ApiException {
-<span class="fc" id="L116">        return getCheck(id);</span>
+<span class="fc" id="L110">        return getCheck(id);</span>
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public List&lt;OrderItemData&gt; getOrderItemForOrder(int orderId) throws ApiException {
-<span class="fc" id="L121">        int OrderId = oDao.checkOrderId(orderId);</span>
-<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (OrderId == -1) {</span>
-<span class="fc" id="L123">            throw new ApiException(&quot;Order with this id does not exist, id : &quot; + orderId);</span>
+<span class="fc" id="L115">        int OrderId = oDao.checkOrderId(orderId);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (OrderId == -1) {</span>
+<span class="fc" id="L117">            throw new ApiException(&quot;Order with this id does not exist, id : &quot; + orderId);</span>
         }
-<span class="fc" id="L125">        Date time = oDao.select(orderId).getTime();</span>
+<span class="fc" id="L119">        Date time = oDao.select(orderId).getTime();</span>
 
-<span class="fc" id="L127">        List&lt;OrderItemPojo&gt; orderList = dao.selectFromOrderId(orderId);</span>
-<span class="fc" id="L128">        List&lt;OrderItemData&gt; orderItemDataList = new ArrayList&lt;OrderItemData&gt;();</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        for(OrderItemPojo i : orderList){</span>
-<span class="fc" id="L130">            OrderItemData j = convertPojoToOrderForm(i);</span>
-<span class="fc" id="L131">            orderItemDataList.add(j);</span>
-<span class="fc" id="L132">        }</span>
-<span class="fc" id="L133">        return orderItemDataList;</span>
+<span class="fc" id="L121">        List&lt;OrderItemPojo&gt; orderList = dao.selectFromOrderId(orderId);</span>
+<span class="fc" id="L122">        List&lt;OrderItemData&gt; orderItemDataList = new ArrayList&lt;OrderItemData&gt;();</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        for(OrderItemPojo i : orderList){</span>
+<span class="fc" id="L124">            OrderItemData j = convertPojoToOrderForm(i);</span>
+<span class="fc" id="L125">            orderItemDataList.add(j);</span>
+<span class="fc" id="L126">        }</span>
+<span class="fc" id="L127">        return orderItemDataList;</span>
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(OrderItemUpdateForm p) throws ApiException {
-<span class="fc" id="L138">        nullUpdateCheck(p);</span>
-<span class="fc" id="L139">        getCheck(p.getId());</span>
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if(p.getQuantity()&lt;=0){</span>
-<span class="nc" id="L141">            throw new ApiException(&quot;Quantity must be greater than 1&quot;);</span>
+<span class="fc" id="L132">        nullUpdateCheck(p);</span>
+<span class="fc" id="L133">        getCheck(p.getId());</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if(p.getQuantity()&lt;=0){</span>
+<span class="nc" id="L135">            throw new ApiException(&quot;Quantity must be greater than 1&quot;);</span>
         }
-<span class="fc" id="L143">        int orderId = dao.select(p.getId()).getOrderId();</span>
-<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if(checkOrderStatus(orderId)){</span>
-<span class="nc" id="L145">            throw new ApiException(&quot;Cannot update as order already placed for order id : &quot; + orderId);</span>
+<span class="fc" id="L137">        int orderId = dao.select(p.getId()).getOrderId();</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if(checkOrderStatus(orderId)){</span>
+<span class="nc" id="L139">            throw new ApiException(&quot;Cannot update as order already placed for order id : &quot; + orderId);</span>
         }
-<span class="fc" id="L147">        updateUtil(p);</span>
-<span class="fc" id="L148">    }</span>
+<span class="fc" id="L141">        updateUtil(p);</span>
+<span class="fc" id="L142">    }</span>
 
     @Transactional(rollbackOn = ApiException.class)
     public OrderItemData getCheck(int id) throws ApiException {
-<span class="fc" id="L152">        OrderItemPojo p = dao.select(id);</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (p == null) {</span>
-<span class="fc" id="L154">            throw new ApiException(&quot;OrderItem with given id does not exist ,id : &quot; + id);</span>
+<span class="fc" id="L146">        OrderItemPojo p = dao.select(id);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (p == null) {</span>
+<span class="fc" id="L148">            throw new ApiException(&quot;OrderItem with given id does not exist ,id : &quot; + id);</span>
         }
-<span class="fc" id="L156">        return convertPojoToOrderForm(p);</span>
+<span class="fc" id="L150">        return convertPojoToOrderForm(p);</span>
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public void delete(int id) throws ApiException {
-<span class="fc" id="L161">        getCheck(id);</span>
-<span class="fc" id="L162">        int OrderId = dao.select(id).getOrderId();</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if(checkOrderStatus(OrderId)){</span>
-<span class="nc" id="L164">            throw new ApiException(&quot;Cannot delete as order already placed for id : &quot; + id);</span>
+<span class="fc" id="L155">        getCheck(id);</span>
+<span class="fc" id="L156">        int OrderId = dao.select(id).getOrderId();</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if(checkOrderStatus(OrderId)){</span>
+<span class="nc" id="L158">            throw new ApiException(&quot;Cannot delete as order already placed for id : &quot; + id);</span>
         }
-<span class="fc" id="L166">        OrderItemPojo ex = dao.select(id);</span>
-<span class="fc" id="L167">        int invId = iDao.getIdFromProductId(ex.getProductId());</span>
-<span class="fc bfc" id="L168" title="All 2 branches covered.">        if(invId==-1){</span>
-<span class="fc" id="L169">            throw new ApiException(&quot;Product with given product id does not exist in the inventory, product id : &quot; + ex.getProductId());</span>
+<span class="fc" id="L160">        OrderItemPojo ex = dao.select(id);</span>
+<span class="fc" id="L161">        int invId = iDao.getIdFromProductId(ex.getProductId());</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if(invId==-1){</span>
+<span class="fc" id="L163">            throw new ApiException(&quot;Product with given product id does not exist in the inventory, product id : &quot; + ex.getProductId());</span>
         }
-<span class="fc" id="L171">        int availQty = iDao.select(invId).getQuantity();</span>
-<span class="fc" id="L172">        InventoryUpdateForm inv = new InventoryUpdateForm();</span>
-<span class="fc" id="L173">        inv.setId(invId);</span>
-<span class="fc" id="L174">        inv.setQuantity(availQty + ex.getQuantity());</span>
-<span class="fc" id="L175">        invService.update(inv);</span>
-<span class="fc" id="L176">        dao.delete(id);</span>
-<span class="fc" id="L177">    }</span>
+<span class="fc" id="L165">        int availQty = iDao.select(invId).getQuantity();</span>
+<span class="fc" id="L166">        InventoryUpdateForm inv = new InventoryUpdateForm();</span>
+<span class="fc" id="L167">        inv.setId(invId);</span>
+<span class="fc" id="L168">        inv.setQuantity(availQty + ex.getQuantity());</span>
+<span class="fc" id="L169">        invService.update(inv);</span>
+<span class="fc" id="L170">        dao.delete(id);</span>
+<span class="fc" id="L171">    }</span>
     @Transactional(rollbackOn = ApiException.class)
     public boolean checkOrderItemWithProductId(int productId){
-<span class="fc" id="L180">        return dao.checkOrderExistForProductId(productId);</span>
+<span class="fc" id="L174">        return dao.checkOrderExistForProductId(productId);</span>
     }
 
     public boolean checkOrderStatus(int orderId) throws ApiException {
-<span class="fc" id="L184">        OrderData p = OServices.getCheck(orderId);</span>
-<span class="fc" id="L185">        return p.isOrderPlaced();</span>
+<span class="fc" id="L178">        OrderData p = OServices.getCheck(orderId);</span>
+<span class="fc" id="L179">        return p.isOrderPlaced();</span>
     }
 
     private void updateUtil(OrderItemUpdateForm p) throws ApiException {
-<span class="fc" id="L189">        OrderItemPojo ex = dao.select(p.getId());</span>
+<span class="fc" id="L183">        OrderItemPojo ex = dao.select(p.getId());</span>
 
-<span class="fc" id="L191">        int invId = iDao.getIdFromProductId(ex.getProductId());</span>
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (invId == -1){</span>
-<span class="fc" id="L193">            throw new ApiException(&quot;Product with given product id does not exist in the inventory, product id : &quot; + ex.getProductId());</span>
+<span class="fc" id="L185">        int invId = iDao.getIdFromProductId(ex.getProductId());</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (invId == -1){</span>
+<span class="fc" id="L187">            throw new ApiException(&quot;Product with given product id does not exist in the inventory, product id : &quot; + ex.getProductId());</span>
         }
-<span class="fc" id="L195">        int availQty = iDao.select(invId).getQuantity();</span>
-<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (availQty + ex.getQuantity() &gt;= p.getQuantity()){</span>
+<span class="fc" id="L189">        int availQty = iDao.select(invId).getQuantity();</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (availQty + ex.getQuantity() &gt;= p.getQuantity()){</span>
             //update qty in inventory
 //            int invId = iDao.getIdFromProductId(ex.getProductId());
-<span class="fc" id="L199">            InventoryUpdateForm inv = new InventoryUpdateForm();</span>
-<span class="fc" id="L200">            inv.setId(invId);</span>
-<span class="fc" id="L201">            inv.setQuantity(availQty + ex.getQuantity() - p.getQuantity());</span>
-<span class="fc" id="L202">            invService.update(inv);</span>
+<span class="fc" id="L193">            InventoryUpdateForm inv = new InventoryUpdateForm();</span>
+<span class="fc" id="L194">            inv.setId(invId);</span>
+<span class="fc" id="L195">            inv.setQuantity(availQty + ex.getQuantity() - p.getQuantity());</span>
+<span class="fc" id="L196">            invService.update(inv);</span>
 
-<span class="fc" id="L204">            ex.setQuantity(p.getQuantity());</span>
-<span class="fc" id="L205">            ex.setSellingPrice(p.getSellingPrice());</span>
-<span class="fc" id="L206">            dao.update(); //symbolic</span>
-<span class="fc" id="L207">        }</span>
+<span class="fc" id="L198">            ex.setQuantity(p.getQuantity());</span>
+<span class="fc" id="L199">            ex.setSellingPrice(p.getSellingPrice());</span>
+<span class="fc" id="L200">            dao.update(); //symbolic</span>
+<span class="fc" id="L201">        }</span>
         else{
-<span class="fc" id="L209">            throw new ApiException(&quot;Selected quantity more than available quantity, available quantity only &quot; + availQty );</span>
+<span class="fc" id="L203">            throw new ApiException(&quot;Selected quantity more than available quantity, available quantity only &quot; + availQty );</span>
         }
-<span class="fc" id="L211">    }</span>
+<span class="fc" id="L205">    }</span>
 
     private OrderItemData convertPojoToOrderForm(OrderItemPojo p){
-<span class="fc" id="L214">        OrderItemData b = new OrderItemData();</span>
-<span class="fc" id="L215">        b.setId(p.getId());</span>
-<span class="fc" id="L216">        b.setQuantity(p.getQuantity());</span>
-<span class="fc" id="L217">        b.setSellingPrice(p.getSellingPrice());</span>
-<span class="fc" id="L218">        b.setProductId(p.getProductId());</span>
-<span class="fc" id="L219">        b.setOrderId(p.getOrderId());</span>
-<span class="fc" id="L220">        return b;</span>
+<span class="fc" id="L208">        OrderItemData b = new OrderItemData();</span>
+<span class="fc" id="L209">        b.setId(p.getId());</span>
+<span class="fc" id="L210">        b.setQuantity(p.getQuantity());</span>
+<span class="fc" id="L211">        b.setSellingPrice(p.getSellingPrice());</span>
+<span class="fc" id="L212">        b.setProductId(p.getProductId());</span>
+<span class="fc" id="L213">        b.setOrderId(p.getOrderId());</span>
+<span class="fc" id="L214">        return b;</span>
     }
 
     private void nullCheck(OrderItemInsertForm p) throws ApiException {
-<span class="fc" id="L224">        System.out.println(p.getOrderId() + p.getSellingPrice() + p.getQuantity() + p.getProductId() + &quot;------&quot;);</span>
-<span class="pc bpc" id="L225" title="7 of 8 branches missed.">        if(p.getOrderId()==0 &amp;&amp; p.getSellingPrice()==0.0 &amp;&amp; p.getQuantity()==0 &amp;&amp; p.getProductId()==0){</span>
-<span class="nc" id="L226">            throw new ApiException(&quot;body values cannot be null&quot;);</span>
+<span class="fc" id="L218">        System.out.println(p.getOrderId() + p.getSellingPrice() + p.getQuantity() + p.getProductId() + &quot;------&quot;);</span>
+<span class="pc bpc" id="L219" title="7 of 8 branches missed.">        if(p.getOrderId()==0 &amp;&amp; p.getSellingPrice()==0.0 &amp;&amp; p.getQuantity()==0 &amp;&amp; p.getProductId()==0){</span>
+<span class="nc" id="L220">            throw new ApiException(&quot;body values cannot be null&quot;);</span>
         }
-<span class="fc" id="L228">    }</span>
+<span class="fc" id="L222">    }</span>
     private void nullUpdateCheck(OrderItemUpdateForm p) throws ApiException {
-<span class="pc bpc" id="L230" title="5 of 6 branches missed.">        if(p.getId()==0 &amp;&amp; p.getSellingPrice()==0.0 &amp;&amp; p.getQuantity()==0){</span>
-<span class="nc" id="L231">            throw new ApiException(&quot;body values cannot be null&quot;);</span>
+<span class="pc bpc" id="L224" title="5 of 6 branches missed.">        if(p.getId()==0 &amp;&amp; p.getSellingPrice()==0.0 &amp;&amp; p.getQuantity()==0){</span>
+<span class="nc" id="L225">            throw new ApiException(&quot;body values cannot be null&quot;);</span>
         }
-<span class="fc" id="L233">    }</span>
+<span class="fc" id="L227">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

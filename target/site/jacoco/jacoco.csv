@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-pos-spring,pos.pojo,BrandPojo,4,20,0,0,2,8,1,6,1,6
+pos-spring,pos.pojo,BrandPojo,5,21,0,0,2,8,1,6,1,6
 pos-spring,pos.pojo,InventoryPojo,4,27,0,0,2,11,1,8,1,8
 pos-spring,pos.pojo,OrderPojo,4,23,0,0,2,9,1,6,1,6
 pos-spring,pos.pojo,ProductPojo,4,48,0,0,2,20,1,14,1,14

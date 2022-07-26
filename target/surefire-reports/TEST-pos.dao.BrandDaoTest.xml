@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="9" failures="0" name="pos.dao.BrandDaoTest" time="0.254" errors="0" skipped="0">
+<testsuite tests="9" failures="0" name="pos.dao.BrandDaoTest" time="0.323" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -7,7 +7,7 @@
     <property name="java.vm.version" value="25.341-b10"/>
     <property name="gopherProxySet" value="false"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
-    <property name="maven.multiModuleProjectDirectory" value="/Users/rahulverma/Downloads/POS"/>
+    <property name="maven.multiModuleProjectDirectory" value="/Users/rahulverma/Downloads/git/POS"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
     <property name="path.separator" value=":"/>
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
@@ -17,7 +17,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/Users/rahulverma/Downloads/POS"/>
+    <property name="user.dir" value="/Users/rahulverma/Downloads/git/POS"/>
     <property name="java.runtime.version" value="1.8.0_341-b10"/>
     <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_341.jdk/Contents/Home/jre/lib/endorsed"/>
@@ -65,13 +65,13 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoDelete" time="0.038"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoInsert" time="0.003"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoSelect" time="0.014"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoUnique" time="0.033"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoUpdate" time="0.025"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckCategory" time="0.041"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckBrand" time="0.023"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoGetIdFromData" time="0.04"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoSelectAll" time="0.037"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoDelete" time="0.051"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoInsert" time="0.006"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoSelect" time="0.025"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoUnique" time="0.039"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoUpdate" time="0.026"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckCategory" time="0.052"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckBrand" time="0.015"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoGetIdFromData" time="0.071"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoSelectAll" time="0.038"/>
 </testsuite>

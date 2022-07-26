@@ -6,7 +6,6 @@
     <groupId>pos.increff</groupId>
     <artifactId>pos-spring-full</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    //TODO version
     <packaging>war</packaging>
 
     <name>pos-spring</name>

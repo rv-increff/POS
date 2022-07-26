@@ -18,8 +18,8 @@ import javax.validation.constraints.NotNull;
 
     @NotBlank
     private String barcode;
-    @Min(value = 1, message = &quot;quantity must be greater than 1&quot;)
-    private @NotNull Integer quantity;
+//    @Min(value = 1, message = &quot;quantity must be greater than 1&quot;)//TODO don't use min
+    private Integer quantity;
 
     public int getId() {
 <span class="fc" id="L25">        return id;</span>
@@ -37,11 +37,11 @@ import javax.validation.constraints.NotNull;
 <span class="fc" id="L37">        this.barcode = barcode;</span>
 <span class="fc" id="L38">    }</span>
 
-    public @NotNull Integer getQuantity() {
+    public  Integer getQuantity() {
 <span class="fc" id="L41">        return quantity;</span>
     }
 
-    public void setQuantity(@NotNull Integer quantity) {
+    public void setQuantity( Integer quantity) {
 <span class="fc" id="L45">        this.quantity = quantity;</span>
 <span class="fc" id="L46">    }</span>
 

@@ -26,9 +26,9 @@ import pos.util.StringUtil;
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(BrandInsertForm p) throws ApiException {
-<span class="fc" id="L29">        nullCheck(p);</span>
-<span class="fc" id="L30">        normalizeInsert(p);</span>
-<span class="fc bfc" id="L31" title="All 2 branches covered.">        if(!dao.unique(p.getBrand(),p.getCategory())){</span>
+<span class="fc" id="L29">        nullCheck(p); //TODO check not null not nullcheck</span>
+<span class="fc" id="L30">        normalizeInsert(p); //TODO normalize</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if(!dao.unique(p.getBrand(),p.getCategory())){  //TODO</span>
 <span class="fc" id="L32">            throw new ApiException(&quot;Brand and category pair should be unique&quot;);</span>
         }
 <span class="fc" id="L34">        BrandPojo ex = new BrandPojo();</span>
@@ -161,7 +161,7 @@ import pos.util.StringUtil;
 <span class="fc" id="L161">        return b;</span>
     }
 
-    private void nullCheck(BrandInsertForm form) throws ApiException {
+    private void nullCheck(BrandInsertForm form) throws ApiException { //TODO make validation util with static class check null check null and check not null(object ,message)
 <span class="pc bpc" id="L165" title="1 of 4 branches missed.">        if(form.getCategory()==null || form.getBrand()==null){</span>
 <span class="fc" id="L166">            throw new ApiException(&quot;brand or category cannot be null&quot;);</span>
         }
