@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderServices.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pos-spring</a> &gt; <a href="index.source.html" class="el_package">pos.services</a> &gt; <span class="el_source">OrderServices.java</span></div><h1>OrderServices.java</h1><pre class="source lang-java linenums">package pos.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pos.dao.OrderDao;
+import pos.model.OrderData;
+import pos.pojo.OrderPojo;
+
+import javax.transaction.Transactional;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Service
+<span class="fc" id="L17">public class OrderServices {</span>
+
+    @Autowired
+    private OrderDao dao;
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void add() throws ApiException {
+<span class="fc" id="L24">        OrderPojo ex = new OrderPojo();</span>
+<span class="fc" id="L25">        java.util.Date date = new java.util.Date();</span>
+<span class="fc" id="L26">        ex.setTime(date);</span>
+<span class="fc" id="L27">        dao.insert(ex);</span>
+<span class="fc" id="L28">    }</span>
+
+    @Transactional(rollbackOn = ApiException.class)
+    public List&lt;OrderData&gt; getAll() throws ApiException {
+<span class="fc" id="L32">        List&lt;OrderPojo&gt; p =  dao.selectAll();</span>
+<span class="fc" id="L33">        List&lt;OrderData&gt; b = new ArrayList&lt;OrderData&gt;();</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for( OrderPojo pj : p){</span>
+<span class="fc" id="L35">            b.add(convertPojoToOrderData(pj));</span>
+<span class="fc" id="L36">        }</span>
+<span class="fc" id="L37">        return b;</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public OrderData get(int id) throws ApiException {
+<span class="fc" id="L42">        return getCheck(id);</span>
+    }
+
+    private OrderData convertPojoToOrderData(OrderPojo p){
+<span class="fc" id="L46">        OrderData b = new OrderData();</span>
+<span class="fc" id="L47">        b.setId(p.getId());</span>
+<span class="fc" id="L48">        b.setTime(p.getTime());</span>
+<span class="fc" id="L49">        b.setOrderPlaced(p.isOrderPlaced());</span>
+<span class="fc" id="L50">        return b;</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public OrderData getCheck(int id) throws ApiException {
+<span class="fc" id="L55">        OrderPojo p = dao.select(id);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (p== null) {</span>
+<span class="fc" id="L57">            throw new ApiException(&quot;Order with given id does not exist, id : &quot; + id);</span>
+        }
+<span class="fc" id="L59">        return convertPojoToOrderData(p);</span>
+    }
+    @Transactional(rollbackOn = ApiException.class)
+    public void updateOrderStatusPlaced(int id) throws ApiException {
+<span class="nc" id="L63">        OrderPojo p = dao.select(id);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (p== null) {</span>
+<span class="nc" id="L65">            throw new ApiException(&quot;Order with given id does not exist&quot;);</span>
+        }
+<span class="nc" id="L67">        p.setOrderPlaced(true);</span>
+<span class="nc" id="L68">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

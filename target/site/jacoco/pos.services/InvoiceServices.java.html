@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceServices.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pos-spring</a> &gt; <a href="index.source.html" class="el_package">pos.services</a> &gt; <span class="el_source">InvoiceServices.java</span></div><h1>InvoiceServices.java</h1><pre class="source lang-java linenums">package pos.services;
+
+import org.apache.fop.apps.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pos.dao.BrandDao;
+import pos.dao.InventoryDao;
+import pos.dao.OrderItemDao;
+import pos.model.*;
+
+import javax.transaction.Transactional;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.transform.*;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+@Service
+<span class="fc" id="L26">public class InvoiceServices {</span>
+
+    @Autowired
+    private OrderItemDao dao ;
+    @Autowired
+    private BrandDao bDao;
+    @Autowired
+    private InventoryDao iDao;
+    @Autowired
+    private OrderItemServices oItemService;
+    @Autowired
+    private OrderServices oService;
+
+<span class="fc" id="L39">    private final FopFactory fopFactory = FopFactory.newInstance(new File(&quot;.&quot;).toURI());</span>
+
+    @Transactional(rollbackOn = ApiException.class)
+    public List&lt;SalesReport&gt; getSalesReport(SalesReportForm s) throws ApiException, ParseException {
+<span class="fc" id="L43">        DateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L44">        String from = s.getFrom();</span>
+<span class="fc" id="L45">        String to = s.getTo();</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if(s.getFrom() != &quot;&quot;) {</span>
+            try {
+<span class="fc" id="L48">                s.setFrom(sdf.parse(s.getFrom()).toString());</span>
+<span class="nc" id="L49">            } catch (ParseException e) {</span>
+<span class="nc" id="L50">                System.out.println(e);</span>
+<span class="nc" id="L51">                throw new ApiException(&quot;From Date format not matching it should be like yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L52">            }</span>
+        }
+        else{
+<span class="nc" id="L55">            throw new ApiException(&quot;From Date cannot be empty&quot;);</span>
+        }
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if(s.getTo() != &quot;&quot;) {</span>
+            try {
+<span class="fc" id="L59">                s.setTo(sdf.parse(s.getTo()).toString());</span>
+<span class="nc" id="L60">            } catch (ParseException e) {</span>
+<span class="nc" id="L61">                System.out.println(e);</span>
+<span class="nc" id="L62">                throw new ApiException(&quot;To Date format not matching it should be like yyyy-MM-dd&quot; );</span>
+<span class="fc" id="L63">            }</span>
+        }
+        else{
+<span class="nc" id="L66">            throw new ApiException(&quot;To Date cannot be empty&quot;);</span>
+        }
+
+
+
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if((((sdf.parse(to).getTime() - sdf.parse(from).getTime())/(1000 * 60 * 60 * 24))% 365) &gt;= 30){</span>
+<span class="nc" id="L72">            throw new ApiException(&quot;Date range should not be greater than 30 days&quot;);</span>
+        }
+
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if((sdf.parse(to).getTime() - sdf.parse(from).getTime())&lt;=0){</span>
+<span class="nc" id="L76">            throw new ApiException(&quot;From date should be less than To date&quot;);</span>
+        }
+
+<span class="pc bpc" id="L79" title="3 of 6 branches missed.">        if(s.getBrand()!=&quot;&quot; &amp; s.getCategory()!=&quot;&quot; &amp; bDao.unique(s.getBrand(), s.getCategory())) {</span>
+<span class="nc" id="L80">            throw new ApiException(s.getBrand() + &quot; - &quot; +  s.getCategory() +&quot; Brand-category pair does not exist&quot;);</span>
+        }
+
+<span class="pc bpc" id="L83" title="4 of 8 branches missed.">        if(s.getCategory()==&quot;&quot; &amp; s.getBrand()!=&quot;&quot; &amp; !bDao.check_brand(s.getBrand())){</span>
+<span class="nc" id="L84">            throw new ApiException(&quot;Brand does not exist&quot;);</span>
+        }
+
+<span class="pc bpc" id="L87" title="4 of 8 branches missed.">        if(s.getBrand()==&quot;&quot; &amp; s.getCategory()!=&quot;&quot; &amp; !bDao.check_category(s.getCategory())){</span>
+<span class="nc" id="L88">            throw new ApiException(&quot;Brand does not exist&quot;);</span>
+        }
+<span class="fc" id="L90">        List&lt;SalesReport&gt; salesReportData = dao.getSalesReport(s);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if(salesReportData.size()==0){</span>
+<span class="nc" id="L92">            throw new ApiException(&quot;No sales for given range&quot;);</span>
+        }
+<span class="fc" id="L94">        return salesReportData;</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    private static String jaxbObjectToXML(OrderItemDataList orderItemList)
+    {
+        try
+        {
+            //Create JAXB Context
+<span class="nc" id="L103">            JAXBContext jaxbContext = JAXBContext.newInstance(OrderItemDataList.class);</span>
+
+            //Create Marshaller
+<span class="nc" id="L106">            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();</span>
+
+            //Required formatting??
+<span class="nc" id="L109">            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);</span>
+
+            //Print XML String to Console
+<span class="nc" id="L112">            StringWriter sw = new StringWriter();</span>
+
+            //Write XML to StringWriter
+<span class="nc" id="L115">            jaxbMarshaller.marshal(orderItemList, sw);</span>
+
+            //Verify XML Content
+<span class="nc" id="L118">            String xmlContent = sw.toString();</span>
+<span class="nc" id="L119">            return xmlContent;</span>
+
+<span class="nc" id="L121">        } catch (JAXBException e) {</span>
+<span class="nc" id="L122">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L124">        return &quot;&quot;;</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException {
+<span class="nc" id="L129">       List&lt;OrderItemData&gt; o = oItemService.getOrderItemForOrder(orderId);</span>
+
+<span class="nc" id="L131">       Date time = oService.get(orderId).getTime();</span>
+<span class="nc" id="L132">       Double total = 0.;</span>
+
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        for(OrderItemData i : o){</span>
+<span class="nc" id="L135">            total += i.getQuantity() * i.getSellingPrice();</span>
+<span class="nc" id="L136">        }</span>
+<span class="nc" id="L137">       OrderItemDataList oItem = new OrderItemDataList(o,time,total,orderId);</span>
+
+
+<span class="nc" id="L140">        String xml = jaxbObjectToXML(oItem);</span>
+//        File xml = new File(&quot;src&quot;, &quot;invoice.xsl&quot;);;
+//        File xsltfile = new File(&quot;src&quot;, &quot;invoice.xsl&quot;);
+<span class="nc" id="L143">        File xsltfile = new File(&quot;src&quot;, &quot;invoice.xsl&quot;);</span>
+<span class="nc" id="L144">        File pdffile = new File(&quot;src&quot;, &quot;invoice.pdf&quot;);</span>
+<span class="nc" id="L145">        System.out.println(xml);</span>
+
+<span class="nc" id="L147">        convertToPDF(oItem,xsltfile,pdffile,xml);</span>
+
+<span class="nc" id="L149">    }</span>
+
+    public void convertToPDF(OrderItemDataList team, File xslt, File pdf,String xml)
+            throws IOException, TransformerException{
+
+<span class="nc" id="L154">         	        FOUserAgent foUserAgent = fopFactory.newFOUserAgent();</span>
+         	        // configure foUserAgent as desired
+
+         	        // Setup output
+<span class="nc" id="L158">         	        OutputStream out = new java.io.FileOutputStream(pdf);</span>
+<span class="nc" id="L159">         	        out = new java.io.BufferedOutputStream(out);</span>
+         	        try {
+             	            // Construct fop with desired output format
+<span class="nc" id="L162">                        Fop fop = null;</span>
+                        try {
+<span class="nc" id="L164">                            fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);</span>
+<span class="nc" id="L165">                        } catch (FOPException e) {</span>
+<span class="nc" id="L166">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L167">                        }</span>
+
+                        // Setup XSLT
+<span class="nc" id="L170">             	            TransformerFactory factory = TransformerFactory.newInstance();</span>
+<span class="nc" id="L171">             	            Transformer transformer = factory.newTransformer(new StreamSource(xslt));</span>
+
+             	            // Setup input for XSLT transformation
+<span class="nc" id="L174">                        Source src = new StreamSource(new StringReader(xml));</span>
+//                        Source src = new StreamSource(new FileInputStream(xml));
+//
+             	            // Resulting SAX events (the generated FO) must be piped through to FOP
+<span class="nc" id="L178">             	            Result res = new SAXResult(fop.getDefaultHandler());</span>
+
+             	            // Start XSLT transformation and FOP processing
+<span class="nc" id="L181">             	            transformer.transform(src, res);</span>
+<span class="nc" id="L182">             	        } catch (FOPException e) {</span>
+<span class="nc" id="L183">                        throw new RuntimeException(e);</span>
+                    } finally {
+<span class="nc" id="L185">             	            out.close();</span>
+             	        }
+<span class="nc" id="L187">         	    }</span>
+
+    @Transactional(rollbackOn = ApiException.class)
+    public List&lt;InventoryReport&gt; getInventoryReport() throws ApiException {
+<span class="nc" id="L191">        return iDao.getInventoryReport();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

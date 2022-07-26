@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BrandDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pos-spring</a> &gt; <a href="index.source.html" class="el_package">pos.dao</a> &gt; <span class="el_source">BrandDao.java</span></div><h1>BrandDao.java</h1><pre class="source lang-java linenums">package pos.dao;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import pos.pojo.BrandPojo;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+@Repository
+<span class="fc" id="L16">public class BrandDao extends AbstractDao{</span>
+
+<span class="fc" id="L18">    private static String delete_id = &quot;delete from BrandPojo where id=:id&quot;;</span>
+<span class="fc" id="L19">    private static String select_id = &quot;select p from BrandPojo p where id=:id&quot;;</span>
+<span class="fc" id="L20">    private static String select_all = &quot;select p from BrandPojo p&quot;;</span>
+<span class="fc" id="L21">    private static String unique = &quot;select p from BrandPojo p where brand=:brand and category=:category&quot;;</span>
+<span class="fc" id="L22">    private static String check_brand = &quot;select p from BrandPojo p where brand=:brand&quot;;</span>
+<span class="fc" id="L23">    private static String check_category = &quot;select p from BrandPojo p where category=:category&quot;;</span>
+
+    @PersistenceContext
+    EntityManager em;
+
+    public void insert(BrandPojo p){
+<span class="fc" id="L29">        em.persist(p);</span>
+<span class="fc" id="L30">    }</span>
+
+    public int delete(int id){
+<span class="fc" id="L33">        Query query = em.createQuery(delete_id);</span>
+<span class="fc" id="L34">        query.setParameter(&quot;id&quot;,id);</span>
+<span class="fc" id="L35">        return query.executeUpdate();</span>
+    }
+
+    public BrandPojo select(int id){
+<span class="fc" id="L39">        TypedQuery&lt;BrandPojo&gt; query = em.createQuery(select_id,BrandPojo.class);</span>
+<span class="fc" id="L40">        query.setParameter(&quot;id&quot;,id);</span>
+<span class="fc" id="L41">        return getSingle(query);</span>
+    }
+
+    public List&lt;BrandPojo&gt; selectAll(){
+<span class="fc" id="L45">        TypedQuery&lt;BrandPojo&gt; query = em.createQuery(select_all,BrandPojo.class);</span>
+<span class="fc" id="L46">        return query.getResultList();</span>
+    }
+
+    public boolean unique(String brand, String category){
+<span class="fc" id="L50">        TypedQuery&lt;BrandPojo&gt; query = em.createQuery(unique,BrandPojo.class);</span>
+<span class="fc" id="L51">        query.setParameter(&quot;brand&quot;,brand);</span>
+<span class="fc" id="L52">        query.setParameter(&quot;category&quot;,category);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        return getSingle(query)==null;</span>
+    }
+    public int getIdFromData(String brand, String category){
+<span class="fc" id="L56">        TypedQuery&lt;BrandPojo&gt; query = em.createQuery(unique,BrandPojo.class);</span>
+<span class="fc" id="L57">        query.setParameter(&quot;brand&quot;,brand);</span>
+<span class="fc" id="L58">        query.setParameter(&quot;category&quot;,category);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        return getSingle(query)!=null?getSingle(query).getId():-1;</span>
+    }
+    public boolean check_brand(String brand){
+<span class="fc" id="L62">        TypedQuery&lt;BrandPojo&gt; query = em.createQuery(check_brand,BrandPojo.class);</span>
+<span class="fc" id="L63">        query.setParameter(&quot;brand&quot;,brand);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        return getSingle(query)!=null;</span>
+
+
+    }
+    public boolean check_category(String category){
+<span class="fc" id="L69">        TypedQuery&lt;BrandPojo&gt; query = em.createQuery(check_category,BrandPojo.class);</span>
+<span class="fc" id="L70">        query.setParameter(&quot;category&quot;,category);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        return getSingle(query)!=null;</span>
+    }
+
+    public void update(){
+        //symbolic
+<span class="fc" id="L76">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

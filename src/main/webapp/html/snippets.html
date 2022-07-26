@@ -1,0 +1,90 @@
+<head th:fragment="name_head">
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="baseUrl" th:attr="content=${baseUrl}">
+
+  <script src="https://kit.fontawesome.com/c30beb553f.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
+    integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
+    crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" th:href="@{/static/app.css}">
+
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-1" th:fragment="name_site_navbar">
+  <a class="navbar-brand" th:href="@{/ui/}">
+    <img th:src="@{/static/logo.jpg}" class="d-inline-block align-top" alt="">
+  </a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/brands}" id="brandLink">Brand</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/products}" id="productLink">Product</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/inventory}" id="inventoryLink">Inventory</a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/orders}" id="orderLink">Order</a>
+      </li>
+      <li class="nav-item">
+        <!--        <a class="nav-link" th:href="@{/ui/reports}" id="ReportsLink">Reports</a>-->
+        <div class="dropdown">
+          <a class="nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" style="-webkit-appearance:none" >
+            Reports
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" th:href="@{/ui/reports}">Generate Sales Report</a>
+            <a class="dropdown-item" href="" onclick="brandReport()">Generate Brand Report</a>
+            <a class="dropdown-item" href="" onclick="inventoryReport()">Generate Inventory Report</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light  mb-1" th:fragment="name_app_navbar">
+  <a class="navbar-brand" th:href="@{/}">
+    <img th:src="@{/static/logo.jpg}" class="d-inline-block align-top" alt="">
+  </a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+</nav>
+
+<footer class="footer  mt-1" th:fragment="name_footer">
+  Copyright Increff 2022
+  &nbsp;
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+
+  <script th:src="@{/static/papaparse.min.js}" />
+  </script>
+  <script th:src="@{/static/appReport.js}" />
+  </script>
+
+
+</footer>

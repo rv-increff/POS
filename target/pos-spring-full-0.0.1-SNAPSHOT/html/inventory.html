@@ -1,0 +1,147 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body>
+
+<nav th:replace="snippets.html :: name_site_navbar"></nav>
+<div class="container-fluid">
+
+<div class="">
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/ui/}">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Inventory</li>
+    </ol>
+  </nav>
+<div class="jumbotron" >
+  <div class="buttonBottom">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addBtn" onclick="addInventoryModal()">Add</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal" id="bulkAddBtn" onclick="bulkAddInventoryModal()">Bulk Add</button>
+  </div>
+
+  <table class="table" width="100%">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Barcode</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody id="inventoryTbody">
+    </tbody>
+  </table>
+</div>
+ 
+</div>
+</div> <!--Container-->
+<!--delete modal-->
+<div class="modal" tabindex="-1" role="dialog" id="inventoryDelete">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Alert</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="confirmModalBody">
+        <p>Do you want to delete ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteModalBtn">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--edit model-->
+<div class="modal" tabindex="-1" role="dialog" id="inventoryEdit">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editInventoryForm" >
+          <div id="modalFormDataDiv">
+            <div class="form-group" id="editDiv">
+              <label for="barcodeInput">Barcode</label>
+              <input type="text" class="form-control" id="barcodeInput" name="barcodeInput" aria-describedby="text" placeholder="Enter Barcode" autocomplete="off" minlength="1">
+            </div>
+            <div class="form-group">
+              <label for="quantityInput">Quantity</label>
+              <input type="number" class="form-control" id="quantityInput"  name="quantityInput" aria-describedby="text" placeholder="Enter Quantity" autocomplete="off" minlength="1" >
+            </div>
+            <div id="modalFormErrorDiv" style="color:red; font-size: 14px;">
+            <!--error-->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="EditModalBtn" ></button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--upload modal-->
+<div class="modal" tabindex="-1" role="dialog" id="bulkUpload">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="">Upload File</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div>
+            <div class="form-group">
+              <label for="formFile" class="form-label">Select TSV file for bulk upload</label>
+              <input class="form-control" type="file" id="formFile" accept=".tsv">
+            </div>
+            <div class="form-group">
+
+              <a class="" th:href="@{/static/InventoryTemplate.tsv}" download>Download Template</a>
+            </div>
+            <div id="uploadModalFormErrorDiv" style="color:red; font-size: 14px;">
+              <!--error-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="uploadModalBtn" onclick="bulkAddInventory()">Upload</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+<script>
+   $(document).ready(function() {
+loadInventory();
+document.getElementById("inventoryLink").style.fontWeight = "bold";
+ });
+</script>
+<script th:src="@{/static/appInventory.js}"/></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+</body>
+
+</html>

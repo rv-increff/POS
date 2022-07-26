@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryApiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pos-spring</a> &gt; <a href="index.source.html" class="el_package">pos.controller</a> &gt; <span class="el_source">InventoryApiController.java</span></div><h1>InventoryApiController.java</h1><pre class="source lang-java linenums">package pos.controller;
+
+import com.google.gson.Gson;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import pos.model.InventoryData;
+import pos.model.InventoryInsertForm;
+import pos.model.InventoryUpdateForm;
+import pos.services.ApiException;
+import pos.services.InventoryServices;
+import pos.services.InventoryServices;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
+
+@Api
+@RestController
+<span class="fc" id="L23">public class InventoryApiController {</span>
+
+
+    @Autowired
+    private InventoryServices service;
+
+    @ApiOperation(value = &quot;Gives all Inventory data&quot;)
+    @RequestMapping(path = &quot;/api/inventory/get-all&quot;, method = RequestMethod.GET)
+    public List&lt;InventoryData&gt; getAllInventoryDetails() throws ApiException {
+<span class="nc" id="L32">        return service.getAll();</span>
+    }
+
+    @ApiOperation(value = &quot;Insert Inventory data&quot;)
+    @RequestMapping(path = &quot;/api/inventory/insert&quot;, method = RequestMethod.POST)
+    public void insertInventory(@RequestBody InventoryInsertForm p, HttpServletResponse response) throws ApiException, IOException {
+<span class="nc" id="L38">        service.add(p);</span>
+<span class="nc" id="L39">        success(response);</span>
+<span class="nc" id="L40">    }</span>
+
+    @ApiOperation(value = &quot;Insert bulk Inventory data&quot;)
+    @RequestMapping(path = &quot;/api/inventory/bulk-insert&quot;, method = RequestMethod.POST)
+    public void bulkInsertInventory(@RequestBody List&lt; InventoryInsertForm&gt; p, HttpServletResponse response) throws ApiException, IOException {
+<span class="nc" id="L45">        service.bulkAdd(p);</span>
+<span class="nc" id="L46">        success(response);</span>
+<span class="nc" id="L47">    }</span>
+
+    @ApiOperation(value = &quot;get a Inventory&quot;)
+    @RequestMapping(path = &quot;/api/inventory/get/{id}&quot;, method = RequestMethod.GET)
+    public InventoryData getInventory(@PathVariable int id) throws ApiException {
+<span class="nc" id="L52">        return service.get(id);</span>
+
+    }
+
+    @ApiOperation(value = &quot;delete a Inventory&quot;)
+    @RequestMapping(path = &quot;/api/inventory/delete/{id}&quot;, method = RequestMethod.DELETE)
+    public void deleteInventory(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
+<span class="nc" id="L59">        service.delete(id);</span>
+<span class="nc" id="L60">        success(response);</span>
+<span class="nc" id="L61">    }</span>
+
+    @ApiOperation(value = &quot;update a Inventory&quot;)
+    @RequestMapping(path = &quot;/api/inventory/update&quot;, method = RequestMethod.PUT)
+    public void updateInventory(@RequestBody InventoryUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
+<span class="nc" id="L66">        service.update(p);</span>
+<span class="nc" id="L67">        success(response);</span>
+<span class="nc" id="L68">    }</span>
+
+    protected void success(HttpServletResponse response) throws IOException {
+<span class="nc" id="L71">        JSONObject obj=new JSONObject();</span>
+<span class="nc" id="L72">        obj.put(&quot;message&quot;, &quot;success&quot;);</span>
+<span class="nc" id="L73">        String json = new Gson().toJson(obj);</span>
+<span class="nc" id="L74">        response.setContentType(&quot;application/json&quot;);</span>
+<span class="nc" id="L75">        response.setCharacterEncoding(&quot;UTF-8&quot;);</span>
+<span class="nc" id="L76">        response.getWriter().write(json);</span>
+<span class="nc" id="L77">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

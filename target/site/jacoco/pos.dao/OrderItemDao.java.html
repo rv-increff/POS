@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderItemDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pos-spring</a> &gt; <a href="index.source.html" class="el_package">pos.dao</a> &gt; <span class="el_source">OrderItemDao.java</span></div><h1>OrderItemDao.java</h1><pre class="source lang-java linenums">package pos.dao;
+
+import org.springframework.stereotype.Repository;
+import pos.model.SalesReport;
+import pos.model.SalesReportForm;
+import pos.pojo.OrderItemPojo;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Repository
+<span class="fc" id="L20">public class OrderItemDao extends AbstractDao{</span>
+<span class="fc" id="L21">        private static String delete_id = &quot;delete from OrderItemPojo where id=:id&quot;;</span>
+<span class="fc" id="L22">        private static String select_id = &quot;select p from OrderItemPojo p where id=:id&quot;;</span>
+<span class="fc" id="L23">        private static String select_all = &quot;select p from OrderItemPojo p&quot;;</span>
+<span class="fc" id="L24">        private static String select_from_orderId = &quot;select p from OrderItemPojo p where orderId=:orderId&quot;;</span>
+<span class="fc" id="L25">        private static String select_from_orderId_productId = &quot;select p from OrderItemPojo p where orderId=:orderId and productId=:productId&quot;;</span>
+<span class="fc" id="L26">        private static String select_from_productId = &quot;select p from OrderItemPojo p where productId=:productId&quot;;</span>
+
+<span class="fc" id="L28">        private String queryBuilder = &quot;select new pos.model.SalesReport(p.brand, p.category,sum(oi.quantity) as quantity, sum(oi.quantity * oi.sellingPrice) as revenue) from ProductPojo p, OrderItemPojo oi, OrderPojo o where &quot;;</span>
+
+
+<span class="fc" id="L31">        private String queryBuilderEnd =  &quot; group by p.brand,p.category&quot;;</span>
+        @PersistenceContext
+        EntityManager em;
+
+        public void insert(OrderItemPojo p){
+<span class="fc" id="L36">            em.persist(p);</span>
+<span class="fc" id="L37">        }</span>
+
+        public int delete(int id){
+<span class="fc" id="L40">            Query query = em.createQuery(delete_id);</span>
+<span class="fc" id="L41">            query.setParameter(&quot;id&quot;,id);</span>
+<span class="fc" id="L42">            return query.executeUpdate();</span>
+        }
+
+        public OrderItemPojo select(int id){
+<span class="fc" id="L46">            TypedQuery&lt;OrderItemPojo&gt; query = em.createQuery(select_id, OrderItemPojo.class);</span>
+<span class="fc" id="L47">            query.setParameter(&quot;id&quot;,id);</span>
+<span class="fc" id="L48">            return getSingle(query);</span>
+        }
+
+        public List&lt;OrderItemPojo&gt; selectAll(){
+<span class="fc" id="L52">            TypedQuery&lt;OrderItemPojo&gt; query = em.createQuery(select_all, OrderItemPojo.class);</span>
+<span class="fc" id="L53">            return query.getResultList();</span>
+        }
+
+        public List&lt;OrderItemPojo&gt; selectFromOrderId(int orderId){
+<span class="fc" id="L57">            TypedQuery&lt;OrderItemPojo&gt; query = em.createQuery(select_from_orderId, OrderItemPojo.class);</span>
+<span class="fc" id="L58">            query.setParameter(&quot;orderId&quot;,orderId);</span>
+<span class="fc" id="L59">            return query.getResultList();</span>
+        }
+
+        public boolean checkOrderExist(int orderId,int productId){
+<span class="fc" id="L63">            TypedQuery&lt;OrderItemPojo&gt; query = em.createQuery(select_from_orderId_productId, OrderItemPojo.class);</span>
+<span class="fc" id="L64">            query.setParameter(&quot;orderId&quot;,orderId);</span>
+<span class="fc" id="L65">            query.setParameter(&quot;productId&quot;,productId);</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            return getSingle(query)==null;</span>
+        }
+        public boolean checkOrderExistForProductId(int productId){
+<span class="fc" id="L69">            TypedQuery&lt;OrderItemPojo&gt; query = em.createQuery(select_from_productId, OrderItemPojo.class);</span>
+<span class="fc" id="L70">            query.setParameter(&quot;productId&quot;,productId);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            return getSingle(query)==null;</span>
+        }
+
+        public List&lt;SalesReport&gt; getSalesReport(SalesReportForm s) throws ParseException {
+<span class="fc" id="L75">            List&lt;String&gt; queryBuilderList = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L76">            DateFormat sdf = new SimpleDateFormat(&quot;EEE MMM dd HH:mm:ss Z yyyy&quot;);</span>
+<span class="fc" id="L77">            queryBuilderList.add(&quot; oi.productId=p.id and oi.orderId=o.id &quot;);</span>
+<span class="fc" id="L78">            queryBuilderList.add(&quot; o.orderPlaced=1 &quot;);</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            if(s.getFrom().toString()!=&quot;&quot;){</span>
+<span class="fc" id="L80">                queryBuilderList.add(&quot; o.time&gt;=:fromTime &quot;);</span>
+
+            }
+<span class="fc bfc" id="L83" title="All 2 branches covered.">             if(s.getTo().toString()!=&quot;&quot;){</span>
+<span class="fc" id="L84">                queryBuilderList.add(&quot; o.time&lt;=:toTime &quot;);</span>
+
+            }
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            if(s.getBrand()!=&quot;&quot;){</span>
+<span class="fc" id="L88">                queryBuilderList.add(&quot; p.brand=:brand &quot;);</span>
+
+            }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">            if(s.getCategory()!=&quot;&quot;){</span>
+<span class="fc" id="L92">                queryBuilderList.add(&quot; p.category=:category &quot;);</span>
+
+            }
+<span class="fc" id="L95">            String queryBuilderFinal  = queryBuilder + queryBuilderList.stream().collect(Collectors.joining(&quot; and &quot;)) + queryBuilderEnd;</span>
+
+<span class="fc" id="L97">            TypedQuery&lt;SalesReport&gt; query = em.createQuery(queryBuilderFinal,SalesReport.class);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if(s.getTo().toString()!=&quot;&quot;){</span>
+<span class="fc" id="L99">                query.setParameter(&quot;toTime&quot;,sdf.parse(s.getTo()));</span>
+            }
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            if(s.getFrom().toString()!=&quot;&quot;){</span>
+<span class="fc" id="L102">                query.setParameter(&quot;fromTime&quot;,sdf.parse(s.getFrom()));</span>
+            }
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            if(s.getBrand()!=&quot;&quot;){</span>
+<span class="fc" id="L105">                query.setParameter(&quot;brand&quot;,s.getBrand());</span>
+            }
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if(s.getCategory()!=&quot;&quot;){</span>
+<span class="fc" id="L108">                query.setParameter(&quot;category&quot;,s.getCategory());</span>
+            }
+<span class="fc" id="L110">            System.out.println(query);</span>
+<span class="fc" id="L111">            return query.getResultList();</span>
+        }
+
+        public void update(){
+                //symbolic
+<span class="fc" id="L116">            }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

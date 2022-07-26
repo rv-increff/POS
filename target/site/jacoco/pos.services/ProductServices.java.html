@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductServices.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pos-spring</a> &gt; <a href="index.source.html" class="el_package">pos.services</a> &gt; <span class="el_source">ProductServices.java</span></div><h1>ProductServices.java</h1><pre class="source lang-java linenums">package pos.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pos.dao.BrandDao;
+import pos.dao.InventoryDao;
+import pos.dao.ProductDao;
+import pos.model.ProductData;
+import pos.model.ProductInsertForm;
+import pos.model.ProductUpdateForm;
+import pos.pojo.ProductPojo;
+import pos.util.StringUtil;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@Service
+<span class="fc" id="L23">public class ProductServices {</span>
+    @Autowired
+    private ProductDao dao;
+    @Autowired
+    private BrandDao bDao;
+    @Autowired
+    private InventoryDao iDao;
+
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void add(ProductInsertForm p) throws ApiException {
+<span class="fc" id="L34">        nullCheck(p);</span>
+<span class="fc" id="L35">        normalizeInsert(p);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(!dao.unique(p.getBarcode())){</span>
+<span class="fc" id="L37">            throw new ApiException(&quot;barcode &quot;  + p.getBarcode() +  &quot; already exists&quot;);</span>
+        }
+<span class="fc" id="L39">        int brandPojoId = bDao.getIdFromData(p.getBrand(),p.getCategory());</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if(brandPojoId==-1){</span>
+<span class="fc" id="L41">            throw new ApiException(p.getBrand() + &quot; - &quot; + p.getCategory() + &quot; brand-category does not exist&quot;);</span>
+        }
+<span class="fc" id="L43">        Pattern pattern = Pattern.compile(&quot;^[0-9A-Za-z]+$&quot;);</span>
+<span class="fc" id="L44">        Matcher matcher = pattern.matcher(p.getBarcode());</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if(!matcher.find()){</span>
+<span class="fc" id="L46">            throw new ApiException(&quot;barcode &quot;  + p.getBarcode() +  &quot; not valid, barcode can only have alphanumeric values&quot;);</span>
+        }
+<span class="fc" id="L48">        Pattern numP = Pattern.compile(&quot;^[0-9]+$|^[0-9]+\\.[0-9]*$&quot;);</span>
+<span class="fc" id="L49">        matcher = numP.matcher(p.getMrp().toString());</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if(!matcher.find()){</span>
+<span class="nc" id="L51">            throw new ApiException(&quot;mrp &quot;  + p.getMrp() +  &quot; not valid, mrp should be a positive number&quot;);</span>
+        }
+<span class="fc" id="L53">        ProductPojo ex = new ProductPojo();</span>
+<span class="fc" id="L54">        ex.setBrandPojoId(brandPojoId);</span>
+<span class="fc" id="L55">        ex.setBrand(p.getBrand());</span>
+<span class="fc" id="L56">        ex.setCategory(p.getCategory());</span>
+<span class="fc" id="L57">        ex.setBarcode(p.getBarcode());</span>
+<span class="fc" id="L58">        ex.setMrp(p.getMrp());</span>
+<span class="fc" id="L59">        ex.setName(p.getName());</span>
+<span class="fc" id="L60">        dao.insert(ex);</span>
+<span class="fc" id="L61">    }</span>
+    @Transactional(rollbackOn = ApiException.class)
+    public void bulkAdd(List&lt;ProductInsertForm&gt; bulkP) throws ApiException {
+<span class="fc" id="L64">        List&lt;String&gt; errorList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L65">        Set&lt;String&gt; barcodeSet = new HashSet&lt;&gt;();</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if(bulkP.size()==0){</span>
+<span class="nc" id="L67">            throw new ApiException(&quot;Empty data&quot;);</span>
+        }
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for(int i=0;i&lt;bulkP.size();i++) {</span>
+<span class="fc" id="L70">            ProductInsertForm p = bulkP.get(i);</span>
+
+<span class="pc bpc" id="L72" title="4 of 10 branches missed.">            if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null || p.getName()==null){</span>
+<span class="fc" id="L73">                errorList.add(&quot;Error : row -&gt; &quot; + (i+1) + &quot; parameters in the Insert form cannot be null&quot;);</span>
+<span class="fc" id="L74">                continue;</span>
+            }
+<span class="fc" id="L76">            Pattern numP = Pattern.compile(&quot;^[0-9]+$|^[0-9]+\\.[0-9]*$&quot;);</span>
+<span class="fc" id="L77">            Matcher matcher = numP.matcher(p.getMrp().toString());</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            if(!matcher.find()){</span>
+<span class="nc" id="L79">                errorList.add(&quot;Error : row -&gt; &quot; + (i+1) + &quot; mrp &quot;  + p.getMrp() +  &quot; not valid, mrp should be a positive number&quot;);</span>
+<span class="nc" id="L80">                continue;</span>
+            }
+<span class="fc" id="L82">            normalizeInsert(p);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            if(!dao.unique(p.getBarcode())) {</span>
+<span class="fc" id="L84">                errorList.add(&quot;Error : row -&gt; &quot; + (i+1) + &quot; barcode &quot; + p.getBarcode() + &quot; already exists&quot;);</span>
+<span class="fc" id="L85">                continue;</span>
+            }
+<span class="fc" id="L87">            int brandPojoId = bDao.getIdFromData(p.getBrand(),p.getCategory());</span>
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            if(brandPojoId==-1){</span>
+<span class="fc" id="L90">                errorList.add(&quot;Error : row -&gt; &quot; + (i+1) + &quot; &quot; + p.getBrand() + &quot; - &quot; + p.getCategory() + &quot; brand-category does not exist&quot;);</span>
+<span class="fc" id="L91">                continue;</span>
+            }
+<span class="fc" id="L93">            Pattern pattern = Pattern.compile(&quot;^[0-9A-Za-z]+$&quot;);</span>
+<span class="fc" id="L94">            matcher = pattern.matcher(p.getBarcode());</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if(!matcher.find()){</span>
+<span class="fc" id="L96">                errorList.add(&quot;Error : row -&gt; &quot; + (i+1) + &quot; barcode &quot;  + p.getBarcode() +  &quot; not valid, barcode can only have alphanumeric values&quot;);</span>
+<span class="fc" id="L97">                continue;</span>
+            }
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">            if(barcodeSet.contains(p.getBarcode())){</span>
+<span class="nc" id="L100">                errorList.add(&quot;Error : row -&gt; &quot; + (i+1) + &quot; Barcode should not be repeated, barcode : &quot; + p.getBarcode());</span>
+<span class="nc" id="L101">                continue;</span>
+            }else{
+<span class="fc" id="L103">                barcodeSet.add(p.getBarcode());</span>
+            }
+        }
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if(errorList.size()==0) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            for (ProductInsertForm p : bulkP) {</span>
+<span class="fc" id="L108">                int brandPojoId = bDao.getIdFromData(p.getBrand(),p.getCategory());</span>
+<span class="fc" id="L109">                ProductPojo ex = new ProductPojo();</span>
+<span class="fc" id="L110">                ex.setBrandPojoId(brandPojoId);</span>
+<span class="fc" id="L111">                ex.setBrand(p.getBrand());</span>
+<span class="fc" id="L112">                ex.setCategory(p.getCategory());</span>
+<span class="fc" id="L113">                ex.setBarcode(p.getBarcode());</span>
+<span class="fc" id="L114">                ex.setMrp(p.getMrp());</span>
+<span class="fc" id="L115">                ex.setName(p.getName());</span>
+<span class="fc" id="L116">                dao.insert(ex);</span>
+<span class="fc" id="L117">            }</span>
+        }
+        else{
+<span class="fc" id="L120">            String errorStr = &quot;&quot;;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            for(String e : errorList){</span>
+<span class="fc" id="L122">                errorStr += e + &quot;&lt;br&gt;&quot;;</span>
+<span class="fc" id="L123">            }</span>
+<span class="fc" id="L124">            throw new ApiException(errorStr);</span>
+        }
+<span class="fc" id="L126">    }</span>
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void delete(int id) throws ApiException {
+<span class="fc" id="L130">        getCheck(id); //check if correct way</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if(iDao.getIdFromProductId(id)!=-1){</span>
+<span class="fc" id="L132">            throw new ApiException(&quot;Inventory already exist, cannot delete product, id : &quot; + id);</span>
+        }
+<span class="fc" id="L134">        dao.delete(id);</span>
+<span class="fc" id="L135">    }</span>
+
+    @Transactional(rollbackOn = ApiException.class)
+    public List&lt;ProductData&gt; getAll() throws ApiException {
+<span class="fc" id="L139">        List&lt;ProductPojo&gt; p =  dao.selectAll();</span>
+<span class="fc" id="L140">        List&lt;ProductData&gt; b = new ArrayList&lt;ProductData&gt;();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for( ProductPojo pj : p){</span>
+<span class="fc" id="L142">            b.add(convertPojoToProductForm(pj));</span>
+<span class="fc" id="L143">        }</span>
+<span class="fc" id="L144">        return b;</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public ProductData get(int id) throws ApiException {
+<span class="fc" id="L149">        return getCheck(id);</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void update(ProductUpdateForm p) throws ApiException {
+<span class="fc" id="L154">        nullCheckUpdate(p);</span>
+<span class="fc" id="L155">        normalizeUpdate(p);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if(!dao.uniqueUpdate(p.getBarcode(),p.getId())){</span>
+<span class="fc" id="L157">            throw new ApiException(&quot;barcode &quot; + p.getBarcode() + &quot; already exists&quot;);</span>
+        }
+<span class="fc" id="L159">        Pattern pattern = Pattern.compile(&quot;^[0-9A-Za-z]+$&quot;);</span>
+<span class="fc" id="L160">        Matcher matcher = pattern.matcher(p.getBarcode());</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if(!matcher.find()){</span>
+<span class="fc" id="L162">            throw new ApiException(&quot;barcode &quot;  + p.getBarcode() +  &quot; not valid, barcode can only have alphanumeric values&quot;);</span>
+        }
+<span class="fc" id="L164">        updateUtil(p);</span>
+
+
+<span class="fc" id="L167">    }</span>
+
+    @Transactional(rollbackOn = ApiException.class)
+    public ProductData getCheck(int id) throws ApiException {
+<span class="fc" id="L171">        ProductPojo p = dao.select(id);</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (p== null) {</span>
+<span class="fc" id="L173">            throw new ApiException(&quot;Product with given id does not exist, id : &quot; + id);</span>
+        }
+<span class="fc" id="L175">        return convertPojoToProductForm(p);</span>
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public ProductPojo getCheckInPojo(int id) throws ApiException {
+<span class="fc" id="L180">        ProductPojo p = dao.select(id);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (p == null) {</span>
+<span class="fc" id="L182">            throw new ApiException(&quot;product with given id does not exist, id : &quot; + id);</span>
+        }
+<span class="fc" id="L184">        return p;</span>
+    }
+    @Transactional(rollbackOn = ApiException.class)
+    public boolean checkIfBrandExist(int brandId){
+<span class="fc" id="L188">        return dao.checkIfBrandExist(brandId);</span>
+    }
+    protected static void normalizeInsert(ProductInsertForm p) {
+<span class="fc" id="L191">        p.setBrand(StringUtil.toLowerCase(p.getBrand()));</span>
+<span class="fc" id="L192">        p.setCategory(StringUtil.toLowerCase(p.getCategory()));</span>
+<span class="fc" id="L193">        p.setName(StringUtil.toLowerCase(p.getName()));</span>
+<span class="fc" id="L194">    }</span>
+    protected static void normalizeUpdate(ProductUpdateForm p) {
+
+<span class="fc" id="L197">        p.setBrand(StringUtil.toLowerCase(p.getBrand()));</span>
+<span class="fc" id="L198">        p.setCategory(StringUtil.toLowerCase(p.getCategory()));</span>
+<span class="fc" id="L199">        p.setName(StringUtil.toLowerCase(p.getName()));</span>
+
+<span class="fc" id="L201">    }</span>
+    private void updateUtil(ProductUpdateForm p) throws ApiException {
+<span class="fc" id="L203">        ProductPojo ex = getCheckInPojo(p.getId());</span>
+<span class="fc" id="L204">        int brandPojoId = bDao.getIdFromData(p.getBrand(),p.getCategory());</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        if(brandPojoId==-1){</span>
+<span class="fc" id="L206">            throw new ApiException(p.getBrand() + &quot; - &quot; + p.getCategory() + &quot; brand-category does not exist&quot;);</span>
+        }
+<span class="fc" id="L208">        Pattern numP = Pattern.compile(&quot;^[0-9]+$|^[0-9]+\\.[0-9]*$&quot;);</span>
+<span class="fc" id="L209">        Matcher matcher = numP.matcher(p.getMrp().toString());</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if(!matcher.find()){</span>
+<span class="nc" id="L211">            throw new ApiException(&quot;mrp &quot;  + p.getMrp() +  &quot; not valid, mrp should be a positive number&quot;);</span>
+        }
+<span class="fc" id="L213">        ex.setBrandPojoId(brandPojoId);</span>
+<span class="fc" id="L214">        ex.setBrand(p.getBrand());</span>
+<span class="fc" id="L215">        ex.setCategory(p.getCategory());</span>
+<span class="fc" id="L216">        ex.setBarcode(p.getBarcode());</span>
+<span class="fc" id="L217">        ex.setMrp(p.getMrp());</span>
+<span class="fc" id="L218">        ex.setName(p.getName());</span>
+<span class="fc" id="L219">        dao.update(); //symbolic</span>
+<span class="fc" id="L220">    }</span>
+
+    private ProductData convertPojoToProductForm(ProductPojo p){
+<span class="fc" id="L223">        ProductData b = new ProductData();</span>
+<span class="fc" id="L224">        b.setId(p.getId());</span>
+<span class="fc" id="L225">        b.setBrand(p.getBrand());</span>
+<span class="fc" id="L226">        b.setCategory(p.getCategory());</span>
+<span class="fc" id="L227">        b.setBrandPojoId(p.getBrandPojoId());</span>
+<span class="fc" id="L228">        b.setBarcode(p.getBarcode());</span>
+<span class="fc" id="L229">        b.setMrp(p.getMrp());</span>
+<span class="fc" id="L230">        b.setName(p.getName());</span>
+<span class="fc" id="L231">        return b;</span>
+    }
+    private static void nullCheck(ProductInsertForm p) throws ApiException {
+<span class="pc bpc" id="L234" title="4 of 10 branches missed.">        if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null || p.getName()==null){</span>
+<span class="fc" id="L235">            throw new ApiException(&quot;parameters in the Insert form cannot be null&quot;);</span>
+        }
+<span class="fc" id="L237">    }</span>
+    private static void nullCheckUpdate(ProductUpdateForm p) throws ApiException {
+<span class="pc bpc" id="L239" title="4 of 10 branches missed.">        if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null || p.getName()==null ){</span>
+<span class="fc" id="L240">            throw new ApiException(&quot;parameters in the Update form cannot be null&quot;);</span>
+        }
+<span class="fc" id="L242">    }</span>
+
+}
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
