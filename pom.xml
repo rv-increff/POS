@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pos.increff</groupId>
-    <artifactId>pos-spring-full</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>pos</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>pos-spring</name>
