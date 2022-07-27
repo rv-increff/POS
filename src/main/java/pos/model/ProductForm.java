@@ -3,7 +3,7 @@ package pos.model;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class ProductInsertForm {
+public class ProductForm {
 
     @NotBlank(message = "barcode cannot be empty")
     private String barcode;

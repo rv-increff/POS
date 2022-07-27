@@ -7,10 +7,9 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pos.model.ProductData;
-import pos.model.ProductInsertForm;
+import pos.model.ProductForm;
 import pos.model.ProductUpdateForm;
 import pos.services.ApiException;
-import pos.services.ProductServices;
 import pos.services.ProductServices;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,14 +37,14 @@ public class ProductApiController {
 
     @ApiOperation(value = "Insert Product data")
     @RequestMapping(path = "/api/product/insert", method = RequestMethod.POST)
-    public void insertProduct( @RequestBody ProductInsertForm p, HttpServletResponse response) throws ApiException, IOException {
+    public void insertProduct(@RequestBody ProductForm p, HttpServletResponse response) throws ApiException, IOException {
         service.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Insert bulk Product data")
     @RequestMapping(path = "/api/product/bulk-insert", method = RequestMethod.POST)
-    public void bulkInsertProduct( @RequestBody List< @Valid ProductInsertForm> p, HttpServletResponse response) throws ApiException, IOException {
+    public void bulkInsertProduct(@RequestBody List< @Valid ProductForm> p, HttpServletResponse response) throws ApiException, IOException {
         service.bulkAdd(p);
         success(response);
     }
@@ -56,14 +55,6 @@ public class ProductApiController {
         return service.get(id);
 
     }
-
-    @ApiOperation(value = "delete a Product")
-    @RequestMapping(path = "/api/product/delete/{id}", method = RequestMethod.DELETE)
-    public void deleteProduct(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
-        service.delete(id);
-        success(response);
-    }
-
     @ApiOperation(value = "update a Product")
     @RequestMapping(path = "/api/product/update", method = RequestMethod.PUT)
     public void updateProduct( @RequestBody ProductUpdateForm p, HttpServletResponse response) throws ApiException, IOException {

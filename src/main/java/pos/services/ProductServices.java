@@ -6,7 +6,7 @@ import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
 import pos.dao.ProductDao;
 import pos.model.ProductData;
-import pos.model.ProductInsertForm;
+import pos.model.ProductForm;
 import pos.model.ProductUpdateForm;
 import pos.pojo.ProductPojo;
 import pos.util.StringUtil;
@@ -30,7 +30,7 @@ public class ProductServices {
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(ProductInsertForm p) throws ApiException {
+    public void add(ProductForm p) throws ApiException {
         nullCheck(p);
         normalizeInsert(p);
         if(!dao.unique(p.getBarcode())){
@@ -60,14 +60,14 @@ public class ProductServices {
         dao.insert(ex);
     }
     @Transactional(rollbackOn = ApiException.class)
-    public void bulkAdd(List<ProductInsertForm> bulkP) throws ApiException {
+    public void bulkAdd(List<ProductForm> bulkP) throws ApiException {
         List<String> errorList = new ArrayList<>();
         Set<String> barcodeSet = new HashSet<>();
         if(bulkP.size()==0){
             throw new ApiException("Empty data");
         }
         for(int i=0;i<bulkP.size();i++) {
-            ProductInsertForm p = bulkP.get(i);
+            ProductForm p = bulkP.get(i);
 
             if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null || p.getName()==null){
                 errorList.add("Error : row -> " + (i+1) + " parameters in the Insert form cannot be null");
@@ -104,7 +104,7 @@ public class ProductServices {
             }
         }
         if(errorList.size()==0) {
-            for (ProductInsertForm p : bulkP) {
+            for (ProductForm p : bulkP) {
                 int brandPojoId = bDao.getIdFromData(p.getBrand(),p.getCategory());
                 ProductPojo ex = new ProductPojo();
                 ex.setBrandPojoId(brandPojoId);
@@ -123,15 +123,6 @@ public class ProductServices {
             }
             throw new ApiException(errorStr);
         }
-    }
-
-    @Transactional(rollbackOn = ApiException.class)
-    public void delete(int id) throws ApiException {
-        getCheck(id); //check if correct way
-        if(iDao.getIdFromProductId(id)!=-1){
-            throw new ApiException("Inventory already exist, cannot delete product, id : " + id);
-        }
-        dao.delete(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -187,7 +178,7 @@ public class ProductServices {
     public boolean checkIfBrandExist(int brandId){
         return dao.checkIfBrandExist(brandId);
     }
-    protected static void normalizeInsert(ProductInsertForm p) {
+    protected static void normalizeInsert(ProductForm p) {
         p.setBrand(StringUtil.toLowerCase(p.getBrand()));
         p.setCategory(StringUtil.toLowerCase(p.getCategory()));
         p.setName(StringUtil.toLowerCase(p.getName()));
@@ -230,7 +221,7 @@ public class ProductServices {
         b.setName(p.getName());
         return b;
     }
-    private static void nullCheck(ProductInsertForm p) throws ApiException {
+    private static void nullCheck(ProductForm p) throws ApiException {
         if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null || p.getName()==null){
             throw new ApiException("parameters in the Insert form cannot be null");
         }

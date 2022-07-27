@@ -12,7 +12,7 @@ import pos.dao.OrderDao;
 import pos.dao.OrderItemDao;
 import pos.dao.ProductDao;
 import pos.model.OrderItemData;
-import pos.model.OrderItemInsertForm;
+import pos.model.OrderItemForm;
 import pos.model.OrderItemUpdateForm;
 import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
@@ -68,7 +68,7 @@ public class OrderItemServiceTest {
     @Test
     public void addOrderItemExistError() {
         OrderItemPojo oi = daoInsertHelper();
-        OrderItemInsertForm p = new OrderItemInsertForm();
+        OrderItemForm p = new OrderItemForm();
         p.setSellingPrice(getRandomNumber());
         p.setOrderId(oi.getOrderId());
         p.setQuantity(getRandomNumber());
@@ -82,7 +82,7 @@ public class OrderItemServiceTest {
 
     @Test
     public void addOrderNotExistError() {
-        OrderItemInsertForm p = new OrderItemInsertForm();
+        OrderItemForm p = new OrderItemForm();
         p.setSellingPrice(getRandomNumber());
         p.setOrderId(getRandomNumber());
         p.setQuantity(getRandomNumber());
@@ -97,7 +97,7 @@ public class OrderItemServiceTest {
     public void addProductNotExistError() {
         OrderPojo op = daoOrderInsertHelper();
         int orderId = oDao.selectAll().get(0).getId();
-        OrderItemInsertForm p = new OrderItemInsertForm();
+        OrderItemForm p = new OrderItemForm();
         p.setSellingPrice(getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(getRandomNumber());
@@ -115,7 +115,7 @@ public class OrderItemServiceTest {
 
         int orderId = oDao.selectAll().get(0).getId();
         int productId = pDao.selectAll().get(0).getId();
-        OrderItemInsertForm p = new OrderItemInsertForm();
+        OrderItemForm p = new OrderItemForm();
         p.setSellingPrice(getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(getRandomNumber());
@@ -137,7 +137,7 @@ public class OrderItemServiceTest {
         int qty = getRandomNumber();
         daoInventoryInsertHelper(productId,qty);
 
-        OrderItemInsertForm p = new OrderItemInsertForm();
+        OrderItemForm p = new OrderItemForm();
         p.setSellingPrice(getRandomNumber() + 5);
         p.setOrderId(orderId);
         p.setQuantity(qty+2);
@@ -147,7 +147,7 @@ public class OrderItemServiceTest {
         }catch (ApiException e){
             Assert.assertEquals("Selected quantity more than available quantity, available quantity only " + qty ,e.getMessage());
         }
-        p = new OrderItemInsertForm();
+        p = new OrderItemForm();
         p.setSellingPrice(getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(qty-2);

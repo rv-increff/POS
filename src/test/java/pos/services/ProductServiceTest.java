@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static pos.util.RandomUtil.getRandomNumber;
 import static pos.util.RandomUtil.getRandomString;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -66,7 +65,7 @@ public class ProductServiceTest {
 
     @Test
     public void addEmptyObject() throws ApiException {
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
         try {
             services.add(p);
         }catch (Exception e){
@@ -78,7 +77,7 @@ public class ProductServiceTest {
 
     @Test
     public void addBrandError() throws ApiException {
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
 
         int prevSize = dao.selectAll().size();
 
@@ -104,7 +103,7 @@ public class ProductServiceTest {
     @Test
     public void addUniqueError(){
         ProductPojo pojo = daoInsertHelper();
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
         String category = getRandomString();
         String brand = getRandomString();
         String name = getRandomString();
@@ -135,7 +134,7 @@ public class ProductServiceTest {
         pb.setCategory(category);
         bDao.insert(pb);
 
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
 
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
@@ -166,7 +165,7 @@ public class ProductServiceTest {
         pb.setCategory(category);
         bDao.insert(pb);
 
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
 
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
@@ -185,8 +184,8 @@ public class ProductServiceTest {
     @Test
     public void bulkAddEmptyObject(){
 
-        ProductInsertForm p = new ProductInsertForm();
-        List<ProductInsertForm> pList = new ArrayList<>();
+        ProductForm p = new ProductForm();
+        List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
 
         try{
@@ -209,7 +208,7 @@ public class ProductServiceTest {
         pb.setCategory(category);
         bDao.insert(pb);
         ProductPojo pojo = daoInsertHelper();
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
         String name = getRandomString();
 
         double mrp = Math.random()*100%(20);
@@ -219,7 +218,7 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
 
-        List<ProductInsertForm> pList = new ArrayList<>();
+        List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
         try{
             services.bulkAdd(pList);
@@ -233,7 +232,7 @@ public class ProductServiceTest {
         String category = getRandomString().toLowerCase();
         String brand = getRandomString().toLowerCase(Locale.ROOT);
 
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
         String name = getRandomString();
         String barcode = getRandomString();
 
@@ -244,7 +243,7 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
 
-        List<ProductInsertForm> pList = new ArrayList<>();
+        List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
         try{
             services.bulkAdd(pList);
@@ -266,7 +265,7 @@ public class ProductServiceTest {
         pb.setCategory(category);
         bDao.insert(pb);
 
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
 
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
@@ -278,7 +277,7 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
 
-        List<ProductInsertForm> pList = new ArrayList<>();
+        List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
 
         try{
@@ -300,7 +299,7 @@ public class ProductServiceTest {
         pb.setCategory(category);
         bDao.insert(pb);
 
-        ProductInsertForm p = new ProductInsertForm();
+        ProductForm p = new ProductForm();
 
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
@@ -312,50 +311,13 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
 
-        List<ProductInsertForm> pList = new ArrayList<>();
+        List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
 
         services.bulkAdd(pList);
 
 
     }
-
-    @Test
-    public void delete() throws ApiException {
-
-        ProductPojo p = daoInsertHelper();
-
-        int id = dao.selectAll().get(0).getId();
-
-        services.delete(id);
-
-        try{
-            services.delete(id);
-        }catch (ApiException e){
-            String err = "Product with given id does not exist, id : " + id;
-            Assert.assertEquals(err,e.getMessage());
-        }
-
-    }
-    @Test
-    public void deleteInvError() throws ApiException {
-
-        ProductPojo p = daoInsertHelper();
-
-        int id = dao.selectAll().get(0).getId();
-        InventoryInsertForm inf = new InventoryInsertForm();
-        inf.setBarcode(p.getBarcode());
-        inf.setQuantity(getRandomNumber());
-        iService.add(inf);
-        try{
-            services.delete(id);
-        }catch (ApiException e){
-            String err = "Inventory already exist, cannot delete product, id : " + id;
-            Assert.assertEquals(err,e.getMessage());
-        }
-
-    }
-
     @Test
     public void update() throws ApiException {
         String category = getRandomString().toLowerCase();

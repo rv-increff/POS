@@ -7,14 +7,12 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pos.model.InventoryData;
-import pos.model.InventoryInsertForm;
+import pos.model.InventoryForm;
 import pos.model.InventoryUpdateForm;
 import pos.services.ApiException;
 import pos.services.InventoryServices;
-import pos.services.InventoryServices;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,14 +32,14 @@ public class InventoryApiController {
 
     @ApiOperation(value = "Insert Inventory data")
     @RequestMapping(path = "/api/inventory/insert", method = RequestMethod.POST)
-    public void insertInventory(@RequestBody InventoryInsertForm p, HttpServletResponse response) throws ApiException, IOException {
+    public void insertInventory(@RequestBody InventoryForm p, HttpServletResponse response) throws ApiException, IOException {
         service.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Insert bulk Inventory data")
     @RequestMapping(path = "/api/inventory/bulk-insert", method = RequestMethod.POST)
-    public void bulkInsertInventory(@RequestBody List< InventoryInsertForm> p, HttpServletResponse response) throws ApiException, IOException {
+    public void bulkInsertInventory(@RequestBody List<InventoryForm> p, HttpServletResponse response) throws ApiException, IOException {
         service.bulkAdd(p);
         success(response);
     }
@@ -51,13 +49,6 @@ public class InventoryApiController {
     public InventoryData getInventory(@PathVariable int id) throws ApiException {
         return service.get(id);
 
-    }
-
-    @ApiOperation(value = "delete a Inventory")
-    @RequestMapping(path = "/api/inventory/delete/{id}", method = RequestMethod.DELETE)
-    public void deleteInventory(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
-        service.delete(id);
-        success(response);
     }
 
     @ApiOperation(value = "update a Inventory")

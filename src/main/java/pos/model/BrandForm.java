@@ -2,7 +2,7 @@ package pos.model;
 
 import javax.validation.constraints.NotNull;
 
-public class BrandInsertForm {
+public class BrandForm {
     @NotNull(message = "brand cannot be null")
     private String brand;
     @NotNull(message = "category cannot be null")

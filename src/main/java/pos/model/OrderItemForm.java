@@ -3,7 +3,7 @@ package pos.model;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class OrderItemInsertForm {
+public class OrderItemForm {
     @NotNull(message = "OrderId cannot be empty")
     private int orderId;
 

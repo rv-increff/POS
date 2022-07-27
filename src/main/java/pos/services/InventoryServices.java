@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pos.dao.*;
 import pos.dao.InventoryDao;
-import pos.model.InventoryInsertForm;
+import pos.model.InventoryForm;
 import pos.model.InventoryData;
 import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
@@ -26,7 +26,7 @@ public class InventoryServices {
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(InventoryInsertForm p) throws ApiException {
+    public void add(InventoryForm p) throws ApiException {
         nullCheck(p);
         if(!dao.unique(p.getBarcode())){
             throw new ApiException("Inventory data already exist update the record instead");
@@ -45,14 +45,14 @@ public class InventoryServices {
         dao.insert(ex);
     }
     @Transactional(rollbackOn = ApiException.class)
-    public void bulkAdd(List<InventoryInsertForm> bulkP) throws ApiException {
+    public void bulkAdd(List<InventoryForm> bulkP) throws ApiException {
         List<String> errorList = new ArrayList<>();
         Set<String> barcodeSet = new HashSet<>();
         if(bulkP.size()==0){
             throw new ApiException("Empty data");
         }
         for(int i=0;i<bulkP.size();i++) {
-            InventoryInsertForm p = bulkP.get(i);
+            InventoryForm p = bulkP.get(i);
             if(p.getBarcode()==null || p.getQuantity()==null){
                 errorList.add("Error : row -> " + (i+1) + " barcode or quantity cannot be NULL");
                 continue;
@@ -79,7 +79,7 @@ public class InventoryServices {
         }
 
         if(errorList.size()==0) {
-            for (InventoryInsertForm p : bulkP) {
+            for (InventoryForm p : bulkP) {
                 InventoryPojo ex = new InventoryPojo();
                 ex.setBarcode(p.getBarcode());
                 ex.setQuantity(p.getQuantity());
@@ -104,14 +104,6 @@ public class InventoryServices {
         }
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void delete(int id) throws ApiException {
-        getCheck(id); //check if correct way
-        if(!checkOrderOfInv(id)){
-            throw new ApiException("OrderItem exist for the product in the inventory cannot delete inventory Item, id : " + id);
-        };
-        dao.delete(id);
-    }
     @Transactional(rollbackOn = ApiException.class)
     public List<InventoryData> getAll() throws ApiException {
         List<InventoryPojo> p =  dao.selectAll();
@@ -170,7 +162,7 @@ public class InventoryServices {
         return b;
     }
 
-    private void nullCheck(InventoryInsertForm p) throws ApiException {
+    private void nullCheck(InventoryForm p) throws ApiException {
         if(p.getBarcode()==null || p.getQuantity()==null){
             throw new ApiException("Barcode or quantity cannot be NULL");
         }

@@ -58,16 +58,6 @@ public class BrandDaoTest {
         assertNotNull(pExpected);
     }
     @Test
-    public void daoDelete(){
-        daoInsertHelper();
-        BrandPojo p = daoInsertHelper();
-        int index=dao.selectAll().get(1).getId();
-        dao.delete(index);
-        assertNull(dao.select(index));
-        assertNotNull(dao.select(index-1));
-    }
-
-    @Test
     public void daoUnique(){
         String brand = getRandomString();
         String category = getRandomString();

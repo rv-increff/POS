@@ -9,7 +9,7 @@ import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pos.dao.BrandDao;
 import pos.model.BrandData;
-import pos.model.BrandInsertForm;
+import pos.model.BrandForm;
 import pos.pojo.BrandPojo;
 
 import javax.annotation.Resource;
@@ -59,7 +59,7 @@ public class BrandServicesTest{
 
     @Test
     public void brandAdd() throws ApiException {
-        BrandInsertForm p = new BrandInsertForm();
+        BrandForm p = new BrandForm();
 
         int prevSize = dao.selectAll().size();
 
@@ -75,7 +75,7 @@ public class BrandServicesTest{
     }
     @Test
     public void brandAddEmptyObject() throws ApiException {
-        BrandInsertForm p = new BrandInsertForm();
+        BrandForm p = new BrandForm();
         try {
             services.add(p);
         }catch (Exception e){
@@ -86,7 +86,7 @@ public class BrandServicesTest{
 
     @Test
     public void brandAddErrorUnique() throws ApiException {
-        BrandInsertForm p = new BrandInsertForm();
+        BrandForm p = new BrandForm();
 
         int prevSize = dao.selectAll().size();
 
@@ -106,7 +106,7 @@ public class BrandServicesTest{
 
     @Test
     public void brandAddErrorUniqueNormalize() throws ApiException {
-        BrandInsertForm p = new BrandInsertForm();
+        BrandForm p = new BrandForm();
 
         int prevSize = dao.selectAll().size();
 
@@ -128,10 +128,10 @@ public class BrandServicesTest{
 
     @Test
     public void bulkAdd() throws ApiException {
-        List<BrandInsertForm> pList = new ArrayList<>();
+        List<BrandForm> pList = new ArrayList<>();
         int n = 5;
         for(int i=0;i<n;i++){
-            BrandInsertForm p = new BrandInsertForm();
+            BrandForm p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
             pList.add(p);
@@ -143,7 +143,7 @@ public class BrandServicesTest{
     }
     @Test
     public void bulkAddErrorUnique() throws ApiException {
-        List<BrandInsertForm> pList = new ArrayList<>();
+        List<BrandForm> pList = new ArrayList<>();
 
         String brand = getRandomString().toLowerCase();
         String category = getRandomString().toLowerCase();
@@ -152,13 +152,13 @@ public class BrandServicesTest{
         p1.setCategory(category);
         dao.insert(p1);
 
-        BrandInsertForm p = new BrandInsertForm();
+        BrandForm p = new BrandForm();
         p.setBrand(brand);
         p.setCategory(category);
         pList.add(p);
         int n = 5;
         for(int i=0;i<n;i++){
-            p = new BrandInsertForm();
+            p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
             pList.add(p);
@@ -175,13 +175,13 @@ public class BrandServicesTest{
 
     @Test
     public void bulkAddErrorEmpty() throws ApiException {
-        List<BrandInsertForm> pList = new ArrayList<>();
+        List<BrandForm> pList = new ArrayList<>();
 
-        BrandInsertForm p = new BrandInsertForm();
+        BrandForm p = new BrandForm();
         pList.add(p);
         int n = 5;
         for(int i=0;i<n;i++){
-            p = new BrandInsertForm();
+            p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
             pList.add(p);
@@ -261,40 +261,6 @@ public class BrandServicesTest{
             Assert.assertEquals("Brand with given id does not exist ,id : " + id,e.getMessage());
         }
     }
-
-    @Test
-    public void brandDelete() throws ApiException {
-        BrandPojo  p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
-        services.delete(id);
-    }
-    @Test
-    public void brandDeleteErrorId() throws ApiException {
-        BrandPojo  p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
-        try {
-            services.delete(id+1);
-        }catch (Exception e){
-            String err = "Brand with given id does not exist ,id : " + (id+1);
-            Assert.assertEquals(err,e.getMessage());
-
-        }
-    }
-
-//    @Test
-//    public void brandDeleteErrorProduct() throws ApiException {
-//        BrandPojo  p = daoInsertHelper();
-//        int id = dao.selectAll().get(0).getId();
-//        try {
-//            services.delete(id+1);
-//        }catch (Exception e){
-//            String err = "Brand with given id does not exist ,id : " + (id+1);
-//            Assert.assertEquals(err,e.getMessage());
-//
-//        }
-//    }
-
-
 
     private BrandPojo daoInsertHelper(){
         BrandPojo p = new BrandPojo();

@@ -58,17 +58,6 @@ public class InventoryDaoTest {
     }
 
     @Test
-    public void daoDelete(){
-        daoInsertHelper();
-        daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
-        int id2 = dao.selectAll().get(1).getId();
-        dao.delete(id);
-        Assert.assertNotNull(dao.select(id2));
-        Assert.assertNull(dao.select(id));
-    }
-
-    @Test
     public void daoUnique(){
         InventoryPojo p = daoInsertHelper();
         Assert.assertTrue(dao.unique(getRandomString()));

@@ -2,7 +2,7 @@ package pos.model;
 
 import javax.validation.constraints.NotNull;
 
-public class InventoryInsertForm {
+public class InventoryForm {
 
     @NotNull(message = "barcode cannot be null")
     private String barcode;

@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import pos.model.BrandInsertForm;
+import pos.model.BrandForm;
 import pos.model.BrandData;
 import pos.services.ApiException;
 import pos.services.BrandServices;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,14 +37,14 @@ public class BrandApiController {
 
     @ApiOperation(value = "Insert brand data")
     @RequestMapping(path = "/api/brand/insert", method = RequestMethod.POST)
-    public void insertBrand(@RequestBody BrandInsertForm p, HttpServletResponse response) throws ApiException, IOException {
+    public void insertBrand(@RequestBody BrandForm p, HttpServletResponse response) throws ApiException, IOException {
         service.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Insert bulk brand data")
     @RequestMapping(path = "/api/brand/bulk-insert", method = RequestMethod.POST)
-    public void bulkInsertBrand(@RequestBody List<BrandInsertForm> p, HttpServletResponse response) throws ApiException, IOException {
+    public void bulkInsertBrand(@RequestBody List<BrandForm> p, HttpServletResponse response) throws ApiException, IOException {
         service.bulkAdd(p);
         success(response);
     }
@@ -55,13 +54,6 @@ public class BrandApiController {
     public BrandData getBrand(@PathVariable int id) throws ApiException {
         return service.get(id);
 
-    }
-
-    @ApiOperation(value = "delete a brand")
-    @RequestMapping(path = "/api/brand/delete/{id}", method = RequestMethod.DELETE)
-    public void deleteBrand(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
-        service.delete(id);
-        success(response);
     }
 
     @ApiOperation(value = "update a brand")

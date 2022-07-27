@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
-import pos.model.BrandInsertForm;
+import pos.model.BrandForm;
 import pos.model.BrandData;
 import pos.pojo.BrandPojo;
 import pos.util.StringUtil;
@@ -25,7 +25,7 @@ public class BrandServices {
     private ProductServices pServices;
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(BrandInsertForm p) throws ApiException {
+    public void add(BrandForm p) throws ApiException {
         nullCheck(p); //TODO check not null not nullcheck
         normalizeInsert(p); //TODO normalize
         if(!dao.unique(p.getBrand(),p.getCategory())){  //TODO
@@ -37,14 +37,14 @@ public class BrandServices {
         dao.insert(ex);
     }
     @Transactional(rollbackOn = ApiException.class)
-    public void bulkAdd(List<BrandInsertForm> bulkP) throws ApiException {
+    public void bulkAdd(List<BrandForm> bulkP) throws ApiException {
         List<String> errorList = new ArrayList<>();
         Set<String> brandSet = new HashSet<>();
         if(bulkP.size()==0){
             throw new ApiException("Empty data");
         }
         for(int i=0;i<bulkP.size();i++) {
-            BrandInsertForm p = bulkP.get(i);
+            BrandForm p = bulkP.get(i);
             if(!nullCheckBulk(p)) {
                 normalizeInsert(p);
                 if(!dao.unique(p.getBrand(),p.getCategory())) {
@@ -63,7 +63,7 @@ public class BrandServices {
 
         }
         if(errorList.size()==0) {
-            for (BrandInsertForm p : bulkP) {
+            for (BrandForm p : bulkP) {
                 BrandPojo ex = new BrandPojo();
                 ex.setBrand(p.getBrand());
                 ex.setCategory(p.getCategory());
@@ -77,16 +77,6 @@ public class BrandServices {
             }
             throw new ApiException(errorStr);
         }
-    }
-
-    @Transactional(rollbackOn = ApiException.class)
-    public void delete(int id) throws ApiException {
-        BrandData b = getCheck(id); //check if correct way
-        if(pServices.checkIfBrandExist(id)){
-            String err = "Cannot delete " +  b.getBrand() + " - " + b.getCategory() + "  as products already exist for this brand";
-            throw new ApiException(err);
-        }
-        dao.delete(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -134,7 +124,7 @@ public class BrandServices {
         }
         return p;
     }
-    protected static void normalizeInsert(BrandInsertForm p) {
+    protected static void normalizeInsert(BrandForm p) {
         p.setBrand(StringUtil.toLowerCase(p.getBrand()));
         p.setCategory(StringUtil.toLowerCase(p.getCategory()));
     }
@@ -161,7 +151,7 @@ public class BrandServices {
         return b;
     }
 
-    private void nullCheck(BrandInsertForm form) throws ApiException { //TODO make validation util with static class check null check null and check not null(object ,message)
+    private void nullCheck(BrandForm form) throws ApiException { //TODO make validation util with static class check null check null and check not null(object ,message)
         if(form.getCategory()==null || form.getBrand()==null){
             throw new ApiException("brand or category cannot be null");
         }
@@ -173,7 +163,7 @@ public class BrandServices {
 
     }
 
-    private boolean nullCheckBulk(BrandInsertForm form) throws ApiException {
+    private boolean nullCheckBulk(BrandForm form) throws ApiException {
        return (form.getCategory()==null || form.getBrand()==null);
 
     }

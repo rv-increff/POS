@@ -35,7 +35,7 @@ public class OrderItemServices {
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(OrderItemInsertForm p) throws ApiException {
+    public void add(OrderItemForm p) throws ApiException {
         if(p==null){
             throw new ApiException("body cannot be null");
         }
@@ -85,7 +85,7 @@ public class OrderItemServices {
         }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void updateQtyInventory(OrderItemInsertForm p,int availQty) throws ApiException {
+    public void updateQtyInventory(OrderItemForm p, int availQty) throws ApiException {
         InventoryUpdateForm inv = new InventoryUpdateForm();
         if(p.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 1");
@@ -214,7 +214,7 @@ public class OrderItemServices {
         return b;
     }
 
-    private void nullCheck(OrderItemInsertForm p) throws ApiException {
+    private void nullCheck(OrderItemForm p) throws ApiException {
         System.out.println(p.getOrderId() + p.getSellingPrice() + p.getQuantity() + p.getProductId() + "------");
         if(p.getOrderId()==0 && p.getSellingPrice()==0.0 && p.getQuantity()==0 && p.getProductId()==0){
             throw new ApiException("body values cannot be null");

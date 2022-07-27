@@ -64,7 +64,7 @@ public class InventoryServicesTest {
 
     @Test
     public void addEmptyObject() {
-        InventoryInsertForm p = new InventoryInsertForm();
+        InventoryForm p = new InventoryForm();
         try {
             services.add(p);
         }catch (Exception e){
@@ -76,7 +76,7 @@ public class InventoryServicesTest {
     public void addInventoryExistError(){
 
         InventoryPojo in = daoInsertHelper();
-        InventoryInsertForm p = new InventoryInsertForm();
+        InventoryForm p = new InventoryForm();
 
         p.setBarcode(in.getBarcode());
         p.setQuantity(in.getQuantity());
@@ -90,7 +90,7 @@ public class InventoryServicesTest {
 
     @Test
     public void addProductBarcodeError() {
-        InventoryInsertForm p = new InventoryInsertForm();
+        InventoryForm p = new InventoryForm();
 
         p.setBarcode(getRandomString());
         p.setQuantity(1000000000);
@@ -106,7 +106,7 @@ public class InventoryServicesTest {
     public void add() throws ApiException {
         ProductPojo pj = pDaoInsertHelper();
 
-        InventoryInsertForm p = new InventoryInsertForm();
+        InventoryForm p = new InventoryForm();
 
         p.setBarcode(pj.getBarcode());
         p.setQuantity(1000000000);
@@ -116,8 +116,8 @@ public class InventoryServicesTest {
 
     @Test
     public void bulkAddEmptyObject() {
-        InventoryInsertForm p = new InventoryInsertForm();
-        List<InventoryInsertForm> pList = new ArrayList<>();
+        InventoryForm p = new InventoryForm();
+        List<InventoryForm> pList = new ArrayList<>();
         pList.add(p);
         try {
             services.bulkAdd(pList);
@@ -128,12 +128,12 @@ public class InventoryServicesTest {
 
     @Test
     public void bulkAddBarcodeError() {
-        InventoryInsertForm p = new InventoryInsertForm();
+        InventoryForm p = new InventoryForm();
 
         p.setBarcode(getRandomString());
         p.setQuantity(10000);
 
-        List<InventoryInsertForm> pList = new ArrayList<>();
+        List<InventoryForm> pList = new ArrayList<>();
         pList.add(p);
         try {
             services.bulkAdd(pList);
@@ -146,42 +146,17 @@ public class InventoryServicesTest {
     public void bulkAddInventoryExistError() throws ApiException {
         ProductPojo pj = pDaoInsertHelper();
         InventoryPojo in = daoInsertHelper();
-        InventoryInsertForm p = new InventoryInsertForm();
+        InventoryForm p = new InventoryForm();
 
         p.setBarcode(pj.getBarcode());
         p.setQuantity(in.getQuantity());
-        List<InventoryInsertForm> pList = new ArrayList<>();
+        List<InventoryForm> pList = new ArrayList<>();
         pList.add(p);
         services.bulkAdd(pList);
         try {
             services.bulkAdd(pList);
         }catch (ApiException e){
             Assert.assertEquals("Error : row -> " + 1 + " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead<br>",e.getMessage());
-        }
-    }
-
-    @Test
-    public void delete() throws ApiException {
-        InventoryPojo p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
-        services.delete(id);
-        try{
-            services.delete(id);
-        }catch (ApiException e){
-            String err = "Inventory with given id does not exist, id : " + id;
-            Assert.assertEquals(err,e.getMessage());
-        }
-    }
-    @Test
-    public void deleteProductItemError() throws ApiException {
-        InventoryPojo p = daoInsertHelper();
-        daoOrderItemInsertHelper(p.getProductId());
-        int id = dao.selectAll().get(0).getId();
-        try{
-            services.delete(id);
-        }catch (ApiException e){
-            String err = "OrderItem exist for the product in the inventory cannot delete inventory Item, id : " + id;
-            Assert.assertEquals(err,e.getMessage());
         }
     }
 
