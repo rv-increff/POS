@@ -20,7 +20,7 @@ public class OrderDto {
     @Transactional(rollbackOn = ApiException.class)
     public List<OrderData> getAll() throws ApiException{
         List<OrderPojo> p =  services.getAll();
-        List<OrderData> b = new ArrayList<OrderData>();
+        List<OrderData> b = new ArrayList<>();
         for( OrderPojo pj : p){
             b.add(convertPojoToOrderData(pj));
         }

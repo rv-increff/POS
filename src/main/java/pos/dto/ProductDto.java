@@ -25,7 +25,7 @@ public class ProductDto {
     @Transactional(rollbackOn = ApiException.class)
     public List<ProductData> getAll() throws ApiException{
         List<ProductPojo> p =  service.getAll();
-        List<ProductData> pData = new ArrayList<ProductData>();
+        List<ProductData> pData = new ArrayList<>();
         for( ProductPojo pj : p){
             pData.add(convertPojoToProductForm(pj));
         }

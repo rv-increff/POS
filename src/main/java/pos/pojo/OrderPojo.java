@@ -3,9 +3,11 @@ package pos.pojo;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.Date;
 @Getter
 @Setter
@@ -18,7 +20,7 @@ public class OrderPojo {
     private Integer id;
 
     @Column(nullable = false)
-    private Date time;
+    private ZonedDateTime time;
 
     @Column(nullable = false)
     private Boolean orderPlaced=false;

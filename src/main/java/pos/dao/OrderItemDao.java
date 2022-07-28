@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -66,7 +67,7 @@ public class OrderItemDao extends AbstractDao{
     }
 
     public List<SalesReport> getSalesReport(SalesReportForm s) throws ParseException {
-        List<String> queryBuilderList = new ArrayList<String>();
+        List<String> queryBuilderList = new ArrayList<>();
         DateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
         queryBuilderList.add(" oi.productId=p.id and oi.orderId=o.id ");
         queryBuilderList.add(" o.orderPlaced=1 ");
@@ -90,10 +91,12 @@ public class OrderItemDao extends AbstractDao{
 
         TypedQuery<SalesReport> query = em().createQuery(queryBuilderFinal,SalesReport.class);
         if(!Objects.equals(s.getTo(), "")){
-            query.setParameter("toTime",sdf.parse(s.getTo()));
+//            query.setParameter("toTime",sdf.parse(s.getTo()));
+            query.setParameter("toTime", ZonedDateTime.parse(s.getTo()));
         }
         if(!Objects.equals(s.getFrom(), "")){
-            query.setParameter("fromTime",sdf.parse(s.getFrom()));
+//            query.setParameter("fromTime",sdf.parse(s.getFrom()));
+            query.setParameter("fromTime",ZonedDateTime.parse(s.getFrom()));
         }
         if(!Objects.equals(s.getBrand(), "")){
             query.setParameter("brand",s.getBrand());

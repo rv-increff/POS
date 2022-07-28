@@ -3,6 +3,7 @@ package pos.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.security.access.method.P;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -21,10 +22,14 @@ import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static pos.util.RandomUtil.getRandomNumber;
@@ -69,7 +74,7 @@ public class InvoiceDtoTest {
         pDao.insert(pp);
 
         //make order
-        Date date = new Date();
+        ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
         OrderPojo op = new OrderPojo();
         op.setTime(date);
         op.setOrderPlaced(true);
@@ -86,12 +91,13 @@ public class InvoiceDtoTest {
         dao.add(oi);
 
 
-        LocalDate now = LocalDate.now();
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
         DateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
         DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
         String to  = now.plusYears(1).toString();
         String from = now.minusYears(1).toString();
-
+        System.out.println(to);
+        System.out.println(from);
         SalesReportForm sf = new SalesReportForm();
         sf.setFrom("");
         sf.setTo("");
@@ -105,6 +111,27 @@ public class InvoiceDtoTest {
         sf.setCategory(category);
 
         Assert.assertEquals(1, dto.getSalesReport(sf).size());
+    }
+
+    @Test
+    public void getOrderInvoice() throws IOException, TransformerException, ApiException {
+        Integer id = getRandomNumber();
+        try{
+            dto.getOrderInvoice(id);
+        }catch (ApiException e){
+            Assert.assertEquals("Order with this id does not exist, id : " + id,e.getMessage());
+        }
+        OrderPojo p = new OrderPojo();
+        ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
+        p.setTime(date);
+        oDao.add(p);
+        id = oDao.selectAll().get(0).getId();
+        dto.getOrderInvoice(id);
+    }
+
+    @Test
+    public void getInventoryReport() throws ApiException {
+        dto.getInventoryReport();
     }
 
 }

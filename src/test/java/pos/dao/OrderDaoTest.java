@@ -12,6 +12,8 @@ import pos.dto.QaConfig;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class OrderDaoTest {
     @Test
     public void daoInsert(){
         OrderPojo p = new OrderPojo();
-        Date now = new Date();
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
         p.setTime(now);
         dao.add(p);
     }
@@ -59,7 +61,7 @@ public class OrderDaoTest {
 
     private OrderPojo daoInsertHelper(){
         OrderPojo p = new OrderPojo();
-        Date now = new Date();
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
         p.setTime(now);
         dao.add(p);
         return p;

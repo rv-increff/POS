@@ -22,6 +22,7 @@ public class InvoiceDto {
 
     @Transactional(rollbackOn = ApiException.class)
     public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException{
+
         services.getOrderInvoice(orderId);
     }
 

@@ -1,6 +1,7 @@
 package pos.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import pos.dao.OrderDao;
 import pos.model.OrderData;
@@ -8,6 +9,8 @@ import pos.pojo.OrderPojo;
 import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class OrderServices {
     @Transactional(rollbackOn = ApiException.class)
     public void add() throws ApiException {
         OrderPojo ex = new OrderPojo();
-        java.util.Date date = new java.util.Date();
+        ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
         ex.setTime(date);
         dao.add(ex);
     }

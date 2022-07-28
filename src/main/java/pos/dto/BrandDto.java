@@ -23,7 +23,7 @@ public class BrandDto {
     @Transactional(rollbackOn = ApiException.class)
     public List<BrandData> getAll() throws ApiException {
         List<BrandPojo> p =  service.getAll();
-        List<BrandData> b = new ArrayList<BrandData>();
+        List<BrandData> b = new ArrayList<>();
         for( BrandPojo pj : p){
             b.add(convertPojoToBrandData(pj));
         }

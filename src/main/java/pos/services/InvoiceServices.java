@@ -2,6 +2,7 @@ package pos.services;
 
 import org.apache.fop.apps.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
@@ -21,6 +22,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +51,8 @@ public class InvoiceServices {
         String to = s.getTo();
         if(s.getFrom() != "") {
             try {
-                s.setFrom(sdf.parse(s.getFrom()).toString());
+//                s.setFrom(sdf.parse(s.getFrom()).toString());
+                sdf.parse(s.getFrom()).toString();
             } catch (ParseException e) {
                 System.out.println(e);
                 throw new ApiException("From Date format not matching it should be like yyyy-MM-dd");
@@ -60,7 +63,8 @@ public class InvoiceServices {
         }
         if(s.getTo() != "") {
             try {
-                s.setTo(sdf.parse(s.getTo()).toString());
+//                s.setTo(sdf.parse(s.getTo()).toString());
+               sdf.parse(s.getTo()).toString();
             } catch (ParseException e) {
                 System.out.println(e);
                 throw new ApiException("To Date format not matching it should be like yyyy-MM-dd" );
@@ -130,7 +134,7 @@ public class InvoiceServices {
     public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException {
        List<OrderItemData> o = ODto.getOrderItemForOrder(orderId);
 
-       Date time = oService.get(orderId).getTime();
+       ZonedDateTime time = oService.get(orderId).getTime();
        Double total = 0.;
 
         for(OrderItemData i : o){
