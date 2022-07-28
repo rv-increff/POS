@@ -1,6 +1,4 @@
 package pos.util;
-
-import jdk.internal.org.objectweb.asm.Type;
 import pos.spring.ApiException;
 
 import java.lang.reflect.Field;
@@ -23,7 +21,7 @@ public class DataUtil {
         }
     }
 
-    public static <T> Boolean checkNotNullBulkUtil(T form) throws ApiException {
+    public static <T> Boolean checkNotNullBulkUtil(T form) {
         try {
             Method[] methods = form.getClass().getDeclaredMethods();
             for (Method m : methods) {
@@ -44,14 +42,12 @@ public class DataUtil {
             Field[] fields = form.getClass().getDeclaredFields();
             for (Field m : fields) {
                 if (m.getGenericType().getTypeName().equals("java.lang.String") & m.getName() != "barcode") {
-                    System.out.println(m.getName());
                     m.setAccessible(true);
                     m.set(form,m.get(form).toString().toLowerCase());
                 }
             }
         } catch (IllegalAccessException err) {
             System.out.println(err);
-
         }
     }
 }

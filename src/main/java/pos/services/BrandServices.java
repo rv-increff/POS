@@ -14,8 +14,6 @@ import pos.model.BrandForm;
 import pos.model.BrandData;
 import pos.pojo.BrandPojo;
 import pos.spring.ApiException;
-import pos.util.StringUtil;
-
 import static pos.util.DataUtil.*;
 
 @Service
@@ -24,20 +22,17 @@ public class BrandServices {
     @Autowired
     private BrandDao dao;
 
-    @Autowired
-    private ProductServices pServices;
-
     @Transactional(rollbackOn = ApiException.class)
     public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion
-        checkNotNullUtil(p,"brand or category cannot be null"); //TODO check not null not nullcheck
-        normalizeUtil(p); //TODO normalize
-        if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){  //TODO
+        checkNotNullUtil(p,"brand or category cannot be null");
+        normalizeUtil(p);
+        if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException("Brand and category pair should be unique");
         }
-        BrandPojo ex = new BrandPojo(); //TODO ex not name
-        ex.setBrand(p.getBrand());
-        ex.setCategory(p.getCategory());
-        dao.add(ex);
+        BrandPojo bPojo = new BrandPojo();
+        bPojo.setBrand(p.getBrand());
+        bPojo.setCategory(p.getCategory());
+        dao.add(bPojo);
     }
 
     @Transactional(rollbackOn = ApiException.class)

@@ -129,7 +129,7 @@ public class ProductServices {
         else{
             String errorStr = "";
             for(String e : errorList){
-                errorStr += e + "<br>";
+                errorStr += e + "\n";
             }
             throw new ApiException(errorStr);
         }

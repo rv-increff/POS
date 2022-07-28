@@ -52,7 +52,6 @@ function loadProduct(){
                                   <td>${obj[i]['name']}</td>
                                   <td>${obj[i]['mrp'].toFixed(2)}</td>
                                   <td><button type='button' class='btn btn-primary' onclick=editProductModal(${obj[i]['id']},"${obj[i]['barcode']}","${obj[i]['brand']}","${obj[i]['category']}","${obj[i]['name']}","${obj[i]['mrp']}")>Edit</button></td>
-                                  <td><button type="button" class="btn btn-danger" onclick=deleteProductModal(${obj[i]['id']})>Delete</button></td>
                                 </tr>`;
                 }
                 body.innerHTML = str;
@@ -316,7 +315,7 @@ function bulkAddProductUtil(data) {
                    error: function(e){
                    console.log(e)
                        console.log(fileError);
-                               $("#confirmModalBody").html(e['responseJSON']['description']);
+                               $("#confirmModalBody").html(e['responseJSON']['description'].replaceAll("\n","<br>"));
                                $("#bulkUpload").modal('hide');
                                document.getElementById('ProductDelete').setAttribute("data-dismiss","");
                                $('#ProductDelete').modal('show');
@@ -326,11 +325,7 @@ function bulkAddProductUtil(data) {
                    url: 'http://localhost:9000/pos/api/product/bulk-insert'
                });
         }
-
-
-
         }
-
     }
 
 

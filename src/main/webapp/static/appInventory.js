@@ -53,7 +53,6 @@ function loadInventory(){
                                   <td>${obj[i]['barcode']}</td>
                                   <td>${obj[i]['quantity']}</td>
                                   <td><button type='button' class='btn btn-primary' onclick=editInventoryModal(${obj[i]['id']},"${obj[i]['barcode']}","${obj[i]['quantity']}")>Edit</button></td>
-                                  <td><button type="button" class="btn btn-danger" onclick=deleteInventoryModal(${obj[i]['id']})>Delete</button></td>
                                 </tr>`;
                 }
                 body.innerHTML = str;
@@ -292,7 +291,7 @@ function bulkAddInventryUtil(data) {
                    error: function(e){
                    console.log(e)
                        console.log(fileError);
-                               $("#confirmModalBody").html(e['responseJSON']['description']);
+                               $("#confirmModalBody").html(e['responseJSON']['description'].replaceAll("\n","<br>"));
                                $("#bulkUpload").modal('hide');
                                document.getElementById('inventoryDelete').setAttribute("data-dismiss","");
 

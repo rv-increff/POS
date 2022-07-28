@@ -79,13 +79,16 @@ thead, tbody tr {
 thead {
     width: calc( 100% - 0.23em )/* scrollbar is average 1em/16px width, remove it from thead width */
 }
+
 table {
     width: 400px;
 }
+
 .order {
 padding:1px;
 border-bottom:0px;
 }
+
 .orderItem {
 margin-top:0px;
 margin-bottom:0px;
@@ -105,6 +108,7 @@ margin:auto;
 #orderItemModalDialog {
 width : 42vw;
 margin:auto;
+margin-top:20px;
 max-width: 100vw;
 }
 
@@ -155,3 +159,7 @@ a.btn.btn-link:hover{
 background-color:white;
 }
 
+.modal#orderItemModal{
+  top:7px;
+  left:72px;
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="pos.services.OrderServiceTest" time="0.198" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="pos.services.OrderServiceTest" time="0.195" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -65,8 +65,8 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.services.OrderServiceTest" name="getAll" time="0.09"/>
-  <testcase classname="pos.services.OrderServiceTest" name="add" time="0.011"/>
-  <testcase classname="pos.services.OrderServiceTest" name="get" time="0.065"/>
-  <testcase classname="pos.services.OrderServiceTest" name="updateOrderStatus" time="0.032"/>
+  <testcase classname="pos.services.OrderServiceTest" name="getAll" time="0.101"/>
+  <testcase classname="pos.services.OrderServiceTest" name="add" time="0.02"/>
+  <testcase classname="pos.services.OrderServiceTest" name="get" time="0.061"/>
+  <testcase classname="pos.services.OrderServiceTest" name="updateOrderStatus" time="0.013"/>
 </testsuite>

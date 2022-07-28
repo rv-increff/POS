@@ -52,7 +52,6 @@ function loadBrand(){
                                   <td>${obj[i]['brand']}</td>
                                   <td>${obj[i]['category']}</td>
                                   <td><button type='button' class='btn btn-primary' onclick=editBrandModal(${obj[i]['id']},"${obj[i]['brand']}","${obj[i]['category']}")>Edit</button></td>
-                                  <td><button type="button" class="btn btn-danger" onclick=deleteBrandModal(${obj[i]['id']})>Delete</button></td>
                                 </tr>`;
                 }
                 body.innerHTML = str;
@@ -290,7 +289,7 @@ function bulkAddUtil(data) {
                    error: function(e){
                    console.log(e)
                        console.log(fileError);
-                               $("#confirmModalBody").html(e['responseJSON']['description']);
+                               $("#confirmModalBody").html(e['responseJSON']['description'].replaceAll("\n","<br>"));
                                $("#bulkUpload").modal('hide');
                                document.getElementById('brandDelete').setAttribute("data-dismiss","");
                                $('#brandDelete').modal('show');

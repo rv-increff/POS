@@ -137,23 +137,21 @@ public class ProductServiceTest {
         bDao.add(pb);
 
         ProductForm p = new ProductForm();
-
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
-
 
         p.setCategory(category);
         p.setBrand(brand);
         p.setBarcode(getRandomString() + " #");
         p.setName(name);
         p.setMrp(mrp);
+
         try{
             services.add(p);
         }catch (ApiException e){
             String err = "barcode "  + p.getBarcode() +  " not valid, barcode can only have alphanumeric values";
             Assert.assertEquals(err,e.getMessage());
         }
-
     }
 
     @Test
@@ -168,10 +166,8 @@ public class ProductServiceTest {
         bDao.add(pb);
 
         ProductForm p = new ProductForm();
-
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
-
 
         p.setCategory(category);
         p.setBrand(brand);
@@ -193,7 +189,7 @@ public class ProductServiceTest {
         try{
             services.bulkAdd(pList);
         } catch (ApiException e) {
-            String err = "Error : row -> " + 1 + " parameters in the Insert form cannot be null<br>";
+            String err = "Error : row -> " + 1 + " parameters in the Insert form cannot be null\n";
             Assert.assertEquals(err,e.getMessage());
         }
 
@@ -225,7 +221,7 @@ public class ProductServiceTest {
         try{
             services.bulkAdd(pList);
         }catch (ApiException e){
-            String err = "Error : row -> " + 1 + " barcode "  + p.getBarcode() +  " already exists<br>";
+            String err = "Error : row -> " + 1 + " barcode "  + p.getBarcode() +  " already exists\n";
             Assert.assertEquals(err,e.getMessage());
         }
     }
@@ -250,7 +246,7 @@ public class ProductServiceTest {
         try{
             services.bulkAdd(pList);
         }catch (ApiException e){
-            String err = "Error : row -> " + 1 + " " + p.getBrand() + " - " + p.getCategory() + " brand-category does not exist<br>";
+            String err = "Error : row -> " + 1 + " " + p.getBrand() + " - " + p.getCategory() + " brand-category does not exist\n";
             Assert.assertEquals(err,e.getMessage());
         }
     }
@@ -272,7 +268,6 @@ public class ProductServiceTest {
         String name = getRandomString();
         double mrp = Math.random()*100%(20);
 
-
         p.setCategory(category);
         p.setBrand(brand);
         p.setBarcode(getRandomString() + " #");
@@ -285,7 +280,7 @@ public class ProductServiceTest {
         try{
             services.bulkAdd(pList);
         }catch (ApiException e){
-            String err = "Error : row -> " + 1 + " barcode "  + p.getBarcode() +  " not valid, barcode can only have alphanumeric values<br>";
+            String err = "Error : row -> " + 1 + " barcode "  + p.getBarcode() +  " not valid, barcode can only have alphanumeric values\n";
             Assert.assertEquals(err,e.getMessage());
         }
 
@@ -330,7 +325,6 @@ public class ProductServiceTest {
         pb.setBrand(brand);
         pb.setCategory(category);
         bDao.add(pb);
-
 
         ProductPojo p = daoInsertHelper();
         ProductUpdateForm pUpdate = new ProductUpdateForm();

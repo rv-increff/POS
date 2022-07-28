@@ -12,7 +12,7 @@ public abstract class AbstractDao {
 	
 	@PersistenceContext
 	private EntityManager em;
-	//TODO java generics
+
 	protected <T> void addAbs(T pojoObject){
 		em.persist(pojoObject);
 	}

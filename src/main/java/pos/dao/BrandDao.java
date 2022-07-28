@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 @Repository
 public class BrandDao extends AbstractDao{
 
-    //TODO wrong case all casps move to abstract dao
+
     private final static String SELECT_FROM_BRAND_CATEGORY = "select p from BrandPojo p where " +
             "brand=:brand and category=:category";
     private final static String SELECT_FROM_BRAND = "select p from BrandPojo p where brand=:brand";
@@ -28,11 +28,11 @@ public class BrandDao extends AbstractDao{
         return selectAll(BrandPojo.class);
     }
 
-    public BrandPojo selectFromBrandCategory(String brand, String category){ //TODO name not right
+    public BrandPojo selectFromBrandCategory(String brand, String category){
         TypedQuery<BrandPojo> query = em().createQuery(SELECT_FROM_BRAND_CATEGORY,BrandPojo.class);
         query.setParameter("brand",brand);
         query.setParameter("category",category);
-        return getSingle(query);  //TODO dao cannot pass anything except pojo and id
+        return getSingle(query);
     }
 
     public BrandPojo selectBrand(String brand){
@@ -41,10 +41,10 @@ public class BrandDao extends AbstractDao{
         return getSingle(query);
     }
 
-    public BrandPojo selectCategory(String category){ //TODO name
+    public BrandPojo selectCategory(String category){
         TypedQuery<BrandPojo> query = em().createQuery(SELECT_FROM_CATEGORY,BrandPojo.class);
         query.setParameter("category",category);
-        return getSingle(query); //TODO dao is suppose to be dum
+        return getSingle(query);
     }
 
     public void update(){
