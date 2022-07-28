@@ -1,26 +1,17 @@
 package pos.model;
 
-import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+@Getter
+@Setter
 public class InventoryForm {
 
     @NotNull(message = "barcode cannot be null")
     private String barcode;
-    private @NotNull(message = "quantity cannot be null") Integer quantity;
 
-    public String getBarcode() {
-        return barcode;
-    }
+    @NotNull(message = "quantity cannot be null")
+    private Integer quantity;
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public @NotNull(message = "quantity cannot be null") Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(@NotNull(message = "quantity cannot be null") Integer quantity) {
-        this.quantity = quantity;
-    }
 }

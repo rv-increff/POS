@@ -17,6 +17,7 @@ import pos.pojo.BrandPojo;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.OrderPojo;
 import pos.pojo.ProductPojo;
+import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -56,7 +57,7 @@ public class InvoiceServicesTest {
         BrandPojo bp = new BrandPojo();
         bp.setBrand(brand);
         bp.setCategory(category);
-        bDao.insert(bp);
+        bDao.add(bp);
 
         ProductPojo pp = new ProductPojo();
         pp.setCategory(category);
@@ -64,7 +65,7 @@ public class InvoiceServicesTest {
         pp.setMrp((double)getRandomNumber());
         pp.setName(getRandomString());
         pp.setBarcode(getRandomString());
-        pp.setBrandPojoId(getRandomNumber());
+        pp.setBrandId(getRandomNumber());
         pDao.insert(pp);
 
         //make order
@@ -72,7 +73,7 @@ public class InvoiceServicesTest {
         OrderPojo op = new OrderPojo();
         op.setTime(date);
         op.setOrderPlaced(true);
-        oDao.insert(op);
+        oDao.add(op);
 
         //orderItem
         int productId = pDao.selectAll().get(0).getId();
@@ -81,8 +82,8 @@ public class InvoiceServicesTest {
         oi.setOrderId(orderId);
         oi.setProductId(productId);
         oi.setQuantity(getRandomNumber());
-        oi.setSellingPrice(getRandomNumber());
-        dao.insert(oi);
+        oi.setSellingPrice((double)getRandomNumber());
+        dao.add(oi);
 
 
         LocalDate now = LocalDate.now();

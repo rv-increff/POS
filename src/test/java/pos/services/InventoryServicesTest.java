@@ -14,6 +14,7 @@ import pos.model.*;
 import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.ProductPojo;
+import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -40,19 +41,19 @@ public class InventoryServicesTest {
 
     @Test
     public void getAll() throws ApiException {
-        int n =5;
-        for(int i=0;i<n;i++)daoInsertHelper();
+        Integer n =5;
+        for(Integer i=0;i<n;i++)daoInsertHelper();
 
         List<InventoryData> plist = services.getAll();
-        Assert.assertEquals(n,plist.size());
+        Assert.assertEquals(n,(Integer)plist.size());
     }
     @Test
     public void get() throws ApiException {
-        int n =5;
-        for(int i=0;i<n;i++)daoInsertHelper();
+        Integer n =5;
+        for(Integer i=0;i<n;i++)daoInsertHelper();
         List<InventoryPojo> pList = dao.selectAll();
 
-        int index  = pList.get(n-1).getId();
+        Integer index  = pList.get(n-1).getId();
         InventoryData p = services.get(index);
         Assert.assertEquals(index,p.getId());
         try {
@@ -122,7 +123,7 @@ public class InventoryServicesTest {
         try {
             services.bulkAdd(pList);
         }catch (Exception e){
-            Assert.assertEquals("Error : row -> " + 1 + " barcode or quantity cannot be NULL<br>",e.getMessage());
+            Assert.assertEquals("Error : row -> " + 1 + " barcode or quantity cannot be NULL\n",e.getMessage());
         }
     }
 
@@ -138,7 +139,7 @@ public class InventoryServicesTest {
         try {
             services.bulkAdd(pList);
         }catch (Exception e){
-            Assert.assertEquals("Error : row -> " + 1 + " product with the barcode " + p.getBarcode() + " does not exist<br>",e.getMessage());
+            Assert.assertEquals("Error : row -> " + 1 + " product with the barcode " + p.getBarcode() + " does not exist\n",e.getMessage());
         }
     }
 
@@ -156,7 +157,7 @@ public class InventoryServicesTest {
         try {
             services.bulkAdd(pList);
         }catch (ApiException e){
-            Assert.assertEquals("Error : row -> " + 1 + " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead<br>",e.getMessage());
+            Assert.assertEquals("Error : row -> " + 1 + " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead\n",e.getMessage());
         }
     }
 
@@ -173,7 +174,7 @@ public class InventoryServicesTest {
     public void updateNotExistError() {
 //        InventoryPojo p = daoInsertHelper();
         InventoryUpdateForm inv = new InventoryUpdateForm();
-        int id = 2;
+        Integer id = 2;
         inv.setId(id);
         inv.setQuantity(100);
         try{
@@ -196,12 +197,12 @@ public class InventoryServicesTest {
     private InventoryPojo daoInsertHelper(){
         InventoryPojo p = new InventoryPojo();
         String barcode = getRandomString();
-        int productId = (int) (Math.random()*1000%(20));
-        int qty = (int)Math.random()*10000%(20);
+        Integer productId = (int) (Math.random()*1000%(20));
+        Integer qty = (int)Math.random()*10000%(20);
         p.setBarcode(barcode);
         p.setProductId(productId);
         p.setQuantity(qty+1);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 
@@ -211,24 +212,24 @@ public class InventoryServicesTest {
         String brand = getRandomString().toLowerCase();
         String name = getRandomString().toLowerCase();
         String barcode = getRandomString();
-        int brandPojoId = (int) (Math.random()*1000);
+        Integer brandPojoId = (int) (Math.random()*1000);
         double mrp = Math.random()*1000;
         p.setCategory(category);
         p.setBrand(brand);
         p.setBarcode(barcode);
         p.setName(name);
-        p.setBrandPojoId(brandPojoId);
+        p.setBrandId(brandPojoId);
         p.setMrp(mrp+1);
         pDao.insert(p);
         return p;
     }
-    private OrderItemPojo daoOrderItemInsertHelper(int productId){
+    private OrderItemPojo daoOrderItemInsertHelper(Integer productId){
         OrderItemPojo p = new OrderItemPojo();
-        p.setSellingPrice(getRandomNumber()+1);
+        p.setSellingPrice((double)getRandomNumber()+1);
         p.setOrderId(getRandomNumber());
         p.setQuantity(getRandomNumber()+1);
         p.setProductId(productId);
-        oIDao.insert(p);
+        oIDao.add(p);
         return p;
     }
 }

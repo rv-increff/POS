@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="pos.dao.InventoryDaoTest" time="0.604" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="pos.dao.InventoryDaoTest" time="0.655" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -65,12 +65,11 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoDelete" time="0.479"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoInsert" time="0.005"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoSelect" time="0.019"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoUnique" time="0.025"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoUpdate" time="0.014"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoGetInventoryReport" time="0.021"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoSelectAll" time="0.018"/>
-  <testcase classname="pos.dao.InventoryDaoTest" name="daoGetIdFromBarcode" time="0.023"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoInsert" time="0.225"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoSelect" time="0.326"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoUnique" time="0.035"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoUpdate" time="0.005"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoGetInventoryReport" time="0.026"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoSelectAll" time="0.016"/>
+  <testcase classname="pos.dao.InventoryDaoTest" name="daoGetIdFromBarcode" time="0.022"/>
 </testsuite>

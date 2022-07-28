@@ -1,5 +1,8 @@
 package pos.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -7,13 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@Getter
+@Setter
 @XmlRootElement
 public class OrderItemDataList {
     private List<OrderItemData> orderItem;
     private String time;
     private Double total;
-    private int orderId;
+    private Integer orderId;
 
     public OrderItemDataList(){
 
@@ -36,31 +40,4 @@ public class OrderItemDataList {
         return orderItem;
     }
 
-    public void setOrderItem(List<OrderItemData> orderItem) {
-        this.orderItem = orderItem;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
 }

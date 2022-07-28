@@ -9,7 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import pos.model.BrandForm;
 import pos.model.BrandData;
-import pos.services.ApiException;
+import pos.spring.ApiException;
 import pos.services.BrandServices;
 
 import javax.servlet.http.HttpServletResponse;

@@ -7,6 +7,7 @@ import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
 import pos.dao.OrderItemDao;
 import pos.model.*;
+import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
 import javax.xml.bind.JAXBContext;
@@ -66,8 +67,6 @@ public class InvoiceServices {
             throw new ApiException("To Date cannot be empty");
         }
 
-
-
         if((((sdf.parse(to).getTime() - sdf.parse(from).getTime())/(1000 * 60 * 60 * 24))% 365) >= 30){
             throw new ApiException("Date range should not be greater than 30 days");
         }
@@ -76,15 +75,15 @@ public class InvoiceServices {
             throw new ApiException("From date should be less than To date");
         }
 
-        if(s.getBrand()!="" & s.getCategory()!="" & bDao.unique(s.getBrand(), s.getCategory())) {
+        if(s.getBrand()!="" & s.getCategory()!="" & bDao.selectFromBrandCategory(s.getBrand(), s.getCategory())==null) {
             throw new ApiException(s.getBrand() + " - " +  s.getCategory() +" Brand-category pair does not exist");
         }
 
-        if(s.getCategory()=="" & s.getBrand()!="" & !bDao.check_brand(s.getBrand())){
+        if(s.getCategory()=="" & s.getBrand()!="" & bDao.selectBrand(s.getBrand())==null){
             throw new ApiException("Brand does not exist");
         }
 
-        if(s.getBrand()=="" & s.getCategory()!="" & !bDao.check_category(s.getCategory())){
+        if(s.getBrand()=="" & s.getCategory()!="" & bDao.selectCategory(s.getCategory())==null){
             throw new ApiException("Brand does not exist");
         }
         List<SalesReport> salesReportData = dao.getSalesReport(s);
@@ -138,13 +137,10 @@ public class InvoiceServices {
 
 
         String xml = jaxbObjectToXML(oItem);
-//        File xml = new File("src", "invoice.xsl");;
-//        File xsltfile = new File("src", "invoice.xsl");
-        File xsltfile = new File("src", "invoice.xsl");
-        File pdffile = new File("src", "invoice.pdf");
+        File xsltFile = new File("src", "invoice.xsl");
+        File pdfFile = new File("src", "invoice.pdf");
         System.out.println(xml);
-
-        convertToPDF(oItem,xsltfile,pdffile,xml);
+        convertToPDF(oItem,xsltFile,pdfFile,xml);
 
     }
 

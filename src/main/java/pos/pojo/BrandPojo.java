@@ -1,43 +1,25 @@
 package pos.pojo;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
+@Getter
+@Setter
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "brand", "category" }) },name="BrandPojo")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "brand", "category" }) },name="pos_brand_pojo")
 public class BrandPojo {
-
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String brand;
-    @NotBlank //TODO don't use validation lvl check here
+
+    @Column(nullable = false)
     private String category;
 
-    public String getBrand() {
-        return brand;
-    }
 
-    public void setBrand(String brand) {
-      this.brand = brand;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

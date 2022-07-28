@@ -1,49 +1,25 @@
 package pos.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+@Getter
+@Setter
 public class InventoryData {
 
     @NotNull(message = "id cannot be null")
-    private int id;
+    private Integer id;
 
     @NotNull(message = "productId cannot be null")
-    private int productId;
+    private Integer productId;
+
     @NotBlank(message = "barcode cannot be null")
     private String barcode;
 
-    private @NotNull(message = "quantity cannot be null") Integer quantity;
+    @NotNull(message = "quantity cannot be null")
+    private Integer quantity;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public @NotNull(message = "quantity cannot be null") Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(@NotNull(message = "quantity cannot be null") Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
 }

@@ -7,7 +7,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
-import pos.pojo.BrandPojo;
 import pos.pojo.ProductPojo;
 import pos.services.QaConfig;
 
@@ -34,7 +33,7 @@ public class ProductDaoTest {
         p.setBrand(getRandomString());
         p.setName(getRandomString());
         p.setBarcode(getRandomString());
-        p.setBrandPojoId(1);
+        p.setBrandId(1);
         dao.insert(p);
     }
 
@@ -59,31 +58,31 @@ public class ProductDaoTest {
     @Test
     public void daoUnique(){
         ProductPojo p = daoInsertHelper();
-        Assert.assertTrue(dao.unique(getRandomString()));
-        Assert.assertTrue(!dao.unique(p.getBarcode()));
+        Assert.assertNull(dao.selectFromBarcode(getRandomString()));
+        Assert.assertNotNull(dao.selectFromBarcode(p.getBarcode()));
     }
     @Test
     public void daoUniqueUpdate(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
 
-        Assert.assertTrue(dao.uniqueUpdate(getRandomString(),0));
-        Assert.assertTrue(!dao.uniqueUpdate(p.getBarcode(),id+1)); //barcode same but id different
+        Assert.assertNull(dao.selectFromBarcodeNotEqualId(getRandomString(),0));
+        Assert.assertNotNull(dao.selectFromBarcodeNotEqualId(p.getBarcode(),id+1)); //barcode same but id different
     }
     @Test
     public void daoGetIdFromBarcode(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.getIdFromBarcode(p.getBarcode()));
-        Assert.assertEquals(-1,dao.getIdFromBarcode(getRandomString()));
+        Assert.assertEquals(id,dao.selectFromBarcode(p.getBarcode()).getId());
+        Assert.assertNull(dao.selectFromBarcode(getRandomString()));
     }
 
     @Test
     public void daoCheckProductId(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.checkProductId(id));
-        Assert.assertEquals(-1,dao.checkProductId(id+1));
+        Assert.assertEquals(id,dao.select(id).getId());
+        Assert.assertNull(dao.select(id+1));
     }
 
     @Test
@@ -94,9 +93,9 @@ public class ProductDaoTest {
     @Test
     public void daoCheckIfBrandExist(){
         daoInsertHelper();
-        int brandId = dao.selectAll().get(0).getBrandPojoId();
-        Assert.assertTrue(dao.checkIfBrandExist(brandId));
-        Assert.assertTrue(!dao.checkIfBrandExist(brandId+1));
+        int brandId = dao.selectAll().get(0).getBrandId();
+        Assert.assertNotNull(dao.selectFromBrand(brandId));
+        Assert.assertEquals(0,dao.selectFromBrand(brandId+1).size());
     }
 
     private ProductPojo daoInsertHelper(){
@@ -105,13 +104,13 @@ public class ProductDaoTest {
         String brand = getRandomString();
         String name = getRandomString();
         String barcode = getRandomString();
-        int brandPojoId = (int) (Math.random()*100%(20));
+        int brandId = (int) (Math.random()*100%(20));
         double mrp = Math.random()*100%(20);
         p.setCategory(category);
         p.setBrand(brand);
         p.setBarcode(barcode);
         p.setName(name);
-        p.setBrandPojoId(brandPojoId);
+        p.setBrandId(brandId);
         p.setMrp(mrp);
         dao.insert(p);
         return p;

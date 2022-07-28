@@ -1,46 +1,25 @@
 package pos.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+@Getter
+@Setter
 @Entity
+@Table(name = "pos_order_pojo")
 public class OrderPojo {
-
+    @TableGenerator(name="orderGen", allocationSize=1,initialValue = 100000)
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy= GenerationType.TABLE,generator = "orderGen")
+    private Integer id;
 
-    @NotNull
+    @Column(nullable = false)
     private Date time;
 
-    private boolean orderPlaced=false;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public boolean isOrderPlaced() {
-        return orderPlaced;
-    }
-
-    public void setOrderPlaced(boolean orderPlaced) {
-        this.orderPlaced = orderPlaced;
-    }
+    @Column(nullable = false)
+    private Boolean orderPlaced=false;
 }

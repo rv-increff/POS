@@ -8,13 +8,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pos.pojo.OrderPojo;
-import pos.pojo.ProductPojo;
 import pos.services.QaConfig;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class OrderDaoTest {
         OrderPojo p = new OrderPojo();
         Date now = new Date();
         p.setTime(now);
-        dao.insert(p);
+        dao.add(p);
     }
 
     @Test
@@ -55,16 +52,16 @@ public class OrderDaoTest {
     @Test
     public void daoCheckOrderId(){
         daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.checkOrderId(id));
-        Assert.assertEquals(-1,dao.checkOrderId(id+1));
+        Integer id = dao.selectAll().get(0).getId();
+        Assert.assertEquals(id,dao.select(id).getId());
+        Assert.assertNull(dao.select(id+1));
     }
 
     private OrderPojo daoInsertHelper(){
         OrderPojo p = new OrderPojo();
         Date now = new Date();
         p.setTime(now);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 

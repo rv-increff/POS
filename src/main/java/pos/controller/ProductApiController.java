@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pos.model.ProductData;
 import pos.model.ProductForm;
 import pos.model.ProductUpdateForm;
-import pos.services.ApiException;
+import pos.spring.ApiException;
 import pos.services.ProductServices;
 
 import javax.servlet.http.HttpServletResponse;

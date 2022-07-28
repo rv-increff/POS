@@ -7,11 +7,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pos.model.OrderData;
-import pos.services.ApiException;
+import pos.spring.ApiException;
 import pos.services.OrderServices;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 

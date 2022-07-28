@@ -1,55 +1,29 @@
 package pos.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+@Getter
+@Setter
 @Entity
-@Table(name="InventoryPojo",uniqueConstraints = { @UniqueConstraint(columnNames = { "barcode" }) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "barcode" }) },name="pos_inventory_pojo")
 public class InventoryPojo {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer id;
 
-    @NotNull
-    private int productId;
+    @Column(nullable = false)
+    private Integer productId;
 
-    @NotBlank
+    @Column(nullable = false)
     private String barcode;
-//    @Min(value = 1, message = "quantity must be greater than 1")//TODO don't use min
+
+    @Column(nullable = false)
     private Integer quantity;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public  Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity( Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
 }

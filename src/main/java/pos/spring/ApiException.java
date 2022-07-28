@@ -1,4 +1,4 @@
-package pos.services;
+package pos.spring;
 
 import java.io.PrintStream;
 

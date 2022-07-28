@@ -5,12 +5,10 @@ import org.springframework.stereotype.Service;
 import pos.dao.OrderDao;
 import pos.model.OrderData;
 import pos.pojo.OrderPojo;
+import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,7 +22,7 @@ public class OrderServices {
         OrderPojo ex = new OrderPojo();
         java.util.Date date = new java.util.Date();
         ex.setTime(date);
-        dao.insert(ex);
+        dao.add(ex);
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -46,7 +44,7 @@ public class OrderServices {
         OrderData b = new OrderData();
         b.setId(p.getId());
         b.setTime(p.getTime());
-        b.setOrderPlaced(p.isOrderPlaced());
+        b.setOrderPlaced(p.getOrderPlaced());
         return b;
     }
 
@@ -58,11 +56,12 @@ public class OrderServices {
         }
         return convertPojoToOrderData(p);
     }
+
     @Transactional(rollbackOn = ApiException.class)
     public void updateOrderStatusPlaced(int id) throws ApiException {
         OrderPojo p = dao.select(id);
         if (p== null) {
-            throw new ApiException("Order with given id does not exist");
+            throw new ApiException("Order with given id does not exist, id : " + id);
         }
         p.setOrderPlaced(true);
     }

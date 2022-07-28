@@ -43,10 +43,10 @@ public class OrderItemDaoTest {
         OrderItemPojo p = new OrderItemPojo();
         p.setProductId(getRandomNumber());
         p.setOrderId(getRandomNumber());
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setQuantity(getRandomNumber());
 
-        dao.insert(p);
+        dao.add(p);
     }
     @Test
     public void daoSelectAll(){
@@ -88,9 +88,9 @@ public class OrderItemDaoTest {
             int productId = i+1;
             p.setProductId(productId);
             p.setOrderId(orderID);
-            p.setSellingPrice(getRandomNumber());
+            p.setSellingPrice((double)getRandomNumber());
             p.setQuantity(getRandomNumber());
-            dao.insert(p);
+            dao.add(p);
         }
         Assert.assertEquals(n,dao.selectFromOrderId(orderID).size());
 
@@ -103,7 +103,7 @@ public class OrderItemDaoTest {
 
     @Test
     public void daoCheckOrderExist(){
-        Assert.assertTrue(dao.checkOrderExist(getRandomNumber(),getRandomNumber()));
+        Assert.assertNull(dao.selectFromOrderIdProductId(getRandomNumber(),getRandomNumber()));
 
         OrderPojo o = daoOrderInsertHelper();
 
@@ -111,11 +111,11 @@ public class OrderItemDaoTest {
         OrderItemPojo p = new OrderItemPojo();
         p.setProductId(productId);
         p.setOrderId(o.getId());
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setQuantity(getRandomNumber());
-        dao.insert(p);
+        dao.add(p);
 
-        Assert.assertTrue(!dao.checkOrderExist(o.getId(),productId));
+        Assert.assertNotNull(dao.selectFromOrderIdProductId(o.getId(),productId));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class OrderItemDaoTest {
         pp.setMrp((double)getRandomNumber());
         pp.setName(getRandomString());
         pp.setBarcode(getRandomString());
-        pp.setBrandPojoId(getRandomNumber());
+        pp.setBrandId(getRandomNumber());
         pDao.insert(pp);
 
         //make order
@@ -137,7 +137,7 @@ public class OrderItemDaoTest {
         OrderPojo op = new OrderPojo();
         op.setOrderPlaced(true);
         op.setTime(date);
-        oDao.insert(op);
+        oDao.add(op);
 
         //orderItem
         int productId = pDao.selectAll().get(0).getId();
@@ -146,8 +146,8 @@ public class OrderItemDaoTest {
         oi.setOrderId(orderId);
         oi.setProductId(productId);
         oi.setQuantity(getRandomNumber());
-        oi.setSellingPrice(getRandomNumber());
-        dao.insert(oi);
+        oi.setSellingPrice((double)getRandomNumber());
+        dao.add(oi);
 
 
         LocalDate now = LocalDate.now();
@@ -178,34 +178,34 @@ public class OrderItemDaoTest {
         for(int i=0;i<n;i++){
             daoInsertHelperProductId(productId);
         }
-        Assert.assertTrue(!dao.checkOrderExistForProductId(productId));
+        Assert.assertNotNull(dao.selectFromProductId(productId));
     }
 
     private OrderItemPojo daoInsertHelper(){
         OrderItemPojo p = new OrderItemPojo();
         p.setProductId(getRandomNumber());
         p.setOrderId(getRandomNumber());
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setQuantity(getRandomNumber());
 
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
     private OrderItemPojo daoInsertHelperProductId(int productId){
         OrderItemPojo p = new OrderItemPojo();
         p.setProductId(productId);
         p.setOrderId(getRandomNumber());
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setQuantity(getRandomNumber());
 
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
     private OrderPojo daoOrderInsertHelper(){
         OrderPojo p = new OrderPojo();
         Date now = new Date();
         p.setTime(now);
-        oDao.insert(p);
+        oDao.add(p);
         return p;
     }
 

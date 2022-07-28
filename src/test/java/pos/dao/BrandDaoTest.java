@@ -33,7 +33,7 @@ public class BrandDaoTest {
         String brand = getRandomString();
         p.setCategory(category);
         p.setBrand(brand);
-        dao.insert(p);
+        dao.add(p);
     }
 
     @Test
@@ -62,11 +62,11 @@ public class BrandDaoTest {
         String brand = getRandomString();
         String category = getRandomString();
 
-        Assert.assertTrue(dao.unique(brand, category));
+        Assert.assertNull(dao.selectFromBrandCategory(brand, category));
 
         BrandPojo p = daoInsertHelper();
 
-        Assert.assertTrue(!dao.unique(p.getBrand(), p.getCategory()));
+        Assert.assertNotNull(dao.selectFromBrandCategory(p.getBrand(), p.getCategory()));
 
 
     }
@@ -77,28 +77,26 @@ public class BrandDaoTest {
         for(int i=0;i<4;i++) {
             daoInsertHelper();
         }
-
         p = daoInsertHelper();
         List<BrandPojo> pList = dao.selectAll();
-        Assert.assertEquals(pList.get(4).getId(),dao.getIdFromData(p.getBrand(),p.getCategory()));
-        Assert.assertEquals(-1,dao.getIdFromData(p.getBrand()+getRandomString(),p.getCategory()));
+        Assert.assertEquals(pList.get(4).getId(), dao.selectFromBrandCategory(p.getBrand(),p.getCategory()).getId());
+        Assert.assertNull(dao.selectFromBrandCategory(p.getBrand()+getRandomString(),p.getCategory()));
     }
 
     @Test
     public void daoCheckBrand(){
         BrandPojo p = daoInsertHelper();
         String brand = getRandomString();
-        Assert.assertTrue(!dao.check_brand(brand));
-        Assert.assertTrue(dao.check_brand(p.getBrand()));
+        Assert.assertNull(dao.selectBrand(brand));
+        Assert.assertNotNull(dao.selectBrand(p.getBrand()));
     }
     @Test
     public void daoCheckCategory(){
         BrandPojo p = daoInsertHelper();
         String category = getRandomString();
-        Assert.assertTrue(!dao.check_category(category));
-        Assert.assertTrue(dao.check_brand(p.getBrand()));
+        Assert.assertNull(dao.selectCategory(category));
+        Assert.assertNotNull(dao.selectCategory(p.getCategory()));
     }
-
     @Test
     public void daoUpdate(){
         dao.update();
@@ -110,7 +108,7 @@ public class BrandDaoTest {
         String brand = getRandomString();
         p.setCategory(category);
         p.setBrand(brand);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 }

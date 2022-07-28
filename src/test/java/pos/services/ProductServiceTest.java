@@ -12,6 +12,7 @@ import pos.dao.ProductDao;
 import pos.model.*;
 import pos.pojo.BrandPojo;
 import pos.pojo.ProductPojo;
+import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -19,6 +20,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static pos.util.RandomUtil.getRandomString;
 
@@ -55,7 +57,7 @@ public class ProductServiceTest {
 
         int index  = productPojoList.get(n-1).getId();
         ProductData p = services.get(index);
-        Assert.assertEquals(index,p.getId());
+        Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
             services.get(index+1);
         }catch (ApiException e){
@@ -132,7 +134,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
         ProductForm p = new ProductForm();
 
@@ -163,7 +165,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
         ProductForm p = new ProductForm();
 
@@ -206,7 +208,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
         ProductPojo pojo = daoInsertHelper();
         ProductForm p = new ProductForm();
         String name = getRandomString();
@@ -263,7 +265,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
         ProductForm p = new ProductForm();
 
@@ -297,7 +299,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
         ProductForm p = new ProductForm();
 
@@ -327,7 +329,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
 
         ProductPojo p = daoInsertHelper();
@@ -387,7 +389,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
 
         ProductPojo p = daoInsertHelper();
@@ -416,7 +418,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
         int id = 2;
         double mrp = Math.random()*100%(20);
         ProductUpdateForm pUpdate = new ProductUpdateForm();
@@ -436,7 +438,7 @@ public class ProductServiceTest {
 
     }
     @Test
-    public void updateBrandError() throws ApiException {
+    public void updateBrandError() {
         String category = getRandomString().toLowerCase();
         String brand = getRandomString().toLowerCase(Locale.ROOT);
 
@@ -468,7 +470,7 @@ public class ProductServiceTest {
         BrandPojo pb = new BrandPojo();
         pb.setBrand(brand);
         pb.setCategory(category);
-        bDao.insert(pb);
+        bDao.add(pb);
 
         ProductPojo p = daoInsertHelper();
         ProductUpdateForm pUpdate = new ProductUpdateForm();
@@ -479,11 +481,12 @@ public class ProductServiceTest {
         pUpdate.setMrp(p.getMrp());
         pUpdate.setId(p.getId());
 
-        Assert.assertTrue(services.checkIfBrandExist(dao.selectAll().get(0).getBrandPojoId()));
+        Assert.assertTrue(services.checkIfBrandExist(dao.selectAll().get(0).getBrandId()));
 
 
     }
-    public ProductPojo daoInsertHelper(){
+
+    private ProductPojo daoInsertHelper(){
         ProductPojo p = new ProductPojo();
         String category = getRandomString().toLowerCase();
         String brand = getRandomString().toLowerCase();
@@ -495,7 +498,7 @@ public class ProductServiceTest {
         p.setBrand(brand);
         p.setBarcode(barcode);
         p.setName(name);
-        p.setBrandPojoId(brandPojoId);
+        p.setBrandId(brandPojoId);
         p.setMrp(mrp);
         dao.insert(p);
         return p;

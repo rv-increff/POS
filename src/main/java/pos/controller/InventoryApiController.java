@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pos.model.InventoryData;
 import pos.model.InventoryForm;
 import pos.model.InventoryUpdateForm;
-import pos.services.ApiException;
+import pos.spring.ApiException;
 import pos.services.InventoryServices;
 
 import javax.servlet.http.HttpServletResponse;

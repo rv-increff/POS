@@ -11,6 +11,7 @@ import pos.dao.BrandDao;
 import pos.model.BrandData;
 import pos.model.BrandForm;
 import pos.pojo.BrandPojo;
+import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static pos.util.RandomUtil.getRandomString;
 
@@ -35,7 +37,7 @@ public class BrandServicesTest{
 
     @Test
     public void brandGetAll() throws ApiException {
-        for(int i=0;i<5;i++)daoInsertHelper();
+        for(Integer i=0;i<5;i++)daoInsertHelper();
 
         List<BrandData> plist = services.getAll();
         Assert.assertEquals(5,plist.size());
@@ -43,10 +45,10 @@ public class BrandServicesTest{
 
     @Test
     public void brandGet() throws ApiException {
-        for(int i=0;i<5;i++)daoInsertHelper();
+        for(Integer i=0;i<5;i++)daoInsertHelper();
 
         List<BrandPojo> brandPojoList = dao.selectAll();
-        int index  = brandPojoList.get(4).getId();
+        Integer index  = brandPojoList.get(4).getId();
         BrandData p = services.get(index);
         Assert.assertEquals(index,p.getId());
 
@@ -61,7 +63,7 @@ public class BrandServicesTest{
     public void brandAdd() throws ApiException {
         BrandForm p = new BrandForm();
 
-        int prevSize = dao.selectAll().size();
+        Integer prevSize = dao.selectAll().size();
 
         String brand = getRandomString();
         String category = getRandomString();
@@ -69,8 +71,8 @@ public class BrandServicesTest{
         p.setCategory(category);
         services.add(p);
 
-        int curSize = dao.selectAll().size();
-        Assert.assertEquals(prevSize+1,curSize);
+        Integer curSize =  dao.selectAll().size();
+        Assert.assertEquals(Optional.of(prevSize + 1),Optional.of(curSize));
 
     }
     @Test
@@ -88,7 +90,7 @@ public class BrandServicesTest{
     public void brandAddErrorUnique() throws ApiException {
         BrandForm p = new BrandForm();
 
-        int prevSize = dao.selectAll().size();
+        Integer prevSize = dao.selectAll().size();
 
         String brand = getRandomString();
         String category = getRandomString();
@@ -108,7 +110,7 @@ public class BrandServicesTest{
     public void brandAddErrorUniqueNormalize() throws ApiException {
         BrandForm p = new BrandForm();
 
-        int prevSize = dao.selectAll().size();
+        Integer prevSize = dao.selectAll().size();
 
         String brand = getRandomString();
         String category = getRandomString();
@@ -129,8 +131,8 @@ public class BrandServicesTest{
     @Test
     public void bulkAdd() throws ApiException {
         List<BrandForm> pList = new ArrayList<>();
-        int n = 5;
-        for(int i=0;i<n;i++){
+        Integer n = 5;
+        for(Integer i=0;i<n;i++){
             BrandForm p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
@@ -138,7 +140,7 @@ public class BrandServicesTest{
         }
 
         services.bulkAdd(pList);
-        int i = dao.selectAll().size();
+        Integer i = dao.selectAll().size();
         Assert.assertEquals(n,i);
     }
     @Test
@@ -150,14 +152,14 @@ public class BrandServicesTest{
         BrandPojo p1 = new BrandPojo();
         p1.setBrand(brand);
         p1.setCategory(category);
-        dao.insert(p1);
+        dao.add(p1);
 
         BrandForm p = new BrandForm();
         p.setBrand(brand);
         p.setCategory(category);
         pList.add(p);
-        int n = 5;
-        for(int i=0;i<n;i++){
+        Integer n = 5;
+        for(Integer i=0;i<n;i++){
             p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
@@ -166,7 +168,7 @@ public class BrandServicesTest{
         try{
             services.bulkAdd(pList);
         }catch (Exception e){
-            String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair should be unique<br>";
+            String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair should be unique\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
         Assert.assertEquals(1,dao.selectAll().size());
@@ -179,8 +181,8 @@ public class BrandServicesTest{
 
         BrandForm p = new BrandForm();
         pList.add(p);
-        int n = 5;
-        for(int i=0;i<n;i++){
+        Integer n = 5;
+        for(Integer i=0;i<n;i++){
             p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
@@ -189,7 +191,7 @@ public class BrandServicesTest{
         try{
             services.bulkAdd(pList);
         }catch (Exception e){
-            String expErr = "Error : row -> " + (1) + " brand or category cannot be empty<br>";
+            String expErr = "Error : row -> " + (1) + " brand or category cannot be empty\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
         Assert.assertEquals(0,dao.selectAll().size());
@@ -199,7 +201,7 @@ public class BrandServicesTest{
     @Test
     public void brandUpdate() throws ApiException {
         BrandPojo p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
+        Integer id = dao.selectAll().get(0).getId();
 
         String brand = getRandomString();
         BrandData brandData = new BrandData();
@@ -213,7 +215,7 @@ public class BrandServicesTest{
     @Test
     public void brandUpdateErrorUnique(){
         BrandPojo p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
+        Integer id = dao.selectAll().get(0).getId();
 
         String brand = getRandomString();
         BrandData brandData = new BrandData();
@@ -231,7 +233,7 @@ public class BrandServicesTest{
     @Test
     public void brandUpdateErrorEmptyObject(){
         BrandPojo p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
+        Integer id = dao.selectAll().get(0).getId();
 
         String brand = getRandomString();
         BrandData brandData = new BrandData();
@@ -248,7 +250,7 @@ public class BrandServicesTest{
 
     @Test
     public void brandUpdateErrorWrongId(){
-        int id = 1;
+        Integer id = 1;
         String brand = getRandomString();
         BrandData brandData = new BrandData();
         brandData.setBrand(brand);
@@ -268,7 +270,7 @@ public class BrandServicesTest{
         String brand = getRandomString();
         p.setCategory(category);
         p.setBrand(brand);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 }

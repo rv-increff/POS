@@ -8,16 +8,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pos.dao.OrderDao;
-import pos.dao.ProductDao;
 import pos.model.OrderData;
-import pos.model.ProductData;
 import pos.pojo.OrderPojo;
-import pos.pojo.ProductPojo;
+import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
+import static pos.util.RandomUtil.getRandomNumber;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
@@ -47,7 +48,7 @@ public class OrderServiceTest {
 
         int index  = orderPojoList.get(n-1).getId();
         OrderData p = services.get(index);
-        Assert.assertEquals(index,p.getId());
+        Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
             services.get(index+1);
         }catch (ApiException e){
@@ -60,11 +61,23 @@ public class OrderServiceTest {
         services.add();
     }
 
+    @Test
+    public void updateOrderStatus() throws ApiException {
+        Integer id = getRandomNumber();
+        try{
+            services.updateOrderStatusPlaced(id);
+        }catch (ApiException e){
+            Assert.assertEquals("Order with given id does not exist, id : " + id,e.getMessage());
+        }
+        daoInsertHelper();
+        id = dao.selectAll().get(0).getId();
+        services.updateOrderStatusPlaced(id);
+    }
     private OrderPojo daoInsertHelper(){
         OrderPojo p = new OrderPojo();
         Date now = new Date();
         p.setTime(now);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 }

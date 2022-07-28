@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pos.pojo.InventoryPojo;
-import pos.pojo.ProductPojo;
 import pos.services.QaConfig;
 
 import javax.annotation.Resource;
@@ -37,7 +36,7 @@ public class InventoryDaoTest {
         p.setProductId(productId);
         p.setQuantity(qty);
         p.setBarcode(getRandomString());
-        dao.insert(p);
+        dao.add(p);
     }
 
     @Test
@@ -60,8 +59,8 @@ public class InventoryDaoTest {
     @Test
     public void daoUnique(){
         InventoryPojo p = daoInsertHelper();
-        Assert.assertTrue(dao.unique(getRandomString()));
-        Assert.assertTrue(!dao.unique(p.getBarcode()));
+        Assert.assertNull(dao.selectFromBarcode(getRandomString()));
+        Assert.assertNotNull(dao.selectFromBarcode(p.getBarcode()));
     }
 
     @Test
@@ -70,9 +69,9 @@ public class InventoryDaoTest {
 //        ProductPojo pp = pDaoInsertHelper();
 
         InventoryPojo p = daoInsertHelper();
-        int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.getIdFromProductId(p.getProductId()));
-        Assert.assertEquals(-1,dao.getIdFromProductId(p.getProductId()+1));
+        Integer id = dao.selectAll().get(0).getId();
+        Assert.assertEquals(id,dao.selectFromProductId(p.getProductId()).getId());
+        Assert.assertNull(dao.selectFromProductId(p.getProductId()+1));
     }
 
     @Test
@@ -90,7 +89,7 @@ public class InventoryDaoTest {
         p.setProductId(productId);
         p.setQuantity(qty+1);
         p.setBarcode(getRandomString());
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 

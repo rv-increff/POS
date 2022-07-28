@@ -1,14 +1,18 @@
 package pos.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.util.Date;
 
-
+@Getter
+@Setter
 public class OrderData {
 
     @NotNull(message = "id cannot be null")
-    private int id;
+    private Integer id;
 
     @NotNull
     private Date time;
@@ -16,28 +20,4 @@ public class OrderData {
     @NotNull
     private boolean orderPlaced=false;
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public boolean isOrderPlaced() {
-        return orderPlaced;
-    }
-
-    public void setOrderPlaced(boolean orderPlaced) {
-        this.orderPlaced = orderPlaced;
-    }
 }

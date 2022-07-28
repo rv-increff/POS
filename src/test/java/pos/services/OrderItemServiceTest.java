@@ -18,11 +18,13 @@ import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.OrderPojo;
 import pos.pojo.ProductPojo;
+import pos.spring.ApiException;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static pos.util.RandomUtil.getRandomNumber;
 import static pos.util.RandomUtil.getRandomString;
@@ -58,7 +60,7 @@ public class OrderItemServiceTest {
         List<OrderItemPojo> orderItemPojoList = dao.selectAll();
         int index  = orderItemPojoList.get(4).getId();
         OrderItemData p = services.get(index);
-        Assert.assertEquals(index,p.getId());
+        Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
             services.get(index+1);
         }catch (Exception e){
@@ -69,7 +71,7 @@ public class OrderItemServiceTest {
     public void addOrderItemExistError() {
         OrderItemPojo oi = daoInsertHelper();
         OrderItemForm p = new OrderItemForm();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double) getRandomNumber());
         p.setOrderId(oi.getOrderId());
         p.setQuantity(getRandomNumber());
         p.setProductId(oi.getProductId());
@@ -83,7 +85,7 @@ public class OrderItemServiceTest {
     @Test
     public void addOrderNotExistError() {
         OrderItemForm p = new OrderItemForm();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double) getRandomNumber());
         p.setOrderId(getRandomNumber());
         p.setQuantity(getRandomNumber());
         p.setProductId(getRandomNumber());
@@ -98,7 +100,7 @@ public class OrderItemServiceTest {
         OrderPojo op = daoOrderInsertHelper();
         int orderId = oDao.selectAll().get(0).getId();
         OrderItemForm p = new OrderItemForm();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double) getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(getRandomNumber());
         p.setProductId(getRandomNumber());
@@ -116,7 +118,7 @@ public class OrderItemServiceTest {
         int orderId = oDao.selectAll().get(0).getId();
         int productId = pDao.selectAll().get(0).getId();
         OrderItemForm p = new OrderItemForm();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double) getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(getRandomNumber());
         p.setProductId(productId);
@@ -138,7 +140,7 @@ public class OrderItemServiceTest {
         daoInventoryInsertHelper(productId,qty);
 
         OrderItemForm p = new OrderItemForm();
-        p.setSellingPrice(getRandomNumber() + 5);
+        p.setSellingPrice((double) (getRandomNumber() + 5));
         p.setOrderId(orderId);
         p.setQuantity(qty+2);
         p.setProductId(productId);
@@ -148,7 +150,7 @@ public class OrderItemServiceTest {
             Assert.assertEquals("Selected quantity more than available quantity, available quantity only " + qty ,e.getMessage());
         }
         p = new OrderItemForm();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double) getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(qty-2);
         p.setProductId(productId);
@@ -182,11 +184,11 @@ public class OrderItemServiceTest {
         System.out.println(iDao.selectAll().get(0).getProductId() + "---" + productId);
 
         OrderItemPojo p = new OrderItemPojo();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setOrderId(op.getId());
         p.setQuantity(getRandomNumber());
         p.setProductId(productId);
-        dao.insert(p);
+        dao.add(p);
 
         int id = dao.selectAll().get(0).getId();
 //        services.get(id);
@@ -216,7 +218,7 @@ public class OrderItemServiceTest {
         OrderItemUpdateForm up = new OrderItemUpdateForm();
         up.setId(1);
         up.setQuantity(getRandomNumber());
-        up.setSellingPrice(getRandomNumber());
+        up.setSellingPrice((double) getRandomNumber());
         try{
             services.update(up);
         }catch(ApiException e){
@@ -231,7 +233,7 @@ public class OrderItemServiceTest {
         OrderItemUpdateForm up = new OrderItemUpdateForm();
         up.setId(p.getId());
         up.setQuantity(p.getQuantity() + 5);
-        up.setSellingPrice(getRandomNumber());
+        up.setSellingPrice((double) getRandomNumber());
         try{
             services.update(up);
         }catch(ApiException e){
@@ -249,7 +251,7 @@ public class OrderItemServiceTest {
 
         up.setId(p.getId());
         up.setQuantity(invP.getQuantity()+ p.getQuantity() + 5);
-        up.setSellingPrice(getRandomNumber());
+        up.setSellingPrice((double) getRandomNumber());
 
         try{
             services.update(up);
@@ -265,7 +267,7 @@ public class OrderItemServiceTest {
         OrderItemUpdateForm up = new OrderItemUpdateForm();
         up.setId(p.getId());
         up.setQuantity(p.getQuantity() + 5);
-        up.setSellingPrice(getRandomNumber());
+        up.setSellingPrice((double) getRandomNumber());
 
         //add in inv
         daoInventoryInsertHelper(p.getProductId(),p.getQuantity());
@@ -281,27 +283,27 @@ public class OrderItemServiceTest {
     }
     private OrderItemPojo daoInsertHelper(){
         OrderItemPojo p = new OrderItemPojo();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setOrderId(getRandomNumber());
         p.setQuantity(getRandomNumber());
         p.setProductId(getRandomNumber());
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
     private OrderItemPojo daoInsertHelper(int orderId){
         OrderItemPojo p = new OrderItemPojo();
-        p.setSellingPrice(getRandomNumber());
+        p.setSellingPrice((double)getRandomNumber());
         p.setOrderId(orderId);
         p.setQuantity(getRandomNumber());
         p.setProductId(getRandomNumber());
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
     private OrderPojo daoOrderInsertHelper(){
         OrderPojo p = new OrderPojo();
         Date now = new Date();
         p.setTime(now);
-        oDao.insert(p);
+        oDao.add(p);
         return p;
     }
     private ProductPojo daoProductInsertHelper(){
@@ -316,7 +318,7 @@ public class OrderItemServiceTest {
         p.setBrand(brand);
         p.setBarcode(barcode);
         p.setName(name);
-        p.setBrandPojoId(brandPojoId);
+        p.setBrandId(brandPojoId);
         p.setMrp(mrp);
         pDao.insert(p);
         return p;
@@ -326,7 +328,7 @@ public class OrderItemServiceTest {
         p.setProductId(productId);
         p.setQuantity(qty);
         p.setBarcode(getRandomString());
-        iDao.insert(p);
+        iDao.add(p);
         return p;
     }
 }

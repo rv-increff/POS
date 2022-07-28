@@ -8,6 +8,8 @@ import pos.model.InventoryForm;
 import pos.model.InventoryData;
 import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
+import pos.pojo.ProductPojo;
+import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -24,17 +26,17 @@ public class InventoryServices {
     @Autowired
     private OrderItemServices oService;
 
-
     @Transactional(rollbackOn = ApiException.class)
     public void add(InventoryForm p) throws ApiException {
         nullCheck(p);
-        if(!dao.unique(p.getBarcode())){
+        if(dao.selectFromBarcode(p.getBarcode())!=null){
             throw new ApiException("Inventory data already exist update the record instead");
         }
-        int productId = bDao.getIdFromBarcode(p.getBarcode());
-        if(productId==-1){
+        ProductPojo pPojo = bDao.selectFromBarcode(p.getBarcode());
+        if(pPojo==null){
             throw new ApiException("Product with this barcode does not exist");
         }
+        int productId = pPojo.getId();
         if(p.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 1");
         }
@@ -42,8 +44,9 @@ public class InventoryServices {
         ex.setBarcode(p.getBarcode());
         ex.setQuantity(p.getQuantity());
         ex.setProductId(productId);
-        dao.insert(ex);
+        dao.add(ex);
     }
+
     @Transactional(rollbackOn = ApiException.class)
     public void bulkAdd(List<InventoryForm> bulkP) throws ApiException {
         List<String> errorList = new ArrayList<>();
@@ -57,12 +60,14 @@ public class InventoryServices {
                 errorList.add("Error : row -> " + (i+1) + " barcode or quantity cannot be NULL");
                 continue;
             }
-            int productId = bDao.getIdFromBarcode(p.getBarcode());
-            if(productId==-1) {
+            ProductPojo pPojo= bDao.selectFromBarcode(p.getBarcode());
+
+            if(pPojo==null) {
                 errorList.add("Error : row -> " + (i+1) + " product with the barcode " + p.getBarcode() + " does not exist");
                 continue;
             }
-            if(!dao.unique(p.getBarcode())){
+
+            if(dao.selectFromBarcode(p.getBarcode())!=null){
                 errorList.add("Error : row -> " + (i+1) + " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead");
                 continue;
             }
@@ -83,14 +88,14 @@ public class InventoryServices {
                 InventoryPojo ex = new InventoryPojo();
                 ex.setBarcode(p.getBarcode());
                 ex.setQuantity(p.getQuantity());
-                int productId = bDao.getIdFromBarcode(p.getBarcode());
+                int productId = bDao.selectFromBarcode(p.getBarcode()).getId();
                 ex.setProductId(productId);
-                dao.insert(ex);
+                dao.add(ex);
             }
             if(errorList.size()>0){
                 String errorStr = "";
                 for(String e : errorList){
-                    errorStr += e + "<br>";
+                    errorStr += e + "\n";
                 }
                 throw new ApiException(errorStr);
             }
@@ -98,7 +103,7 @@ public class InventoryServices {
         else{
             String errorStr = "";
             for(String e : errorList){
-                errorStr += e + "<br>";
+                errorStr += e + "\n";
             }
             throw new ApiException(errorStr);
         }
@@ -127,8 +132,6 @@ public class InventoryServices {
             throw new ApiException("Quantity must be greater than 1");
         }
         updateUtil(p);
-
-
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -139,14 +142,14 @@ public class InventoryServices {
         }
         return convertPojoToInventoryForm(p);
     }
+
     @Transactional(rollbackOn = ApiException.class)
     public boolean checkOrderOfInv(int id) throws ApiException {
         InventoryData p = getCheck(id);
         int productId = p.getProductId();
         return oService.checkOrderItemWithProductId(productId);
-
-
     }
+
     private void updateUtil(InventoryUpdateForm p) throws ApiException {
         InventoryPojo ex = dao.select(p.getId());
         ex.setQuantity(p.getQuantity());
@@ -167,6 +170,7 @@ public class InventoryServices {
             throw new ApiException("Barcode or quantity cannot be NULL");
         }
     }
+
     private void nullCheckUpdate(InventoryUpdateForm p) throws ApiException {
         if(p.getQuantity()==null){
             throw new ApiException("Quantity cannot be NULL");
