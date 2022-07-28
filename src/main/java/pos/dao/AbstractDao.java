@@ -13,7 +13,6 @@ public abstract class AbstractDao {
 	@PersistenceContext
 	private EntityManager em;
 	//TODO java generics
-
 	protected <T> void addAbs(T pojoObject){
 		em.persist(pojoObject);
 	}
@@ -40,11 +39,7 @@ public abstract class AbstractDao {
 	protected <T> T getSingle(TypedQuery<T> query) {
 		return query.getResultList().stream().findFirst().orElse(null);
 	}
-	
-	protected <T> TypedQuery<T> getQuery(String jpql, Class<T> clazz) {
-		return em.createQuery(jpql, clazz);
-	}
-	
+
 	protected EntityManager em() {
 		return em;
 	}

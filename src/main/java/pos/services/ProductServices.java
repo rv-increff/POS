@@ -21,6 +21,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static pos.util.DataUtil.*;
+
 @Service
 public class ProductServices {
 
@@ -34,8 +36,8 @@ public class ProductServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(ProductForm p) throws ApiException {
-        checkNotNull(p);
-        normalize(p);
+        checkNotNullUtil(p,"parameters in the Insert form cannot be null");
+        normalizeUtil(p);
         if(dao.selectFromBarcode(p.getBarcode())!=null){
             throw new ApiException("barcode "  + p.getBarcode() +  " already exists");
         }
@@ -47,7 +49,8 @@ public class ProductServices {
         Pattern pattern = Pattern.compile("^[0-9A-Za-z]+$");
         Matcher matcher = pattern.matcher(p.getBarcode());
         if(!matcher.find()){
-            throw new ApiException("barcode "  + p.getBarcode() +  " not valid, barcode can only have alphanumeric values");
+            throw new ApiException("barcode "  + p.getBarcode() +
+                    " not valid, barcode can only have alphanumeric values");
         }
         Pattern numP = Pattern.compile("^[0-9]+$|^[0-9]+\\.[0-9]*$");
         matcher = numP.matcher(p.getMrp().toString());
@@ -73,9 +76,7 @@ public class ProductServices {
         }
         for(int i=0;i<bulkP.size();i++) {
             ProductForm p = bulkP.get(i);
-
-            if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null ||
-                    p.getCategory()==null || p.getName()==null){
+            if(!checkNotNullBulkUtil(p)){
                 errorList.add("Error : row -> " + (i+1) + " parameters in the Insert form cannot be null");
                 continue;
             }
@@ -86,7 +87,7 @@ public class ProductServices {
                         " not valid, mrp should be a positive number");
                 continue;
             }
-            normalize(p);
+            normalizeUtil(p);
             if(dao.selectFromBarcode(p.getBarcode())!=null) {
                 errorList.add("Error : row -> " + (i+1) + " barcode " + p.getBarcode() + " already exists");
                 continue;
@@ -151,8 +152,8 @@ public class ProductServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(ProductUpdateForm p) throws ApiException {
-        checkNotNullUpdate(p);
-        normalizeUpdate(p);
+        checkNotNullUtil(p,"parameters in the Update form cannot be null");
+        normalizeUtil(p);
         if(dao.selectFromBarcodeNotEqualId(p.getBarcode(),p.getId())!=null){
             throw new ApiException("barcode " + p.getBarcode() + " already exists");
         }
@@ -188,19 +189,6 @@ public class ProductServices {
         return dao.selectFromBrand(brandId).size()>0;
     }
 
-    protected static void normalize(ProductForm p) {
-        p.setBrand(StringUtil.toLowerCase(p.getBrand()));
-        p.setCategory(StringUtil.toLowerCase(p.getCategory()));
-        p.setName(StringUtil.toLowerCase(p.getName()));
-    }
-
-    protected static void normalizeUpdate(ProductUpdateForm p) {
-
-        p.setBrand(StringUtil.toLowerCase(p.getBrand()));
-        p.setCategory(StringUtil.toLowerCase(p.getCategory()));
-        p.setName(StringUtil.toLowerCase(p.getName()));
-    }
-
     private void updateUtil(ProductUpdateForm p) throws ApiException {
         ProductPojo ex = getCheckInPojo(p.getId());
         BrandPojo bPojo = bDao.selectFromBrandCategory(p.getBrand(),p.getCategory());
@@ -232,20 +220,6 @@ public class ProductServices {
         b.setMrp(p.getMrp());
         b.setName(p.getName());
         return b;
-    }
-
-    private static void checkNotNull(ProductForm p) throws ApiException {
-        if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null ||
-                p.getName()==null){
-            throw new ApiException("parameters in the Insert form cannot be null");
-        }
-    }
-
-    private static void checkNotNullUpdate(ProductUpdateForm p) throws ApiException {
-        if(p.getBarcode()==null || p.getBrand()==null || p.getMrp()==null || p.getCategory()==null ||
-                p.getName()==null ){
-            throw new ApiException("parameters in the Update form cannot be null");
-        }
     }
 
 }

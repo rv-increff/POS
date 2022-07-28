@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static pos.util.DataUtil.checkNotNullUtil;
+
 @Service
 public class OrderItemServices {
 
@@ -38,10 +40,8 @@ public class OrderItemServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(OrderItemForm p) throws ApiException {
-        if(p==null){
-            throw new ApiException("body cannot be null");
-        }
-        checkNotNull(p);
+
+        checkNotNullUtil(p,"body values cannot be null");
         if(dao.selectFromOrderIdProductId(p.getOrderId(),p.getProductId())!=null){
             throw new ApiException("OrderItem already exist update that instead");
         }
@@ -56,6 +56,7 @@ public class OrderItemServices {
         if (pPojo == null) {
             throw new ApiException("Product with this id does not exist, id : " + p.getProductId());
         }
+
         InventoryPojo inv = iDao.selectFromProductId(p.getProductId());
         if (inv == null) {
             throw new ApiException("Product with this id does not exist in the inventory, id : " + p.getProductId());
@@ -120,10 +121,9 @@ public class OrderItemServices {
         if (oPojo == null) {
             throw new ApiException("Order with this id does not exist, id : " + orderId);
         }
-        Date time = oDao.select(orderId).getTime();
 
         List<OrderItemPojo> orderList = dao.selectFromOrderId(orderId);
-        List<OrderItemData> orderItemDataList = new ArrayList<OrderItemData>();
+        List<OrderItemData> orderItemDataList = new ArrayList<>();
         for(OrderItemPojo i : orderList){
             OrderItemData j = convertPojoToOrderForm(i);
             orderItemDataList.add(j);
@@ -133,7 +133,7 @@ public class OrderItemServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(OrderItemUpdateForm p) throws ApiException {
-        checkNotNullUpdate(p);
+        checkNotNullUtil(p,"Body values cannot be null");
         getCheck(p.getId());
         if(p.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 1");
@@ -164,7 +164,8 @@ public class OrderItemServices {
         OrderItemPojo ex = dao.select(id);
         InventoryPojo inv = iDao.selectFromProductId(ex.getProductId());
         if(inv==null){
-            throw new ApiException("Product with given product id does not exist in the inventory, product id : " + ex.getProductId());
+            throw new ApiException("Product with given product id does not exist in the inventory, product id : "
+                    + ex.getProductId());
         }
         int invId = inv.getId();
         int availQty = iDao.select(invId).getQuantity();
@@ -190,13 +191,12 @@ public class OrderItemServices {
 
         InventoryPojo inv = iDao.selectFromProductId(ex.getProductId());
         if (inv == null){
-            throw new ApiException("Product with given product id does not exist in the inventory, product id : " + ex.getProductId());
+            throw new ApiException("Product with given product id does not exist in the inventory, product id : "
+                    + ex.getProductId());
         }
         int invId = inv.getId();
         int availQty = iDao.select(invId).getQuantity();
         if (availQty + ex.getQuantity() >= p.getQuantity()){
-            //update qty in inventory
-//            int invId = iDao.getIdFromProductId(ex.getProductId());
             InventoryUpdateForm invUpdate = new InventoryUpdateForm();
             invUpdate.setId(invId);
             invUpdate.setQuantity(availQty + ex.getQuantity() - p.getQuantity());
@@ -207,7 +207,8 @@ public class OrderItemServices {
             dao.update(); //symbolic
         }
         else{
-            throw new ApiException("Selected quantity more than available quantity, available quantity only " + availQty );
+            throw new ApiException("Selected quantity more than available quantity, available quantity only "
+                    + availQty );
         }
     }
 
@@ -221,16 +222,4 @@ public class OrderItemServices {
         return b;
     }
 
-    private void checkNotNull(OrderItemForm p) throws ApiException {
-        System.out.println(p.getOrderId() + p.getSellingPrice() + p.getQuantity() + p.getProductId() + "------");
-        if(p.getOrderId()==0 && p.getSellingPrice()==0.0 && p.getQuantity()==0 && p.getProductId()==0){
-            throw new ApiException("body values cannot be null");
-        }
-    }
-
-    private void checkNotNullUpdate(OrderItemUpdateForm p) throws ApiException {
-        if(p.getId()==0 && p.getSellingPrice()==0.0 && p.getQuantity()==0){
-            throw new ApiException("body values cannot be null");
-        }
-    }
 }

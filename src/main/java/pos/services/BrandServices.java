@@ -16,6 +16,8 @@ import pos.pojo.BrandPojo;
 import pos.spring.ApiException;
 import pos.util.StringUtil;
 
+import static pos.util.DataUtil.*;
+
 @Service
 public class BrandServices {
 
@@ -27,8 +29,8 @@ public class BrandServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion
-        checkNotNull(p); //TODO check not null not nullcheck
-        normalize(p); //TODO normalize
+        checkNotNullUtil(p,"brand or category cannot be null"); //TODO check not null not nullcheck
+        normalizeUtil(p); //TODO normalize
         if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){  //TODO
             throw new ApiException("Brand and category pair should be unique");
         }
@@ -47,14 +49,16 @@ public class BrandServices {
         }
         for(int i=0;i<bulkP.size();i++) {
             BrandForm p = bulkP.get(i);
-            if(!nullCheckBulk(p)) {
-                normalize(p);
+            if(checkNotNullBulkUtil(p)) {
+                normalizeUtil(p);
                 if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null) {
                     errorList.add("Error : row -> " + (i+1) + " "  + p.getBrand() +
                             " - " +  p.getCategory() + " pair should be unique");
                 }
                 if(brandSet.contains(p.getBrand() + p.getCategory())){
-                    errorList.add("Error : row -> " + (i+1) + " Brand-Category should not be repeated, Brand-category : " + p.getBrand() + "-"+  p.getCategory());
+                    errorList.add("Error : row -> " + (i+1)
+                            + " Brand-Category should not be repeated, Brand-category : "
+                            + p.getBrand() + "-"+  p.getCategory());
                     continue;
                 }
                 else{
@@ -70,10 +74,10 @@ public class BrandServices {
         }
         if(errorList.size()==0) {
             for (BrandForm p : bulkP) {
-                BrandPojo ex = new BrandPojo();
-                ex.setBrand(p.getBrand());
-                ex.setCategory(p.getCategory());
-                dao.add(ex);
+                BrandPojo bPojo = new BrandPojo();
+                bPojo.setBrand(p.getBrand());
+                bPojo.setCategory(p.getCategory());
+                dao.add(bPojo);
             }
         }
         else{
@@ -102,8 +106,8 @@ public class BrandServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(BrandData p) throws ApiException {
-        checkNotNull(p);
-        normalizeUpdate(p);
+        checkNotNullUtil(p,"brand or category cannot be null");
+        normalizeUtil(p);
         System.out.println(p.getBrand() +" "+ p.getCategory());
         if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException(p.getBrand() + " - " +  p.getCategory() + " pair should be unique");
@@ -129,17 +133,6 @@ public class BrandServices {
         return p;
     }
 
-    protected static void normalize(BrandForm p) {
-        p.setBrand(StringUtil.toLowerCase(p.getBrand()));
-        p.setCategory(StringUtil.toLowerCase(p.getCategory()));
-    }
-
-    protected static void normalizeUpdate(BrandData p) {
-        p.setBrand(StringUtil.toLowerCase(p.getBrand()));
-        p.setCategory(StringUtil.toLowerCase(p.getCategory()));
-
-    }
-
     private void updateUtil(BrandData p) throws ApiException {
         BrandPojo ex = getCheckInPojo(p.getId());
         ex.setBrand(p.getBrand());
@@ -153,21 +146,6 @@ public class BrandServices {
         b.setBrand(p.getBrand());
         b.setCategory(p.getCategory());
         return b;
-    }
-
-    private void checkNotNull(BrandForm form) throws ApiException { //TODO make validation util with static class check null check null and check not null(object ,message)
-        if(form.getCategory()==null || form.getBrand()==null){
-            throw new ApiException("brand or category cannot be null");
-        }
-    }
-    private void checkNotNull(BrandData form) throws ApiException {
-        if(form.getCategory()==null || form.getBrand()==null){
-            throw new ApiException("brand or category cannot be null");
-        }
-    }
-
-    private boolean nullCheckBulk(BrandForm form) throws ApiException {
-       return (form.getCategory()==null || form.getBrand()==null);
     }
 
 }

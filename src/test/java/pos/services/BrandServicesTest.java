@@ -34,7 +34,6 @@ public class BrandServicesTest{
     @Resource
     private BrandDao dao;
 
-
     @Test
     public void brandGetAll() throws ApiException {
         for(Integer i=0;i<5;i++)daoInsertHelper();
@@ -60,7 +59,7 @@ public class BrandServicesTest{
     }
 
     @Test
-    public void brandAdd() throws ApiException {
+    public void brandAdd() throws ApiException, IllegalAccessException {
         BrandForm p = new BrandForm();
 
         Integer prevSize = dao.selectAll().size();
@@ -76,18 +75,18 @@ public class BrandServicesTest{
 
     }
     @Test
-    public void brandAddEmptyObject() throws ApiException {
+    public void brandAddEmptyObject() {
         BrandForm p = new BrandForm();
         try {
             services.add(p);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("brand or category cannot be null",e.getMessage());
         }
 
     }
 
     @Test
-    public void brandAddErrorUnique() throws ApiException {
+    public void brandAddErrorUnique() throws ApiException, IllegalAccessException {
         BrandForm p = new BrandForm();
 
         Integer prevSize = dao.selectAll().size();
@@ -208,7 +207,6 @@ public class BrandServicesTest{
         brandData.setBrand(brand);
         brandData.setCategory(p.getCategory());
         brandData.setId(id);
-
         services.update(brandData);
     }
 
@@ -226,7 +224,7 @@ public class BrandServicesTest{
         try{
             services.update(brandData);
         } catch (Exception e) {
-            Assert.assertEquals(p.getBrand() + " -- " +  p.getCategory() + " pair should be unique",e.getMessage());
+            Assert.assertEquals(p.getBrand() + " - " +  p.getCategory() + " pair should be unique",e.getMessage());
         }
     }
 
