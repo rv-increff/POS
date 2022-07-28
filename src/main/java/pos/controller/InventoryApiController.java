@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pos.dto.InventoryDto;
 import pos.model.InventoryData;
 import pos.model.InventoryForm;
 import pos.model.InventoryUpdateForm;
@@ -20,41 +21,40 @@ import java.util.List;
 @RestController
 public class InventoryApiController {
 
-
     @Autowired
-    private InventoryServices service;
+    private InventoryDto dto;
 
     @ApiOperation(value = "Gives all Inventory data")
     @RequestMapping(path = "/api/inventory/get-all", method = RequestMethod.GET)
     public List<InventoryData> getAllInventoryDetails() throws ApiException {
-        return service.getAll();
+        return dto.getAll();
     }
 
     @ApiOperation(value = "Insert Inventory data")
     @RequestMapping(path = "/api/inventory/insert", method = RequestMethod.POST)
     public void insertInventory(@RequestBody InventoryForm p, HttpServletResponse response) throws ApiException, IOException {
-        service.add(p);
+        dto.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Insert bulk Inventory data")
     @RequestMapping(path = "/api/inventory/bulk-insert", method = RequestMethod.POST)
     public void bulkInsertInventory(@RequestBody List<InventoryForm> p, HttpServletResponse response) throws ApiException, IOException {
-        service.bulkAdd(p);
+        dto.bulkAdd(p);
         success(response);
     }
 
     @ApiOperation(value = "get a Inventory")
     @RequestMapping(path = "/api/inventory/get/{id}", method = RequestMethod.GET)
     public InventoryData getInventory(@PathVariable int id) throws ApiException {
-        return service.get(id);
+        return dto.get(id);
 
     }
 
     @ApiOperation(value = "update a Inventory")
     @RequestMapping(path = "/api/inventory/update", method = RequestMethod.PUT)
     public void updateInventory(@RequestBody InventoryUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
-        service.update(p);
+        dto.update(p);
         success(response);
     }
 

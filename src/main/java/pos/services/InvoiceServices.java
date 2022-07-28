@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
 import pos.dao.OrderItemDao;
+import pos.dto.OrderItemDto;
 import pos.model.*;
 import pos.spring.ApiException;
 
@@ -36,6 +37,8 @@ public class InvoiceServices {
     private OrderItemServices oItemService;
     @Autowired
     private OrderServices oService;
+    @Autowired
+    private OrderItemDto ODto;
 
     private final FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
@@ -125,7 +128,7 @@ public class InvoiceServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException {
-       List<OrderItemData> o = oItemService.getOrderItemForOrder(orderId);
+       List<OrderItemData> o = ODto.getOrderItemForOrder(orderId);
 
        Date time = oService.get(orderId).getTime();
        Double total = 0.;

@@ -6,11 +6,11 @@ import io.swagger.annotations.ApiOperation;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pos.dto.ProductDto;
 import pos.model.ProductData;
 import pos.model.ProductForm;
 import pos.model.ProductUpdateForm;
 import pos.spring.ApiException;
-import pos.services.ProductServices;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 public class ProductApiController {
     @Autowired
-    private ProductServices service;
+    private ProductDto dto;
 
     @ApiOperation(value = "say hi")
     @RequestMapping(path = "/api/product/smoke", method = RequestMethod.GET)
@@ -32,33 +32,33 @@ public class ProductApiController {
     @ApiOperation(value = "Gives all Product data")
     @RequestMapping(path = "/api/product/get-all", method = RequestMethod.GET)
     public List<ProductData> getAllProductDetails() throws ApiException {
-        return service.getAll();
+        return dto.getAll();
     }
 
     @ApiOperation(value = "Insert Product data")
     @RequestMapping(path = "/api/product/insert", method = RequestMethod.POST)
     public void insertProduct(@RequestBody ProductForm p, HttpServletResponse response) throws ApiException, IOException {
-        service.add(p);
+        dto.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Insert bulk Product data")
     @RequestMapping(path = "/api/product/bulk-insert", method = RequestMethod.POST)
     public void bulkInsertProduct(@RequestBody List< @Valid ProductForm> p, HttpServletResponse response) throws ApiException, IOException {
-        service.bulkAdd(p);
+        dto.bulkAdd(p);
         success(response);
     }
 
     @ApiOperation(value = "get a Product")
     @RequestMapping(path = "/api/product/get/{id}", method = RequestMethod.GET)
     public ProductData getProduct(@PathVariable int id) throws ApiException {
-        return service.get(id);
+        return dto.get(id);
 
     }
     @ApiOperation(value = "update a Product")
     @RequestMapping(path = "/api/product/update", method = RequestMethod.PUT)
     public void updateProduct( @RequestBody ProductUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
-        service.update(p);
+        dto.update(p);
         success(response);
     }
 

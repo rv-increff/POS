@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;

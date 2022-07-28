@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,10 +27,10 @@ import static pos.util.RandomUtil.getRandomString;
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration("src/test/webapp")
 @Transactional
-public class BrandServicesTest{
+public class BrandDtoTest {
 
     @Resource
-    private BrandServices services;
+    private BrandDto dto;
     @Resource
     private BrandDao dao;
 
@@ -38,7 +38,7 @@ public class BrandServicesTest{
     public void brandGetAll() throws ApiException {
         for(Integer i=0;i<5;i++)daoInsertHelper();
 
-        List<BrandData> plist = services.getAll();
+        List<BrandData> plist = dto.getAll();
         Assert.assertEquals(5,plist.size());
     }
 
@@ -48,11 +48,11 @@ public class BrandServicesTest{
 
         List<BrandPojo> brandPojoList = dao.selectAll();
         Integer index  = brandPojoList.get(4).getId();
-        BrandData p = services.get(index);
+        BrandData p = dto.get(index);
         Assert.assertEquals(index,p.getId());
 
         try {
-            services.get(index+1);
+            dto.get(index+1);
         }catch (Exception e){
             Assert.assertEquals("Brand with given id does not exist ,id : " + (index+1),e.getMessage());
         }
@@ -68,7 +68,7 @@ public class BrandServicesTest{
         String category = getRandomString();
         p.setBrand(brand);
         p.setCategory(category);
-        services.add(p);
+        dto.add(p);
 
         Integer curSize =  dao.selectAll().size();
         Assert.assertEquals(Optional.of(prevSize + 1),Optional.of(curSize));
@@ -78,7 +78,7 @@ public class BrandServicesTest{
     public void brandAddEmptyObject() {
         BrandForm p = new BrandForm();
         try {
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             Assert.assertEquals("brand or category cannot be null",e.getMessage());
         }
@@ -95,10 +95,10 @@ public class BrandServicesTest{
         String category = getRandomString();
         p.setBrand(brand);
         p.setCategory(category);
-        services.add(p);
+        dto.add(p);
 
         try{
-            services.add(p);
+            dto.add(p);
         }catch (Exception e){
             Assert.assertEquals("Brand and category pair should be unique",e.getMessage());
         }
@@ -115,12 +115,12 @@ public class BrandServicesTest{
         String category = getRandomString();
         p.setBrand(brand);
         p.setCategory(category);
-        services.add(p);
+        dto.add(p);
 
         try{
             p.setBrand(p.getBrand().toLowerCase(Locale.ROOT));
             p.setCategory(p.getCategory().toLowerCase(Locale.ROOT));
-            services.add(p);
+            dto.add(p);
         }catch (Exception e){
             Assert.assertEquals("Brand and category pair should be unique",e.getMessage());
         }
@@ -138,7 +138,7 @@ public class BrandServicesTest{
             pList.add(p);
         }
 
-        services.bulkAdd(pList);
+        dto.bulkAdd(pList);
         Integer i = dao.selectAll().size();
         Assert.assertEquals(n,i);
     }
@@ -165,7 +165,7 @@ public class BrandServicesTest{
             pList.add(p);
         }
         try{
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (Exception e){
             String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair should be unique\n";
             Assert.assertEquals(expErr,e.getMessage());
@@ -188,7 +188,7 @@ public class BrandServicesTest{
             pList.add(p);
         }
         try{
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (Exception e){
             String expErr = "Error : row -> " + (1) + " brand or category cannot be empty\n";
             Assert.assertEquals(expErr,e.getMessage());
@@ -207,7 +207,7 @@ public class BrandServicesTest{
         brandData.setBrand(brand);
         brandData.setCategory(p.getCategory());
         brandData.setId(id);
-        services.update(brandData);
+        dto.update(brandData);
     }
 
     @Test
@@ -222,7 +222,7 @@ public class BrandServicesTest{
         brandData.setId(id);
 
         try{
-            services.update(brandData);
+            dto.update(brandData);
         } catch (Exception e) {
             Assert.assertEquals(p.getBrand() + " - " +  p.getCategory() + " pair should be unique",e.getMessage());
         }
@@ -240,7 +240,7 @@ public class BrandServicesTest{
         brandData.setId(id);
 
         try{
-            services.update(brandData);
+            dto.update(brandData);
         } catch (Exception e) {
             Assert.assertEquals("brand or category cannot be null",e.getMessage());
         }
@@ -256,7 +256,7 @@ public class BrandServicesTest{
         brandData.setId(id);
 
         try{
-            services.update(brandData);
+            dto.update(brandData);
         } catch (Exception e) {
             Assert.assertEquals("Brand with given id does not exist ,id : " + id,e.getMessage());
         }

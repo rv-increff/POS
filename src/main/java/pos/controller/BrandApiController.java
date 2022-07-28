@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import pos.dto.BrandDto;
 import pos.model.BrandForm;
 import pos.model.BrandData;
 import pos.spring.ApiException;
@@ -21,7 +22,7 @@ import java.util.List;
 public class BrandApiController {
 
     @Autowired
-    private BrandServices service;
+    private BrandDto dto;
 
     @ApiOperation(value = "say hi")
     @RequestMapping(path = "/api/brand/smoke", method = RequestMethod.GET)
@@ -32,34 +33,34 @@ public class BrandApiController {
     @ApiOperation(value = "Gives all brand data")
     @RequestMapping(path = "/api/brand/get-all", method = RequestMethod.GET)
     public List<BrandData> getAllBrandDetails() throws ApiException {
-        return service.getAll();
+        return dto.getAll();
     }
 
     @ApiOperation(value = "Insert brand data")
     @RequestMapping(path = "/api/brand/insert", method = RequestMethod.POST)
     public void insertBrand(@RequestBody BrandForm p, HttpServletResponse response) throws ApiException, IOException {
-        service.add(p);
+        dto.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Insert bulk brand data")
     @RequestMapping(path = "/api/brand/bulk-insert", method = RequestMethod.POST)
     public void bulkInsertBrand(@RequestBody List<BrandForm> p, HttpServletResponse response) throws ApiException, IOException {
-        service.bulkAdd(p);
+        dto.bulkAdd(p);
         success(response);
     }
 
     @ApiOperation(value = "get a brand")
     @RequestMapping(path = "/api/brand/get/{id}", method = RequestMethod.GET)
     public BrandData getBrand(@PathVariable int id) throws ApiException {
-        return service.get(id);
+        return dto.get(id);
 
     }
 
     @ApiOperation(value = "update a brand")
     @RequestMapping(path = "/api/brand/update", method = RequestMethod.PUT)
     public void updateBrand(@RequestBody BrandData p, HttpServletResponse response) throws ApiException, IOException {
-        service.update(p);
+        dto.update(p);
         success(response);
     }
 
@@ -71,7 +72,4 @@ public class BrandApiController {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
     }
-
-
-
 }

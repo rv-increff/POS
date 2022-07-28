@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,10 +24,10 @@ import static pos.util.RandomUtil.getRandomNumber;
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration("src/test/webapp")
 @Transactional
-public class OrderServiceTest {
+public class OrderDtoTest {
 
     @Resource
-    private OrderServices services;
+    private OrderDto dto;
     @Resource
     private OrderDao dao;
 
@@ -37,7 +37,7 @@ public class OrderServiceTest {
         int n =5;
         for(int i=0;i<n;i++)daoInsertHelper();
 
-        List<OrderData> plist = services.getAll();
+        List<OrderData> plist = dto.getAll();
         Assert.assertEquals(n,plist.size());
     }
     @Test
@@ -47,10 +47,10 @@ public class OrderServiceTest {
         List<OrderPojo> orderPojoList = dao.selectAll();
 
         int index  = orderPojoList.get(n-1).getId();
-        OrderData p = services.get(index);
+        OrderData p = dto.get(index);
         Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
-            services.get(index+1);
+            dto.get(index+1);
         }catch (ApiException e){
             Assert.assertEquals("Order with given id does not exist, id : " + (index+1),e.getMessage());
         }
@@ -58,20 +58,20 @@ public class OrderServiceTest {
 
     @Test
     public void add() throws ApiException {
-        services.add();
+        dto.add();
     }
 
     @Test
     public void updateOrderStatus() throws ApiException {
         Integer id = getRandomNumber();
         try{
-            services.updateOrderStatusPlaced(id);
+            dto.updateOrderStatusPlaced(id);
         }catch (ApiException e){
             Assert.assertEquals("Order with given id does not exist, id : " + id,e.getMessage());
         }
         daoInsertHelper();
         id = dao.selectAll().get(0).getId();
-        services.updateOrderStatusPlaced(id);
+        dto.updateOrderStatusPlaced(id);
     }
     private OrderPojo daoInsertHelper(){
         OrderPojo p = new OrderPojo();

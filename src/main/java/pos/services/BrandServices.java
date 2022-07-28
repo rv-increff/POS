@@ -24,8 +24,6 @@ public class BrandServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion
-        checkNotNullUtil(p,"brand or category cannot be null");
-        normalizeUtil(p);
         if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException("Brand and category pair should be unique");
         }
@@ -85,17 +83,12 @@ public class BrandServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<BrandData> getAll() throws ApiException {
-        List<BrandPojo> p =  dao.selectAll();
-        List<BrandData> b = new ArrayList<BrandData>();
-        for( BrandPojo pj : p){
-            b.add(convertPojoToBrandForm(pj));
-        }
-        return b;
+    public List<BrandPojo> getAll() throws ApiException {
+        return dao.selectAll();
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public BrandData get(int id) throws ApiException {
+    public BrandPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
@@ -103,7 +96,6 @@ public class BrandServices {
     public void update(BrandData p) throws ApiException {
         checkNotNullUtil(p,"brand or category cannot be null");
         normalizeUtil(p);
-        System.out.println(p.getBrand() +" "+ p.getCategory());
         if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException(p.getBrand() + " - " +  p.getCategory() + " pair should be unique");
         }
@@ -111,12 +103,12 @@ public class BrandServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public BrandData getCheck(int id) throws ApiException {
+    public BrandPojo getCheck(int id) throws ApiException {
             BrandPojo p = dao.select(id);
             if (p== null) {
                 throw new ApiException("Brand with given id does not exist ,id : " + id);
             }
-            return convertPojoToBrandForm(p);
+            return p;
         }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -135,12 +127,6 @@ public class BrandServices {
         dao.update(); //symbolic
     }
 
-    private BrandData convertPojoToBrandForm(BrandPojo p){
-        BrandData b = new BrandData();
-        b.setId(p.getId());
-        b.setBrand(p.getBrand());
-        b.setCategory(p.getCategory());
-        return b;
-    }
+
 
 }

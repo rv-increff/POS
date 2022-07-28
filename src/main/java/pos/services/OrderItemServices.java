@@ -6,6 +6,7 @@ import pos.dao.InventoryDao;
 import pos.dao.OrderItemDao;
 import pos.dao.OrderDao;
 import pos.dao.ProductDao;
+import pos.dto.OrderDto;
 import pos.model.*;
 import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
@@ -37,6 +38,8 @@ public class OrderItemServices {
     private InventoryServices invService;
     @Autowired
     private OrderServices OServices;
+    @Autowired
+    private OrderDto ODto;
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(OrderItemForm p) throws ApiException {
@@ -101,34 +104,23 @@ public class OrderItemServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<OrderItemData> getAll() throws ApiException {
-        List<OrderItemPojo> p =  dao.selectAll();
-        List<OrderItemData> b = new ArrayList<OrderItemData>();
-        for( OrderItemPojo pj : p){
-            b.add(convertPojoToOrderForm(pj));
-        }
-        return b;
+    public List<OrderItemPojo> getAll() throws ApiException {
+        return dao.selectAll();
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public OrderItemData get(int id) throws ApiException {
+    public OrderItemPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<OrderItemData> getOrderItemForOrder(int orderId) throws ApiException {
+    public List<OrderItemPojo> getOrderItemForOrder(int orderId) throws ApiException {
         OrderPojo oPojo = oDao.select(orderId);
         if (oPojo == null) {
             throw new ApiException("Order with this id does not exist, id : " + orderId);
         }
+        return dao.selectFromOrderId(orderId);
 
-        List<OrderItemPojo> orderList = dao.selectFromOrderId(orderId);
-        List<OrderItemData> orderItemDataList = new ArrayList<>();
-        for(OrderItemPojo i : orderList){
-            OrderItemData j = convertPojoToOrderForm(i);
-            orderItemDataList.add(j);
-        }
-        return orderItemDataList;
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -146,12 +138,12 @@ public class OrderItemServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public OrderItemData getCheck(int id) throws ApiException {
+    public OrderItemPojo getCheck(int id) throws ApiException {
         OrderItemPojo p = dao.select(id);
         if (p == null) {
             throw new ApiException("OrderItem with given id does not exist ,id : " + id);
         }
-        return convertPojoToOrderForm(p);
+        return p;
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -182,7 +174,7 @@ public class OrderItemServices {
     }
 
     public boolean checkOrderStatus(int orderId) throws ApiException {
-        OrderData p = OServices.getCheck(orderId);
+        OrderData p = ODto.get(orderId);
         return p.isOrderPlaced();
     }
 
@@ -212,14 +204,6 @@ public class OrderItemServices {
         }
     }
 
-    private OrderItemData convertPojoToOrderForm(OrderItemPojo p){
-        OrderItemData b = new OrderItemData();
-        b.setId(p.getId());
-        b.setQuantity(p.getQuantity());
-        b.setSellingPrice(p.getSellingPrice());
-        b.setProductId(p.getProductId());
-        b.setOrderId(p.getOrderId());
-        return b;
-    }
+
 
 }

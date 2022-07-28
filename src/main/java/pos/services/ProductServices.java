@@ -36,8 +36,7 @@ public class ProductServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(ProductForm p) throws ApiException {
-        checkNotNullUtil(p,"parameters in the Insert form cannot be null");
-        normalizeUtil(p);
+
         if(dao.selectFromBarcode(p.getBarcode())!=null){
             throw new ApiException("barcode "  + p.getBarcode() +  " already exists");
         }
@@ -136,24 +135,18 @@ public class ProductServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<ProductData> getAll() throws ApiException {
-        List<ProductPojo> p =  dao.selectAll();
-        List<ProductData> b = new ArrayList<ProductData>();
-        for( ProductPojo pj : p){
-            b.add(convertPojoToProductForm(pj));
-        }
-        return b;
+    public List<ProductPojo> getAll() throws ApiException {
+        return dao.selectAll();
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public ProductData get(int id) throws ApiException {
+    public ProductPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(ProductUpdateForm p) throws ApiException {
-        checkNotNullUtil(p,"parameters in the Update form cannot be null");
-        normalizeUtil(p);
+
         if(dao.selectFromBarcodeNotEqualId(p.getBarcode(),p.getId())!=null){
             throw new ApiException("barcode " + p.getBarcode() + " already exists");
         }
@@ -167,12 +160,12 @@ public class ProductServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public ProductData getCheck(int id) throws ApiException {
+    public ProductPojo getCheck(int id) throws ApiException {
         ProductPojo p = dao.select(id);
         if (p== null) {
             throw new ApiException("Product with given id does not exist, id : " + id);
         }
-        return convertPojoToProductForm(p);
+        return p;
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -210,17 +203,6 @@ public class ProductServices {
         dao.update(); //symbolic
     }
 
-    private ProductData convertPojoToProductForm(ProductPojo p){
-        ProductData b = new ProductData();
-        b.setId(p.getId());
-        b.setBrand(p.getBrand());
-        b.setCategory(p.getCategory());
-        b.setBrandPojoId(p.getBrandId());
-        b.setBarcode(p.getBarcode());
-        b.setMrp(p.getMrp());
-        b.setName(p.getName());
-        return b;
-    }
 
 }
 

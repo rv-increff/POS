@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import pos.dto.BrandDto;
+import pos.dto.InvoiceDto;
 import pos.model.*;
 import pos.spring.ApiException;
 import pos.services.BrandServices;
@@ -21,15 +23,18 @@ import java.util.List;
 public class InvoiceApiController {
 
     @Autowired
-    private InvoiceServices service;
+    private InvoiceDto iDto;
 
     @Autowired
     private BrandServices bService;
 
+    @Autowired
+    private BrandDto bDto;
+
     @ApiOperation(value = "Get order invoice for orderId")
     @RequestMapping(path = "/api/invoices/get-order-invoice/{orderId}", method = RequestMethod.GET)
     public void getOrderInvoice(@PathVariable int orderId,HttpServletResponse response) throws ApiException, IOException, TransformerException {
-        service.getOrderInvoice(orderId);
+        iDto.getOrderInvoice(orderId);
         String path = "/Users/rahulverma/Downloads/POS/src/invoice.pdf";
         File file = new File(path);
         if (file.exists()) {
@@ -45,20 +50,20 @@ public class InvoiceApiController {
     @ApiOperation(value = "Get Sales report ")
     @RequestMapping(path = "/api/invoices/get-sales", method = RequestMethod.POST)
     public List<SalesReport> getsSalesReport(@RequestBody SalesReportForm s) throws ApiException, ParseException {
-        return service.getSalesReport(s);
+        return iDto.getSalesReport(s);
     }
 
 
     @ApiOperation(value = "Get Brand report ")
     @RequestMapping(path = "/api/invoices/get-brand-report", method = RequestMethod.GET)
     public List<BrandData> getsBrandReport() throws ApiException {
-        return bService.getAll();
+        return bDto.getAll();
     }
 
     @ApiOperation(value = "Get Inventory report ")
     @RequestMapping(path = "/api/invoices/get-inventory-report", method = RequestMethod.GET)
     public List<InventoryReport> getInventoryReport() throws ApiException {
-        return service.getInventoryReport();
+        return iDto.getInventoryReport();
     }
 
 

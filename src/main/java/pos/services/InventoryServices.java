@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import pos.dao.*;
 import pos.dao.InventoryDao;
 import pos.model.InventoryForm;
-import pos.model.InventoryData;
+import pos.pojo.InventoryPojo;
 import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
 import pos.pojo.ProductPojo;
@@ -31,7 +31,6 @@ public class InventoryServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(InventoryForm p) throws ApiException {
-        checkNotNullUtil(p,"Barcode or quantity cannot be NULL");
         if(dao.selectFromBarcode(p.getBarcode())!=null){
             throw new ApiException("Inventory data already exist update the record instead");
         }
@@ -117,23 +116,17 @@ public class InventoryServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<InventoryData> getAll() throws ApiException {
-        List<InventoryPojo> p =  dao.selectAll();
-        List<InventoryData> b = new ArrayList<InventoryData>();
-        for( InventoryPojo pj : p){
-            b.add(convertPojoToInventoryForm(pj));
-        }
-        return b;
+    public List<InventoryPojo> getAll() throws ApiException {
+        return dao.selectAll();
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public InventoryData get(int id) throws ApiException {
+    public InventoryPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(InventoryUpdateForm p) throws ApiException {
-        checkNotNullUtil(p,"Quantity cannot be NULL");
         getCheck(p.getId());
         if(p.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 1");
@@ -142,20 +135,13 @@ public class InventoryServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public InventoryData getCheck(int id) throws ApiException {
+    public InventoryPojo getCheck(int id) throws ApiException {
         InventoryPojo p = dao.select(id);
         if (p == null) {
             throw new ApiException("Inventory with given id does not exist, id : " + id);
         }
-        return convertPojoToInventoryForm(p);
+        return p;
     }
-//
-//    @Transactional(rollbackOn = ApiException.class)
-//    public boolean checkOrderOfInv(int id) throws ApiException {
-//        InventoryData p = getCheck(id);
-//        int productId = p.getProductId();
-//        return oService.checkOrderItemWithProductId(productId);
-//    }
 
     private void updateUtil(InventoryUpdateForm p) {
         InventoryPojo ex = dao.select(p.getId());
@@ -163,12 +149,5 @@ public class InventoryServices {
         dao.update(); //symbolic
     }
 
-    private InventoryData convertPojoToInventoryForm(InventoryPojo p){
-        InventoryData b = new InventoryData();
-        b.setId(p.getId());
-        b.setBarcode(p.getBarcode());
-        b.setQuantity(p.getQuantity());
-        b.setProductId(p.getProductId());
-        return b;
-    }
+
 }

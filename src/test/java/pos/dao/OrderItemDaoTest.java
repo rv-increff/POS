@@ -12,7 +12,7 @@ import pos.model.SalesReportForm;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.OrderPojo;
 import pos.pojo.ProductPojo;
-import pos.services.QaConfig;
+import pos.dto.QaConfig;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;

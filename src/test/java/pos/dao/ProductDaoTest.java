@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pos.pojo.ProductPojo;
-import pos.services.QaConfig;
+import pos.dto.QaConfig;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;

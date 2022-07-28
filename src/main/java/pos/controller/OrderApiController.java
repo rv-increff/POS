@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiOperation;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pos.dto.OrderDto;
 import pos.model.OrderData;
 import pos.spring.ApiException;
-import pos.services.OrderServices;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,31 +19,31 @@ import java.util.List;
 public class OrderApiController {
 
     @Autowired
-    private OrderServices service;
+    private OrderDto dto;
 
     @ApiOperation(value = "Gives all Order data")
     @RequestMapping(path = "/api/order/get-all", method = RequestMethod.GET)
     public List<OrderData> getAllOrderDetails() throws ApiException {
-        return service.getAll();
+        return dto.getAll();
     }
 
     @ApiOperation(value = "Insert Order data")
     @RequestMapping(path = "/api/order/insert", method = RequestMethod.POST)
     public void insertOrder(HttpServletResponse response) throws ApiException, IOException {
-        service.add();
+        dto.add();
         success(response);
     }
 
     @ApiOperation(value = "get a Order")
     @RequestMapping(path = "/api/order/get/{id}", method = RequestMethod.GET)
     public OrderData getOrder(@PathVariable int id) throws ApiException {
-        return service.get(id);
+        return dto.get(id);
 
     }
     @ApiOperation(value = "set order status placed")
     @RequestMapping(path = "/api/order/placed/{id}", method = RequestMethod.PUT)
     public void setOrderStatusPlaced(@PathVariable int id,HttpServletResponse response) throws ApiException, IOException {
-        service.updateOrderStatusPlaced(id);
+        dto.updateOrderStatusPlaced(id);
         success(response);
     }
 

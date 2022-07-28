@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import javax.transaction.Transactional;
 

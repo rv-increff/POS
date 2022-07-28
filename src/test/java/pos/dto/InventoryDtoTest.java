@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,9 +29,9 @@ import static pos.util.RandomUtil.getRandomString;
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration("src/test/webapp")
 @Transactional
-public class InventoryServicesTest {
+public class InventoryDtoTest {
     @Resource
-    private InventoryServices services;
+    private InventoryDto dto;
     @Resource
     private InventoryDao dao;
     @Resource
@@ -44,7 +44,7 @@ public class InventoryServicesTest {
         Integer n =5;
         for(Integer i=0;i<n;i++)daoInsertHelper();
 
-        List<InventoryData> plist = services.getAll();
+        List<InventoryData> plist = dto.getAll();
         Assert.assertEquals(n,(Integer)plist.size());
     }
     @Test
@@ -54,10 +54,10 @@ public class InventoryServicesTest {
         List<InventoryPojo> pList = dao.selectAll();
 
         Integer index  = pList.get(n-1).getId();
-        InventoryData p = services.get(index);
+        InventoryData p = dto.get(index);
         Assert.assertEquals(index,p.getId());
         try {
-            services.get(index+1);
+            dto.get(index+1);
         }catch (ApiException e){
             Assert.assertEquals("Inventory with given id does not exist, id : " + (index+1),e.getMessage());
         }
@@ -67,7 +67,7 @@ public class InventoryServicesTest {
     public void addEmptyObject() {
         InventoryForm p = new InventoryForm();
         try {
-            services.add(p);
+            dto.add(p);
         }catch (Exception e){
             Assert.assertEquals("Barcode or quantity cannot be NULL",e.getMessage());
         }
@@ -83,7 +83,7 @@ public class InventoryServicesTest {
         p.setQuantity(in.getQuantity());
 
         try{
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             Assert.assertEquals("Inventory data already exist update the record instead",e.getMessage());
         }
@@ -97,7 +97,7 @@ public class InventoryServicesTest {
         p.setQuantity(1000000000);
 
         try{
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             Assert.assertEquals("Product with this barcode does not exist",e.getMessage());
         }
@@ -112,7 +112,7 @@ public class InventoryServicesTest {
         p.setBarcode(pj.getBarcode());
         p.setQuantity(1000000000);
 
-        services.add(p);
+        dto.add(p);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class InventoryServicesTest {
         List<InventoryForm> pList = new ArrayList<>();
         pList.add(p);
         try {
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (Exception e){
             Assert.assertEquals("Error : row -> " + 1 + " barcode or quantity cannot be NULL\n",e.getMessage());
         }
@@ -137,7 +137,7 @@ public class InventoryServicesTest {
         List<InventoryForm> pList = new ArrayList<>();
         pList.add(p);
         try {
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (Exception e){
             Assert.assertEquals("Error : row -> " + 1 + " product with the barcode " + p.getBarcode() + " does not exist\n",e.getMessage());
         }
@@ -153,9 +153,9 @@ public class InventoryServicesTest {
         p.setQuantity(in.getQuantity());
         List<InventoryForm> pList = new ArrayList<>();
         pList.add(p);
-        services.bulkAdd(pList);
+        dto.bulkAdd(pList);
         try {
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (ApiException e){
             Assert.assertEquals("Error : row -> " + 1 + " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead\n",e.getMessage());
         }
@@ -167,7 +167,7 @@ public class InventoryServicesTest {
         InventoryUpdateForm inv = new InventoryUpdateForm();
         inv.setId(p.getId());
         inv.setQuantity(p.getQuantity()+100);
-        services.update(inv);
+        dto.update(inv);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class InventoryServicesTest {
         inv.setId(id);
         inv.setQuantity(100);
         try{
-        services.update(inv);
+        dto.update(inv);
         }catch (ApiException e){
             Assert.assertEquals("Inventory with given id does not exist, id : " + id,e.getMessage());
         }
@@ -189,7 +189,7 @@ public class InventoryServicesTest {
         InventoryUpdateForm inv = new InventoryUpdateForm();
 
         try{
-        services.update(inv);
+        dto.update(inv);
         }catch (ApiException e){
             Assert.assertEquals("Quantity cannot be NULL", e.getMessage());
         }

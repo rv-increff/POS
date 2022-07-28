@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,6 +18,7 @@ import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.OrderPojo;
 import pos.pojo.ProductPojo;
+import pos.services.OrderItemServices;
 import pos.spring.ApiException;
 
 import javax.annotation.Resource;
@@ -33,10 +34,12 @@ import static pos.util.RandomUtil.getRandomString;
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration("src/test/webapp")
 @Transactional
-public class OrderItemServiceTest {
+public class OrderItemDtoTest {
 
     @Resource
     private OrderItemServices services;
+    @Resource
+    private OrderItemDto dto;
     @Resource
     private OrderItemDao dao;
     @Resource
@@ -50,7 +53,7 @@ public class OrderItemServiceTest {
     public void getAll() throws ApiException {
         for(int i=0;i<5;i++)daoInsertHelper();
 
-        List<OrderItemData> plist = services.getAll();
+        List<OrderItemData> plist = dto.getAll();
         Assert.assertEquals(5,plist.size());
     }
 
@@ -59,7 +62,7 @@ public class OrderItemServiceTest {
         for(int i=0;i<5;i++)daoInsertHelper();
         List<OrderItemPojo> orderItemPojoList = dao.selectAll();
         int index  = orderItemPojoList.get(4).getId();
-        OrderItemData p = services.get(index);
+        OrderItemData p = dto.get(index);
         Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
             services.get(index+1);
@@ -165,7 +168,7 @@ public class OrderItemServiceTest {
         for(int i=0;i<n;i++){
             daoInsertHelper(orderId);
         }
-        List<OrderItemData> oList = services.getOrderItemForOrder(orderId);
+        List<OrderItemData> oList = dto.getOrderItemForOrder(orderId);
         Assert.assertEquals(n,oList.size());
 
         try{

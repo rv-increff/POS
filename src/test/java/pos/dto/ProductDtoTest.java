@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +12,8 @@ import pos.dao.ProductDao;
 import pos.model.*;
 import pos.pojo.BrandPojo;
 import pos.pojo.ProductPojo;
+import pos.services.InventoryServices;
+import pos.services.ProductServices;
 import pos.spring.ApiException;
 
 import javax.annotation.Resource;
@@ -28,10 +30,12 @@ import static pos.util.RandomUtil.getRandomString;
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration("src/test/webapp")
 @Transactional
-public class ProductServiceTest {
+public class ProductDtoTest {
 
     @Resource
-    private ProductServices services;
+    private ProductDto dto;
+    @Resource
+    private ProductServices service;
     @Resource
     private ProductDao dao;
     @Resource
@@ -46,7 +50,7 @@ public class ProductServiceTest {
         int n =5;
         for(int i=0;i<n;i++)daoInsertHelper();
 
-        List<ProductData> plist = services.getAll();
+        List<ProductData> plist = dto.getAll();
         Assert.assertEquals(n,plist.size());
     }
     @Test
@@ -56,10 +60,10 @@ public class ProductServiceTest {
         List<ProductPojo> productPojoList = dao.selectAll();
 
         int index  = productPojoList.get(n-1).getId();
-        ProductData p = services.get(index);
+        ProductData p = dto.get(index);
         Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
-            services.get(index+1);
+            dto.get(index+1);
         }catch (ApiException e){
             Assert.assertEquals("Product with given id does not exist, id : " + (index+1),e.getMessage());
         }
@@ -69,7 +73,7 @@ public class ProductServiceTest {
     public void addEmptyObject() throws ApiException {
         ProductForm p = new ProductForm();
         try {
-            services.add(p);
+            dto.add(p);
         }catch (Exception e){
             Assert.assertEquals("parameters in the Insert form cannot be null",e.getMessage());
         }
@@ -94,7 +98,7 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
         try{
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             String err = p.getBrand() + " - " + p.getCategory() + " brand-category does not exist";
             Assert.assertEquals(err,e.getMessage());
@@ -117,7 +121,7 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
         try{
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             String err = "barcode "  + p.getBarcode() +  " already exists";
             Assert.assertEquals(err,e.getMessage());
@@ -147,7 +151,7 @@ public class ProductServiceTest {
         p.setMrp(mrp);
 
         try{
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             String err = "barcode "  + p.getBarcode() +  " not valid, barcode can only have alphanumeric values";
             Assert.assertEquals(err,e.getMessage());
@@ -175,7 +179,7 @@ public class ProductServiceTest {
         p.setName(name);
         p.setMrp(mrp);
 
-        services.add(p);
+        dto.add(p);
 
     }
 
@@ -187,7 +191,7 @@ public class ProductServiceTest {
         pList.add(p);
 
         try{
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         } catch (ApiException e) {
             String err = "Error : row -> " + 1 + " parameters in the Insert form cannot be null\n";
             Assert.assertEquals(err,e.getMessage());
@@ -219,7 +223,7 @@ public class ProductServiceTest {
         List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
         try{
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (ApiException e){
             String err = "Error : row -> " + 1 + " barcode "  + p.getBarcode() +  " already exists\n";
             Assert.assertEquals(err,e.getMessage());
@@ -244,7 +248,7 @@ public class ProductServiceTest {
         List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
         try{
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (ApiException e){
             String err = "Error : row -> " + 1 + " " + p.getBrand() + " - " + p.getCategory() + " brand-category does not exist\n";
             Assert.assertEquals(err,e.getMessage());
@@ -278,7 +282,7 @@ public class ProductServiceTest {
         pList.add(p);
 
         try{
-            services.bulkAdd(pList);
+            dto.bulkAdd(pList);
         }catch (ApiException e){
             String err = "Error : row -> " + 1 + " barcode "  + p.getBarcode() +  " not valid, barcode can only have alphanumeric values\n";
             Assert.assertEquals(err,e.getMessage());
@@ -311,7 +315,7 @@ public class ProductServiceTest {
         List<ProductForm> pList = new ArrayList<>();
         pList.add(p);
 
-        services.bulkAdd(pList);
+        dto.bulkAdd(pList);
 
 
     }
@@ -335,7 +339,7 @@ public class ProductServiceTest {
         pUpdate.setMrp(p.getMrp());
         pUpdate.setId(p.getId());
 
-        services.update(pUpdate);
+        dto.update(pUpdate);
 
     }
     @Test
@@ -343,7 +347,7 @@ public class ProductServiceTest {
 
         ProductUpdateForm pUpdate = new ProductUpdateForm();
         try{
-        services.update(pUpdate);
+        dto.update(pUpdate);
         }catch (ApiException e){
             String err = "parameters in the Update form cannot be null";
             Assert.assertEquals(err,e.getMessage());
@@ -367,7 +371,7 @@ public class ProductServiceTest {
         pUpdate.setId(p.getId());
 
         try{
-        services.update(pUpdate);
+        dto.update(pUpdate);
         }catch (ApiException e){
             String err = "barcode " + pUpdate.getBarcode() + " already exists";
             Assert.assertEquals(err,e.getMessage());
@@ -396,7 +400,7 @@ public class ProductServiceTest {
         pUpdate.setId(p.getId());
 
         try{
-            services.update(pUpdate);
+            dto.update(pUpdate);
         }catch (ApiException e){
             String err = "barcode "  + pUpdate.getBarcode() +  " not valid, barcode can only have alphanumeric values";
             Assert.assertEquals(err,e.getMessage());
@@ -424,7 +428,7 @@ public class ProductServiceTest {
         pUpdate.setId(id);
 
         try{
-            services.update(pUpdate);
+            dto.update(pUpdate);
         }catch (ApiException e){
             String err = "product with given id does not exist, id : " + id;
             Assert.assertEquals(err,e.getMessage());
@@ -446,7 +450,7 @@ public class ProductServiceTest {
         pUpdate.setId(p.getId());
 
         try{
-            services.update(pUpdate);
+            dto.update(pUpdate);
         }catch (ApiException e){
             String err = pUpdate.getBrand() + " - " + pUpdate.getCategory() + " brand-category does not exist";
             Assert.assertEquals(err,e.getMessage());
@@ -456,7 +460,7 @@ public class ProductServiceTest {
 
     @Test
     public void checkIfBrandExist(){
-        Assert.assertTrue(!services.checkIfBrandExist(0));
+        Assert.assertTrue(!service.checkIfBrandExist(0));
         String category = getRandomString().toLowerCase();
         String brand = getRandomString().toLowerCase(Locale.ROOT);
 
@@ -475,7 +479,7 @@ public class ProductServiceTest {
         pUpdate.setMrp(p.getMrp());
         pUpdate.setId(p.getId());
 
-        Assert.assertTrue(services.checkIfBrandExist(dao.selectAll().get(0).getBrandId()));
+        Assert.assertTrue(service.checkIfBrandExist(dao.selectAll().get(0).getBrandId()));
 
 
     }

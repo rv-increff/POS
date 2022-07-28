@@ -1,4 +1,4 @@
-package pos.services;
+package pos.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,10 +34,10 @@ import static pos.util.RandomUtil.getRandomString;
 @ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration("src/test/webapp")
 @Transactional
-public class InvoiceServicesTest {
+public class InvoiceDtoTest {
 
     @Resource
-    InvoiceServices service;
+    InvoiceDto dto;
 
     @Resource
     OrderItemDao dao;
@@ -104,7 +104,7 @@ public class InvoiceServicesTest {
         sf.setBrand(brand);
         sf.setCategory(category);
 
-        Assert.assertEquals(1,service.getSalesReport(sf).size());
+        Assert.assertEquals(1, dto.getSalesReport(sf).size());
     }
 
 }

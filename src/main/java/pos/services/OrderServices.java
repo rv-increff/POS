@@ -26,35 +26,24 @@ public class OrderServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<OrderData> getAll() throws ApiException {
-        List<OrderPojo> p =  dao.selectAll();
-        List<OrderData> b = new ArrayList<OrderData>();
-        for( OrderPojo pj : p){
-            b.add(convertPojoToOrderData(pj));
-        }
-        return b;
+    public List<OrderPojo> getAll() throws ApiException {
+        return  dao.selectAll();
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public OrderData get(int id) throws ApiException {
+    public OrderPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
-    private OrderData convertPojoToOrderData(OrderPojo p){
-        OrderData b = new OrderData();
-        b.setId(p.getId());
-        b.setTime(p.getTime());
-        b.setOrderPlaced(p.getOrderPlaced());
-        return b;
-    }
+
 
     @Transactional(rollbackOn = ApiException.class)
-    public OrderData getCheck(int id) throws ApiException {
+    public OrderPojo getCheck(int id) throws ApiException {
         OrderPojo p = dao.select(id);
         if (p== null) {
             throw new ApiException("Order with given id does not exist, id : " + id);
         }
-        return convertPojoToOrderData(p);
+        return p;
     }
 
     @Transactional(rollbackOn = ApiException.class)
