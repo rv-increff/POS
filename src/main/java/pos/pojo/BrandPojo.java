@@ -9,10 +9,12 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"brand", "category"})}, name="pos_brand_pojo")
-public class BrandPojo {
+public class BrandPojo extends AbstractPojo {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    @TableGenerator(name=BRAND_GENERATOR,initialValue = BRAND_INITIAL_VALUE)
+    @GeneratedValue(strategy= GenerationType.TABLE,generator = BRAND_GENERATOR) //TODO table
+    private Integer id;  //TODO add locking
 
     @Column(nullable = false)
     private String brand;

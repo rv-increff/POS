@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: pos.dao.InventoryDaoTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.966 sec
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.158 sec

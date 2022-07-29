@@ -14,7 +14,7 @@ public class InventoryDao extends AbstractDao{
     private final static String SELECT_INVENTORY_REPORT = "select new " +
             "pos.model.InventoryReport(p.brand, p.category, i.quantity) from ProductPojo p, InventoryPojo i where " +
             "p.id=i.productId";
-
+ //TODO change to inmenmry
     public void add(InventoryPojo p){
         addAbs(p);
     }

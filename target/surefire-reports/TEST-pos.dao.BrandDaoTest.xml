@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="pos.dao.BrandDaoTest" time="0.175" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="pos.dao.BrandDaoTest" time="0.069" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -65,12 +65,12 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoInsert" time="0.009"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoSelect" time="0.043"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoUnique" time="0.022"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoUpdate" time="0.003"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckCategory" time="0.018"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckBrand" time="0.029"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoGetIdFromData" time="0.031"/>
-  <testcase classname="pos.dao.BrandDaoTest" name="daoSelectAll" time="0.02"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoInsert" time="0.015"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoSelect" time="0.015"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoUnique" time="0.005"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoUpdate" time="0.005"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckCategory" time="0.01"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoCheckBrand" time="0.006"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoGetIdFromData" time="0.007"/>
+  <testcase classname="pos.dao.BrandDaoTest" name="daoSelectAll" time="0.006"/>
 </testsuite>

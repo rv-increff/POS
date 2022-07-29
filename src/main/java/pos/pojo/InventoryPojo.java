@@ -8,9 +8,11 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = {"barcode"}) }, name="pos_inventory_pojo")
-public class InventoryPojo {
+public class InventoryPojo extends AbstractPojo{
+
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @TableGenerator(name=INVENTORY_GENERATOR,initialValue = INVENTORY_INITIAL_VALUE)
+    @GeneratedValue(strategy= GenerationType.TABLE,generator = INVENTORY_GENERATOR)
     private Integer id;
 
     @Column(nullable = false)

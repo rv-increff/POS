@@ -28,7 +28,7 @@ public class OrderItemDao extends AbstractDao{
     private final static String QUERY_BUILDER =
             "select new pos.model.SalesReport(p.brand, p.category,sum(oi.quantity) " +
             "as quantity, sum(oi.quantity * oi.sellingPrice) as revenue) " +
-            "from ProductPojo p, OrderItemPojo oi, OrderPojo o where ";
+            "from ProductPojo p, OrderItemPojo oi, OrderPojo o where "; //TODO in mem
     private final static String QUERY_BUILDER_SUFFIX =  " group by p.brand,p.category";
 
     public void add(OrderItemPojo p){
@@ -95,7 +95,7 @@ public class OrderItemDao extends AbstractDao{
         TypedQuery<SalesReport> query = em().createQuery(queryBuilderFinal,SalesReport.class);
         if(!Objects.equals(s.getTo(), "")){
 //            query.setParameter("toTime",sdf.parse(s.getTo()));
-            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" );
+            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" ); //TODO donot use
             query.setParameter("toTime", ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getTo())),zoneId));
         }
         if(!Objects.equals(s.getFrom(), "")){

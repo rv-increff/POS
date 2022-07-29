@@ -9,10 +9,11 @@ import java.time.ZonedDateTime;
 @Setter
 @Entity
 @Table(name = "pos_order_pojo")
-public class OrderPojo {
-    @TableGenerator(name="orderGen", allocationSize=1,initialValue = 100000)
+public class OrderPojo extends AbstractPojo{
+
+    @TableGenerator(name=ORDER_GENERATOR, initialValue = INVENTORY_INITIAL_VALUE)
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE,generator = "orderGen")
+    @GeneratedValue(strategy= GenerationType.TABLE,generator = ORDER_GENERATOR)
     private Integer id; //TODO make a common file table consts and all names and table data as final static
 
     @Column(nullable = false)

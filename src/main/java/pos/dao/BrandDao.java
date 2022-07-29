@@ -12,7 +12,7 @@ public class BrandDao extends AbstractDao{
 
     private final static String SELECT_FROM_BRAND_CATEGORY = "select p from BrandPojo p where " +
             "brand=:brand and category=:category";
-    private final static String SELECT_FROM_BRAND = "select p from BrandPojo p where brand=:brand";
+    private final static String SELECT_FROM_BRAND = "select p from BrandPojo p where brand=:brand"; //TODO select by
     private final static String SELECT_FROM_CATEGORY = "select p from BrandPojo p where category=:category";
 
     public void add(BrandPojo p){
@@ -27,7 +27,7 @@ public class BrandDao extends AbstractDao{
         return selectAll(BrandPojo.class);
     }
 
-    public BrandPojo selectFromBrandCategory(String brand, String category){
+    public BrandPojo selectFromBrandCategory(String brand, String category){ //TODO by not
         TypedQuery<BrandPojo> query = em().createQuery(SELECT_FROM_BRAND_CATEGORY,BrandPojo.class);
         query.setParameter("brand",brand);
         query.setParameter("category",category);

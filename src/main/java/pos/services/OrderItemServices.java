@@ -78,7 +78,7 @@ public class OrderItemServices {
             throw new ApiException("Cannot add as order already placed for order id : " + p.getOrderId());
         }
         if(p.getQuantity()<=0){
-            throw new ApiException("Quantity must be greater than 1");
+            throw new ApiException("Quantity must be greater than 0");
         }
         OrderItemPojo oiPojo = new OrderItemPojo();
         oiPojo.setOrderId(p.getOrderId());
@@ -95,7 +95,7 @@ public class OrderItemServices {
     public void updateQtyInventory(OrderItemForm p, int availQty) throws ApiException {
         InventoryUpdateForm inv = new InventoryUpdateForm();
         if(p.getQuantity()<=0){
-            throw new ApiException("Quantity must be greater than 1");
+            throw new ApiException("Quantity must be greater than 0");
         }
 
         int invId = iDao.selectFromProductId(p.getProductId()).getId();

@@ -16,7 +16,7 @@
       <fo:page-sequence master-reference="simpleA4">
         <fo:flow flow-name="xsl-region-body">
           <fo:block font-size="25pt" text-align="center" font-family="Helvetica" font-weight="bold" space-after="2mm">
-            Order Invoice
+            Invoice
           </fo:block>
           <fo:block font-size="12pt" text-align="center" font-family="Helvetica" font-weight="bold" space-after="5mm">
             Ordered on - <xsl:value-of select="time"/>

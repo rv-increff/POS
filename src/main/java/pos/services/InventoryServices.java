@@ -38,7 +38,7 @@ public class InventoryServices {
         }
         int productId = pPojo.getId();
         if(p.getQuantity()<=0){
-            throw new ApiException("Quantity must be greater than 1");
+            throw new ApiException("Quantity must be greater than 0");
         }
         InventoryPojo ex = new InventoryPojo();
         ex.setBarcode(p.getBarcode());
@@ -126,8 +126,8 @@ public class InventoryServices {
     @Transactional(rollbackOn = ApiException.class)
     public void update(InventoryUpdateForm p) throws ApiException {
         getCheck(p.getId());
-        if(p.getQuantity()<=0){
-            throw new ApiException("Quantity must be greater than 1");
+        if(p.getQuantity()<0){
+            throw new ApiException("Quantity must be greater than 0");
         }
         updateUtil(p);
     }

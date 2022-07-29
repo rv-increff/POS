@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="pos.dao.OrderDaoTest" time="0.142" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="pos.dao.OrderDaoTest" time="0.096" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -65,8 +65,8 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.dao.OrderDaoTest" name="daoInsert" time="0.029"/>
-  <testcase classname="pos.dao.OrderDaoTest" name="daoSelect" time="0.054"/>
+  <testcase classname="pos.dao.OrderDaoTest" name="daoInsert" time="0.012"/>
+  <testcase classname="pos.dao.OrderDaoTest" name="daoSelect" time="0.023"/>
   <testcase classname="pos.dao.OrderDaoTest" name="daoCheckOrderId" time="0.023"/>
-  <testcase classname="pos.dao.OrderDaoTest" name="daoSelectAll" time="0.036"/>
+  <testcase classname="pos.dao.OrderDaoTest" name="daoSelectAll" time="0.038"/>
 </testsuite>

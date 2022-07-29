@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class AbstractDao {
 	
 	@PersistenceContext
-	private EntityManager em;
+	protected EntityManager em;
 
 	protected <T> void addAbs(T pojoObject){
 		em.persist(pojoObject);

@@ -8,9 +8,11 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "orderId", "productId"}) }, name="pos_order_item_pojo")
-public class OrderItemPojo {
+public class OrderItemPojo extends AbstractPojo{
+
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @TableGenerator(name=ORDER_ITEM_GENERATOR,initialValue = INVENTORY_INITIAL_VALUE)
+    @GeneratedValue(strategy= GenerationType.TABLE,generator = ORDER_ITEM_GENERATOR)
     private Integer id;
 
     @Column(nullable = false)

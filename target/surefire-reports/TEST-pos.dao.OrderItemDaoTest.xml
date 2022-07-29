@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="9" failures="0" name="pos.dao.OrderItemDaoTest" time="0.379" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="pos.dao.OrderItemDaoTest" time="0.087" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -65,13 +65,12 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoSelectFromOrderId" time="0.038"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoDelete" time="0.076"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoInsert" time="0.009"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoSelect" time="0.033"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="daoSelectFromOrderId" time="0.013"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="daoDelete" time="0.02"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="daoInsert" time="0.004"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="daoSelect" time="0.015"/>
   <testcase classname="pos.dao.OrderItemDaoTest" name="daoUpdate" time="0.002"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoGetSalesReport" time="0.135"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="getOrderItemsForProductId" time="0.039"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoCheckOrderExist" time="0.032"/>
-  <testcase classname="pos.dao.OrderItemDaoTest" name="daoSelectAll" time="0.015"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="getOrderItemsForProductId" time="0.005"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="daoCheckOrderExist" time="0.007"/>
+  <testcase classname="pos.dao.OrderItemDaoTest" name="daoSelectAll" time="0.021"/>
 </testsuite>
