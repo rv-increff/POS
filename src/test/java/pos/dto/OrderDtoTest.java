@@ -3,6 +3,7 @@ package pos.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -12,11 +13,9 @@ import pos.model.OrderData;
 import pos.pojo.OrderPojo;
 import pos.spring.ApiException;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +27,9 @@ import static pos.util.RandomUtil.getRandomNumber;
 @Transactional
 public class OrderDtoTest {
 
-    @Resource
+    @Autowired
     private OrderDto dto;
-    @Resource
+    @Autowired
     private OrderDao dao;
 
 

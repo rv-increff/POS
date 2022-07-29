@@ -1,37 +1,33 @@
 package pos.util;
 import pos.spring.ApiException;
-
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class DataUtil {
     public static <T> void checkNotNullUtil(T form, String e) throws ApiException {
         try {
-            Method[] methods = form.getClass().getDeclaredMethods();
-            for (Method m : methods) {
-                if (!m.getGenericReturnType().toString().equals("void")) {
-                    if (m.invoke(form) == null) {
-                        throw new ApiException(e);
-                    }
+            Field[] fields = form.getClass().getDeclaredFields();
+            for (Field m : fields) {
+                m.setAccessible(true);
+                System.out.println(m.get(form));
+                if(m.get(form) == null){
+                    throw new ApiException(e);
                 }
             }
-        } catch (IllegalAccessException | InvocationTargetException err) {
+        } catch (IllegalAccessException err) {
             System.out.println(err);
         }
     }
 
     public static <T> Boolean checkNotNullBulkUtil(T form) {
         try {
-            Method[] methods = form.getClass().getDeclaredMethods();
-            for (Method m : methods) {
-                if (!m.getGenericReturnType().toString().equals("void")) {
-                    if (m.invoke(form) == null) {
+            Field[] fields = form.getClass().getDeclaredFields();
+            for (Field m : fields) {
+                    m.setAccessible(true);
+                System.out.println(m.get(form));
+                    if(m.get(form) == null)
                         return false;
-                    }
-                }
             }
-        } catch (IllegalAccessException | InvocationTargetException err) {
+        } catch (IllegalAccessException err) {
             System.out.println(err);
 
         }
@@ -43,7 +39,7 @@ public class DataUtil {
             for (Field m : fields) {
                 if (m.getGenericType().getTypeName().equals("java.lang.String") & m.getName() != "barcode") {
                     m.setAccessible(true);
-                    m.set(form,m.get(form).toString().toLowerCase());
+                    m.set(form,m.get(form).toString().toLowerCase().trim());
                 }
             }
         } catch (IllegalAccessException err) {

@@ -1,17 +1,15 @@
 package pos.controller;
 
 import com.google.gson.Gson;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import pos.dto.BrandDto;
-import pos.model.BrandForm;
 import pos.model.BrandData;
+import pos.model.BrandForm;
 import pos.spring.ApiException;
-import pos.services.BrandServices;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

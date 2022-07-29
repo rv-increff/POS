@@ -3,22 +3,23 @@ package pos.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pos.dao.BrandDao;
 import pos.dao.ProductDao;
-import pos.model.*;
+import pos.model.ProductData;
+import pos.model.ProductForm;
+import pos.model.ProductUpdateForm;
 import pos.pojo.BrandPojo;
 import pos.pojo.ProductPojo;
 import pos.services.InventoryServices;
 import pos.services.ProductServices;
 import pos.spring.ApiException;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -32,15 +33,15 @@ import static pos.util.RandomUtil.getRandomString;
 @Transactional
 public class ProductDtoTest {
 
-    @Resource
+    @Autowired
     private ProductDto dto;
-    @Resource
+    @Autowired
     private ProductServices service;
-    @Resource
+    @Autowired
     private ProductDao dao;
-    @Resource
+    @Autowired
     private BrandDao bDao;
-    @Resource
+    @Autowired
     private InventoryServices iService;
 
 
@@ -74,7 +75,7 @@ public class ProductDtoTest {
         ProductForm p = new ProductForm();
         try {
             dto.add(p);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("parameters in the Insert form cannot be null",e.getMessage());
         }
 

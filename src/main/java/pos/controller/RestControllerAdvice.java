@@ -1,6 +1,7 @@
 package pos.controller;
 
 import com.google.gson.Gson;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,9 +14,7 @@ import pos.spring.ApiException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-
-import org.json.simple.JSONObject;
+import java.util.Arrays;
 
 
 @ControllerAdvice

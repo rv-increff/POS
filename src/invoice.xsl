@@ -19,7 +19,7 @@
             Order Invoice
           </fo:block>
           <fo:block font-size="12pt" text-align="center" font-family="Helvetica" font-weight="bold" space-after="5mm">
-            Order Time-<xsl:value-of select="time"/>
+            Ordered on - <xsl:value-of select="time"/>
           </fo:block>
           <fo:block font-size="12pt" text-align="center" font-family="Helvetica" font-weight="bold" space-after="5mm">
             Order Id-<xsl:value-of select="orderId"/>

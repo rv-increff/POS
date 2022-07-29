@@ -3,6 +3,7 @@ package pos.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -10,17 +11,17 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import pos.dao.InventoryDao;
 import pos.dao.OrderItemDao;
 import pos.dao.ProductDao;
-import pos.model.*;
+import pos.model.InventoryData;
+import pos.model.InventoryForm;
+import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.ProductPojo;
 import pos.spring.ApiException;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static pos.util.RandomUtil.getRandomNumber;
 import static pos.util.RandomUtil.getRandomString;
@@ -30,13 +31,13 @@ import static pos.util.RandomUtil.getRandomString;
 @WebAppConfiguration("src/test/webapp")
 @Transactional
 public class InventoryDtoTest {
-    @Resource
+    @Autowired
     private InventoryDto dto;
-    @Resource
+    @Autowired
     private InventoryDao dao;
-    @Resource
+    @Autowired
     private ProductDao pDao;
-    @Resource
+    @Autowired
     private OrderItemDao oIDao;
 
     @Test
@@ -68,7 +69,7 @@ public class InventoryDtoTest {
         InventoryForm p = new InventoryForm();
         try {
             dto.add(p);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("Barcode or quantity cannot be NULL",e.getMessage());
         }
     }
@@ -122,7 +123,7 @@ public class InventoryDtoTest {
         pList.add(p);
         try {
             dto.bulkAdd(pList);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("Error : row -> " + 1 + " barcode or quantity cannot be NULL\n",e.getMessage());
         }
     }
@@ -138,7 +139,7 @@ public class InventoryDtoTest {
         pList.add(p);
         try {
             dto.bulkAdd(pList);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("Error : row -> " + 1 + " product with the barcode " + p.getBarcode() + " does not exist\n",e.getMessage());
         }
     }
@@ -187,7 +188,6 @@ public class InventoryDtoTest {
     @Test
     public void updateEmptyObjectError() {
         InventoryUpdateForm inv = new InventoryUpdateForm();
-
         try{
         dto.update(inv);
         }catch (ApiException e){

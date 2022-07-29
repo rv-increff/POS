@@ -4,13 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.util.function.DoubleUnaryOperator;
 @Getter
 @Setter
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "orderId", "productId" }) },name="pos_order_item_pojo")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "orderId", "productId"}) }, name="pos_order_item_pojo")
 public class OrderItemPojo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

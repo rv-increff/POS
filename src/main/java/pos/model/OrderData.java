@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Time;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -16,7 +13,7 @@ public class OrderData {
     private Integer id;
 
     @NotNull
-    private ZonedDateTime time;
+    private String time;
 
     @NotNull
     private boolean orderPlaced=false;

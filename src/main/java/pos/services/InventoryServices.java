@@ -2,10 +2,9 @@ package pos.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pos.dao.*;
 import pos.dao.InventoryDao;
+import pos.dao.ProductDao;
 import pos.model.InventoryForm;
-import pos.pojo.InventoryPojo;
 import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
 import pos.pojo.ProductPojo;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import static pos.util.DataUtil.checkNotNullBulkUtil;
-import static pos.util.DataUtil.checkNotNullUtil;
 
 @Service
 public class InventoryServices {

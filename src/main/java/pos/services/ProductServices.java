@@ -5,13 +5,11 @@ import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
 import pos.dao.ProductDao;
-import pos.model.ProductData;
 import pos.model.ProductForm;
 import pos.model.ProductUpdateForm;
 import pos.pojo.BrandPojo;
 import pos.pojo.ProductPojo;
 import pos.spring.ApiException;
-import pos.util.StringUtil;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -21,7 +19,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static pos.util.DataUtil.*;
+import static pos.util.DataUtil.checkNotNullBulkUtil;
+import static pos.util.DataUtil.normalizeUtil;
 
 @Service
 public class ProductServices {
@@ -184,6 +183,7 @@ public class ProductServices {
 
     private void updateUtil(ProductUpdateForm p) throws ApiException {
         ProductPojo ex = getCheckInPojo(p.getId());
+
         BrandPojo bPojo = bDao.selectFromBrandCategory(p.getBrand(),p.getCategory());
         if(bPojo==null){
             throw new ApiException(p.getBrand() + " - " + p.getCategory() + " brand-category does not exist");
@@ -193,6 +193,10 @@ public class ProductServices {
         Matcher matcher = numP.matcher(p.getMrp().toString());
         if(!matcher.find()){
             throw new ApiException("mrp "  + p.getMrp() +  " not valid, mrp should be a positive number");
+        }
+
+        if(iDao.selectFromBarcode(ex.getBarcode()) != null & ex.getBarcode() != p.getBarcode()){
+            throw new ApiException("cannot change barcode as Inventory exist for this");
         }
         ex.setBrandId(brandId);
         ex.setBrand(p.getBrand());

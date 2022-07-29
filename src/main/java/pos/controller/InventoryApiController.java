@@ -11,7 +11,6 @@ import pos.model.InventoryData;
 import pos.model.InventoryForm;
 import pos.model.InventoryUpdateForm;
 import pos.spring.ApiException;
-import pos.services.InventoryServices;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

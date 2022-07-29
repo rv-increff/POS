@@ -2,7 +2,6 @@ package pos.services;
 
 import org.apache.fop.apps.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
@@ -23,7 +22,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -52,7 +50,7 @@ public class InvoiceServices {
         if(s.getFrom() != "") {
             try {
 //                s.setFrom(sdf.parse(s.getFrom()).toString());
-                sdf.parse(s.getFrom()).toString();
+                sdf.parse(from);
             } catch (ParseException e) {
                 System.out.println(e);
                 throw new ApiException("From Date format not matching it should be like yyyy-MM-dd");
@@ -64,8 +62,8 @@ public class InvoiceServices {
         if(s.getTo() != "") {
             try {
 //                s.setTo(sdf.parse(s.getTo()).toString());
-               sdf.parse(s.getTo()).toString();
-            } catch (ParseException e) {
+               sdf.parse(to);
+            } catch (Exception e) {
                 System.out.println(e);
                 throw new ApiException("To Date format not matching it should be like yyyy-MM-dd" );
             }

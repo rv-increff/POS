@@ -2,10 +2,7 @@ package pos.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
-import pos.pojo.BrandPojo;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 @Getter
 @Setter

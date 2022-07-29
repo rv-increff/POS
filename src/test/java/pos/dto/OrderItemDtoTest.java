@@ -3,6 +3,7 @@ package pos.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -21,11 +22,9 @@ import pos.pojo.ProductPojo;
 import pos.services.OrderItemServices;
 import pos.spring.ApiException;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,17 +37,17 @@ import static pos.util.RandomUtil.getRandomString;
 @Transactional
 public class OrderItemDtoTest {
 
-    @Resource
+    @Autowired
     private OrderItemServices services;
-    @Resource
+    @Autowired
     private OrderItemDto dto;
-    @Resource
+    @Autowired
     private OrderItemDao dao;
-    @Resource
+    @Autowired
     private OrderDao oDao;
-    @Resource
+    @Autowired
     private ProductDao pDao;
-    @Resource
+    @Autowired
     private InventoryDao iDao;
 
     @Test
@@ -68,7 +67,7 @@ public class OrderItemDtoTest {
         Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
             services.get(index+1);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("OrderItem with given id does not exist ,id : " + (index+1),e.getMessage());
         }
     }

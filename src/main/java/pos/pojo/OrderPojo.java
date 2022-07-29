@@ -2,13 +2,9 @@ package pos.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
-import java.util.Date;
 @Getter
 @Setter
 @Entity
@@ -17,7 +13,7 @@ public class OrderPojo {
     @TableGenerator(name="orderGen", allocationSize=1,initialValue = 100000)
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE,generator = "orderGen")
-    private Integer id;
+    private Integer id; //TODO make a common file table consts and all names and table data as final static
 
     @Column(nullable = false)
     private ZonedDateTime time;

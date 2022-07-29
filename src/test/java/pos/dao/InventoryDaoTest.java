@@ -7,12 +7,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
-import pos.pojo.InventoryPojo;
 import pos.dto.QaConfig;
+import pos.pojo.InventoryPojo;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static pos.util.RandomUtil.getRandomString;

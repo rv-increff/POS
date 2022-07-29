@@ -3,6 +3,7 @@ package pos.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -13,9 +14,7 @@ import pos.model.BrandForm;
 import pos.pojo.BrandPojo;
 import pos.spring.ApiException;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -29,9 +28,9 @@ import static pos.util.RandomUtil.getRandomString;
 @Transactional
 public class BrandDtoTest {
 
-    @Resource
+    @Autowired
     private BrandDto dto;
-    @Resource
+    @Autowired
     private BrandDao dao;
 
     @Test
@@ -53,7 +52,7 @@ public class BrandDtoTest {
 
         try {
             dto.get(index+1);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("Brand with given id does not exist ,id : " + (index+1),e.getMessage());
         }
     }
@@ -99,7 +98,7 @@ public class BrandDtoTest {
 
         try{
             dto.add(p);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("Brand and category pair should be unique",e.getMessage());
         }
 
@@ -121,7 +120,7 @@ public class BrandDtoTest {
             p.setBrand(p.getBrand().toLowerCase(Locale.ROOT));
             p.setCategory(p.getCategory().toLowerCase(Locale.ROOT));
             dto.add(p);
-        }catch (Exception e){
+        }catch (ApiException e){
             Assert.assertEquals("Brand and category pair should be unique",e.getMessage());
         }
 
@@ -166,7 +165,7 @@ public class BrandDtoTest {
         }
         try{
             dto.bulkAdd(pList);
-        }catch (Exception e){
+        }catch (ApiException e){
             String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair should be unique\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
@@ -189,7 +188,7 @@ public class BrandDtoTest {
         }
         try{
             dto.bulkAdd(pList);
-        }catch (Exception e){
+        }catch (ApiException e){
             String expErr = "Error : row -> " + (1) + " brand or category cannot be empty\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
@@ -223,7 +222,7 @@ public class BrandDtoTest {
 
         try{
             dto.update(brandData);
-        } catch (Exception e) {
+        } catch (ApiException e) {
             Assert.assertEquals(p.getBrand() + " - " +  p.getCategory() + " pair should be unique",e.getMessage());
         }
     }
@@ -241,7 +240,7 @@ public class BrandDtoTest {
 
         try{
             dto.update(brandData);
-        } catch (Exception e) {
+        } catch (ApiException e) {
             Assert.assertEquals("brand or category cannot be null",e.getMessage());
         }
     }
@@ -257,7 +256,7 @@ public class BrandDtoTest {
 
         try{
             dto.update(brandData);
-        } catch (Exception e) {
+        } catch (ApiException e) {
             Assert.assertEquals("Brand with given id does not exist ,id : " + id,e.getMessage());
         }
     }

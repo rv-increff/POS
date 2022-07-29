@@ -1,19 +1,20 @@
 package pos.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pos.dao.BrandDao;
+import pos.dao.ProductDao;
+import pos.model.BrandData;
+import pos.model.BrandForm;
+import pos.pojo.BrandPojo;
+import pos.spring.ApiException;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pos.dao.BrandDao;
-import pos.model.BrandForm;
-import pos.model.BrandData;
-import pos.pojo.BrandPojo;
-import pos.spring.ApiException;
 import static pos.util.DataUtil.*;
 
 @Service
@@ -21,9 +22,11 @@ public class BrandServices {
 
     @Autowired
     private BrandDao dao;
+    @Autowired
+    private ProductDao pDao;
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion
+    public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
         if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException("Brand and category pair should be unique");
         }
@@ -34,14 +37,14 @@ public class BrandServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void bulkAdd(List<BrandForm> bulkP) throws ApiException {
+    public void bulkAdd(List<BrandForm> brandPojoList) throws ApiException {
         List<String> errorList = new ArrayList<>();
         Set<String> brandSet = new HashSet<>();
-        if(bulkP.size()==0){
+        if(brandPojoList.size()==0){
             throw new ApiException("Empty data");
         }
-        for(int i=0;i<bulkP.size();i++) {
-            BrandForm p = bulkP.get(i);
+        for(int i=0;i<brandPojoList.size();i++) {
+            BrandForm p = brandPojoList.get(i);
             if(checkNotNullBulkUtil(p)) {
                 normalizeUtil(p);
                 if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null) {
@@ -50,7 +53,7 @@ public class BrandServices {
                 }
                 if(brandSet.contains(p.getBrand() + p.getCategory())){
                     errorList.add("Error : row -> " + (i+1)
-                            + " Brand-Category should not be repeated, Brand-category : "
+                            + " Brand-Category should not be repeated, Brand-category : "  //TODO shift to dto form check for duplicatu
                             + p.getBrand() + "-"+  p.getCategory());
                     continue;
                 }
@@ -66,7 +69,7 @@ public class BrandServices {
             //TODO reduce function size
         }
         if(errorList.size()==0) {
-            for (BrandForm p : bulkP) {
+            for (BrandForm p : brandPojoList) {
                 BrandPojo bPojo = new BrandPojo();
                 bPojo.setBrand(p.getBrand());
                 bPojo.setCategory(p.getCategory());
@@ -96,6 +99,9 @@ public class BrandServices {
     public void update(BrandData p) throws ApiException {
         checkNotNullUtil(p,"brand or category cannot be null");
         normalizeUtil(p);
+        if(pDao.selectFromBrand(p.getId()).size()>0){
+            throw new ApiException("cannot update " + p.getBrand() + " - " +  p.getCategory() + " as product for this exist");
+        }
         if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException(p.getBrand() + " - " +  p.getCategory() + " pair should be unique");
         }

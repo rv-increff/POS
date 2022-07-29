@@ -3,7 +3,6 @@ package pos.dao;
 import org.springframework.stereotype.Repository;
 import pos.model.SalesReport;
 import pos.model.SalesReportForm;
-import pos.pojo.InventoryPojo;
 import pos.pojo.OrderItemPojo;
 
 import javax.persistence.Query;
@@ -11,8 +10,11 @@ import javax.persistence.TypedQuery;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,7 +70,8 @@ public class OrderItemDao extends AbstractDao{
 
     public List<SalesReport> getSalesReport(SalesReportForm s) throws ParseException {
         List<String> queryBuilderList = new ArrayList<>();
-        DateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         queryBuilderList.add(" oi.productId=p.id and oi.orderId=o.id ");
         queryBuilderList.add(" o.orderPlaced=1 ");
         if(!Objects.equals(s.getFrom(), "")){
@@ -92,11 +95,13 @@ public class OrderItemDao extends AbstractDao{
         TypedQuery<SalesReport> query = em().createQuery(queryBuilderFinal,SalesReport.class);
         if(!Objects.equals(s.getTo(), "")){
 //            query.setParameter("toTime",sdf.parse(s.getTo()));
-            query.setParameter("toTime", ZonedDateTime.parse(s.getTo()));
+            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" );
+            query.setParameter("toTime", ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getTo())),zoneId));
         }
         if(!Objects.equals(s.getFrom(), "")){
 //            query.setParameter("fromTime",sdf.parse(s.getFrom()));
-            query.setParameter("fromTime",ZonedDateTime.parse(s.getFrom()));
+            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" );
+            query.setParameter("fromTime",ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getFrom())),zoneId));
         }
         if(!Objects.equals(s.getBrand(), "")){
             query.setParameter("brand",s.getBrand());
@@ -110,5 +115,11 @@ public class OrderItemDao extends AbstractDao{
     public void update(){
             //symbolic
         }
+
+    public LocalDateTime convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
 
 }

@@ -1,5 +1,6 @@
 pos/controller/OrderItemApiController.class
 pos/dao/OrderDao.class
+pos/dto/BrandDto.class
 pos/model/OrderItemDataList.class
 pos/model/OrderItemData.class
 pos/spring/ControllerConfig.class
@@ -18,11 +19,15 @@ pos/model/ProductData.class
 pos/services/InventoryServices.class
 pos/services/BrandServices.class
 pos/model/InventoryUpdateForm.class
+pos/dto/InvoiceDto.class
 pos/dao/OrderItemDao.class
 pos/services/ProductServices.class
 pos/controller/BrandApiController.class
+pos/dto/InventoryDto.class
 pos/controller/RestControllerAdvice.class
 pos/model/ProductUpdateForm.class
+pos/dto/OrderItemDto.class
+pos/dto/ProductDto.class
 pos/model/OrderData.class
 pos/spring/DbConfig.class
 pos/model/SalesReport.class
@@ -42,6 +47,7 @@ pos/spring/SpringConfig.class
 pos/model/InventoryForm.class
 pos/pojo/OrderPojo.class
 pos/dao/InventoryDao.class
+pos/dto/OrderDto.class
 pos/pojo/BrandPojo.class
 pos/spring/ApiException.class
 pos/model/InventoryReport.class

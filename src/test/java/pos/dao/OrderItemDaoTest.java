@@ -7,23 +7,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
+import pos.dto.QaConfig;
 import pos.model.SalesReport;
 import pos.model.SalesReportForm;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.OrderPojo;
 import pos.pojo.ProductPojo;
-import pos.dto.QaConfig;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static pos.util.RandomUtil.getRandomNumber;

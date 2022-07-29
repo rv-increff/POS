@@ -1,11 +1,10 @@
 package pos.dao;
 
-import java.util.List;
-
 import org.springframework.stereotype.Repository;
 import pos.pojo.BrandPojo;
 
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
 public class BrandDao extends AbstractDao{

@@ -40,9 +40,8 @@ function loadOrder() {
       let str = ""
       for (var i = 0; i < data.length; i++) {
         let t = data[i]
-        time = new Date(t['time'])
-        time = time.toLocaleString();
-        console.log(t)
+        time = t['time'].split('T').join(" ")
+        console.log(t,time)
         if (t['orderPlaced']) {
           str += `
                             <tr>

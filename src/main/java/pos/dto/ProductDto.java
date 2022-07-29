@@ -9,7 +9,6 @@ import pos.pojo.ProductPojo;
 import pos.services.ProductServices;
 import pos.spring.ApiException;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class ProductDto {
     @Autowired
     private ProductServices service;
 
-    @Transactional(rollbackOn = ApiException.class)
     public List<ProductData> getAll() throws ApiException{
         List<ProductPojo> p =  service.getAll();
         List<ProductData> pData = new ArrayList<>();
@@ -32,24 +30,20 @@ public class ProductDto {
         return pData;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public void add(ProductForm p) throws ApiException {
         checkNotNullUtil(p,"parameters in the Insert form cannot be null");
         normalizeUtil(p);
         service.add(p);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public void bulkAdd(List<ProductForm> bulkP) throws ApiException{
         service.bulkAdd(bulkP);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public ProductData get(int id) throws ApiException{
         return convertPojoToProductForm(service.get(id));
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public void update(ProductUpdateForm p) throws ApiException{
         checkNotNullUtil(p,"parameters in the Update form cannot be null");
         normalizeUtil(p);

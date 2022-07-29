@@ -1,17 +1,14 @@
 package pos.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import pos.dao.OrderDao;
-import pos.model.OrderData;
 import pos.pojo.OrderPojo;
 import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,6 +53,8 @@ public class OrderServices {
             throw new ApiException("Order with given id does not exist, id : " + id);
         }
         p.setOrderPlaced(true);
+        ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
+        p.setTime(date);
     }
 
 }

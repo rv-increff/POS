@@ -7,10 +7,12 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import pos.dto.BrandDto;
 import pos.dto.InvoiceDto;
-import pos.model.*;
-import pos.spring.ApiException;
+import pos.model.BrandData;
+import pos.model.InventoryReport;
+import pos.model.SalesReport;
+import pos.model.SalesReportForm;
 import pos.services.BrandServices;
-import pos.services.InvoiceServices;
+import pos.spring.ApiException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
@@ -35,7 +37,7 @@ public class InvoiceApiController {
     @RequestMapping(path = "/api/invoices/get-order-invoice/{orderId}", method = RequestMethod.GET)
     public void getOrderInvoice(@PathVariable int orderId,HttpServletResponse response) throws ApiException, IOException, TransformerException {
         iDto.getOrderInvoice(orderId);
-        String path = "/Users/rahulverma/Downloads/POS/src/invoice.pdf";
+        String path = "/Users/rahulverma/Downloads/git/POS/src/invoice.pdf";
         File file = new File(path);
         if (file.exists()) {
             String mimeType = "application/pdf";

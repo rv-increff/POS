@@ -2,15 +2,10 @@ package pos.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 @Getter
 @Setter
@@ -29,7 +24,7 @@ public class OrderItemDataList {
         this.orderItem = new ArrayList<OrderItemData>();
 
 //        this.time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").format(time);
-        this.time = time.toString();
+        this.time = time.toLocalDate().toString() + " " + time.toLocalTime().toString();
 
         this.orderId = orderId;
         this.total = total;

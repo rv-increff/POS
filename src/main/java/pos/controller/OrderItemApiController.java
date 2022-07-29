@@ -7,7 +7,9 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pos.dto.OrderItemDto;
-import pos.model.*;
+import pos.model.OrderItemData;
+import pos.model.OrderItemForm;
+import pos.model.OrderItemUpdateForm;
 import pos.spring.ApiException;
 
 import javax.servlet.http.HttpServletResponse;

@@ -7,12 +7,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
-import pos.pojo.ProductPojo;
 import pos.dto.QaConfig;
+import pos.pojo.ProductPojo;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static pos.util.RandomUtil.getRandomString;
@@ -73,7 +72,7 @@ public class ProductDaoTest {
     public void daoGetIdFromBarcode(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.selectFromBarcode(p.getBarcode()).getId());
+        Assert.assertEquals(id,(int)(dao.selectFromBarcode(p.getBarcode()).getId()));
         Assert.assertNull(dao.selectFromBarcode(getRandomString()));
     }
 
@@ -81,7 +80,7 @@ public class ProductDaoTest {
     public void daoCheckProductId(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.select(id).getId());
+        Assert.assertEquals(id,(int)dao.select(id).getId());
         Assert.assertNull(dao.select(id+1));
     }
 
