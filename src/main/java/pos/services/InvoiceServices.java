@@ -80,15 +80,15 @@ public class InvoiceServices {
             throw new ApiException("From date should be less than To date");
         }
 
-        if(s.getBrand()!="" & s.getCategory()!="" & bDao.selectFromBrandCategory(s.getBrand(), s.getCategory())==null) {
+        if(s.getBrand()!="" & s.getCategory()!="" & bDao.selectByBrandCategory(s.getBrand(), s.getCategory())==null) {
             throw new ApiException(s.getBrand() + " - " +  s.getCategory() +" Brand-category pair does not exist");
         }
 
-        if(s.getCategory()=="" & s.getBrand()!="" & bDao.selectBrand(s.getBrand())==null){
+        if(s.getCategory()=="" & s.getBrand()!="" & bDao.selectByBrand(s.getBrand())==null){
             throw new ApiException("Brand does not exist");
         }
 
-        if(s.getBrand()=="" & s.getCategory()!="" & bDao.selectCategory(s.getCategory())==null){
+        if(s.getBrand()=="" & s.getCategory()!="" & bDao.selectByCategory(s.getCategory())==null){
             throw new ApiException("Brand does not exist");
         }
         List<SalesReport> salesReportData = dao.getSalesReport(s);

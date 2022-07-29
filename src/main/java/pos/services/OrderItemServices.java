@@ -61,7 +61,7 @@ public class OrderItemServices {
             throw new ApiException("Product with this id does not exist, id : " + p.getProductId());
         }
 
-        InventoryPojo inv = iDao.selectFromProductId(p.getProductId());
+        InventoryPojo inv = iDao.selectByProductId(p.getProductId());
         if (inv == null) {
             throw new ApiException("Product with this id does not exist in the inventory, id : " + p.getProductId());
         }
@@ -98,7 +98,7 @@ public class OrderItemServices {
             throw new ApiException("Quantity must be greater than 0");
         }
 
-        int invId = iDao.selectFromProductId(p.getProductId()).getId();
+        int invId = iDao.selectByProductId(p.getProductId()).getId();
         inv.setId(invId);
         inv.setQuantity(availQty-p.getQuantity());
         invService.update(inv);
@@ -155,7 +155,7 @@ public class OrderItemServices {
             throw new ApiException("Cannot delete as order already placed for id : " + id);
         }
         OrderItemPojo ex = dao.select(id);
-        InventoryPojo inv = iDao.selectFromProductId(ex.getProductId());
+        InventoryPojo inv = iDao.selectByProductId(ex.getProductId());
         if(inv==null){
             throw new ApiException("Product with given product id does not exist in the inventory, product id : "
                     + ex.getProductId());
@@ -182,7 +182,7 @@ public class OrderItemServices {
     private void updateUtil(OrderItemUpdateForm p) throws ApiException {
         OrderItemPojo ex = dao.select(p.getId());
 
-        InventoryPojo inv = iDao.selectFromProductId(ex.getProductId());
+        InventoryPojo inv = iDao.selectByProductId(ex.getProductId());
         if (inv == null){
             throw new ApiException("Product with given product id does not exist in the inventory, product id : "
                     + ex.getProductId());

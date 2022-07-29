@@ -9,7 +9,7 @@ import java.util.List;
 public class OrderDao extends AbstractDao{
 
     public void add(OrderPojo p){
-        addAbs(p);
+        this.add(p);
     }
 
     public OrderPojo select(int id){

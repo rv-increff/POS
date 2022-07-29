@@ -21,10 +21,10 @@ import java.util.Objects;
 @Repository
 public class OrderItemDao extends AbstractDao{
     private final static String DELETE = "delete from OrderItemPojo where id=:id";
-    private final static String SELECT_FROM_ORDER_ID = "select p from OrderItemPojo p where orderId=:orderId";
-    private final static String SELECT_FROM_ORDER_ID_PRODUCT_ID =
+    private final static String SELECT_BY_ORDER_ID = "select p from OrderItemPojo p where orderId=:orderId";
+    private final static String SELECT_BY_ORDER_ID_PRODUCT_ID =
             "select p from OrderItemPojo p where orderId=:orderId and productId=:productId";
-    private final static String SELECT_FROM_PRODUCT_ID = "select p from OrderItemPojo p where productId=:productId";
+    private final static String SELECT_BY_PRODUCT_ID = "select p from OrderItemPojo p where productId=:productId";
     private final static String QUERY_BUILDER =
             "select new pos.model.SalesReport(p.brand, p.category,sum(oi.quantity) " +
             "as quantity, sum(oi.quantity * oi.sellingPrice) as revenue) " +
@@ -32,7 +32,7 @@ public class OrderItemDao extends AbstractDao{
     private final static String QUERY_BUILDER_SUFFIX =  " group by p.brand,p.category";
 
     public void add(OrderItemPojo p){
-        addAbs(p);
+        this.add(p);
     }
 
     public OrderItemPojo select(int id){
@@ -50,20 +50,20 @@ public class OrderItemDao extends AbstractDao{
     }
 
     public List<OrderItemPojo> selectFromOrderId(int orderId){
-            TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_FROM_ORDER_ID, OrderItemPojo.class);
+            TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_BY_ORDER_ID, OrderItemPojo.class);
             query.setParameter("orderId",orderId);
             return query.getResultList();
         }
 
     public OrderItemPojo selectFromOrderIdProductId(int orderId, int productId){
-        TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_FROM_ORDER_ID_PRODUCT_ID, OrderItemPojo.class);
+        TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_BY_ORDER_ID_PRODUCT_ID, OrderItemPojo.class);
         query.setParameter("orderId",orderId);
         query.setParameter("productId",productId);
         return getSingle(query);
     }
 
     public OrderItemPojo selectFromProductId(int productId){
-        TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_FROM_PRODUCT_ID, OrderItemPojo.class);
+        TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_BY_PRODUCT_ID, OrderItemPojo.class);
         query.setParameter("productId",productId);
         return getSingle(query);
     }

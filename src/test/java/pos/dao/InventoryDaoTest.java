@@ -58,8 +58,8 @@ public class InventoryDaoTest {
     @Test
     public void daoUnique(){
         InventoryPojo p = daoInsertHelper();
-        Assert.assertNull(dao.selectFromBarcode(getRandomString()));
-        Assert.assertNotNull(dao.selectFromBarcode(p.getBarcode()));
+        Assert.assertNull(dao.selectByBarcode(getRandomString()));
+        Assert.assertNotNull(dao.selectByBarcode(p.getBarcode()));
     }
 
     @Test
@@ -69,8 +69,8 @@ public class InventoryDaoTest {
 
         InventoryPojo p = daoInsertHelper();
         Integer id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,dao.selectFromProductId(p.getProductId()).getId());
-        Assert.assertNull(dao.selectFromProductId(p.getProductId()+1));
+        Assert.assertEquals(id,dao.selectByProductId(p.getProductId()).getId());
+        Assert.assertNull(dao.selectByProductId(p.getProductId()+1));
     }
 
     @Test

@@ -62,11 +62,11 @@ public class BrandDaoTest {
         String brand = getRandomString();
         String category = getRandomString();
 
-        Assert.assertNull(dao.selectFromBrandCategory(brand, category));
+        Assert.assertNull(dao.selectByBrandCategory(brand, category));
 
         BrandPojo p = daoInsertHelper();
 
-        Assert.assertNotNull(dao.selectFromBrandCategory(p.getBrand(), p.getCategory()));
+        Assert.assertNotNull(dao.selectByBrandCategory(p.getBrand(), p.getCategory()));
 
 
     }
@@ -79,23 +79,23 @@ public class BrandDaoTest {
         }
         p = daoInsertHelper();
         List<BrandPojo> pList = dao.selectAll();
-        Assert.assertEquals(pList.get(4).getId(), dao.selectFromBrandCategory(p.getBrand(),p.getCategory()).getId());
-        Assert.assertNull(dao.selectFromBrandCategory(p.getBrand()+getRandomString(),p.getCategory()));
+        Assert.assertEquals(pList.get(4).getId(), dao.selectByBrandCategory(p.getBrand(),p.getCategory()).getId());
+        Assert.assertNull(dao.selectByBrandCategory(p.getBrand()+getRandomString(),p.getCategory()));
     }
 
     @Test
     public void daoCheckBrand(){
         BrandPojo p = daoInsertHelper();
         String brand = getRandomString();
-        Assert.assertNull(dao.selectBrand(brand));
-        Assert.assertNotNull(dao.selectBrand(p.getBrand()));
+        Assert.assertNull(dao.selectByBrand(brand));
+        Assert.assertNotNull(dao.selectByBrand(p.getBrand()));
     }
     @Test
     public void daoCheckCategory(){
         BrandPojo p = daoInsertHelper();
         String category = getRandomString();
-        Assert.assertNull(dao.selectCategory(category));
-        Assert.assertNotNull(dao.selectCategory(p.getCategory()));
+        Assert.assertNull(dao.selectByCategory(category));
+        Assert.assertNotNull(dao.selectByCategory(p.getCategory()));
     }
     @Test
     public void daoUpdate(){

@@ -39,7 +39,7 @@ public class ProductServices {
         if(dao.selectFromBarcode(p.getBarcode())!=null){
             throw new ApiException("barcode "  + p.getBarcode() +  " already exists");
         }
-        BrandPojo bPojo= bDao.selectFromBrandCategory(p.getBrand(),p.getCategory());
+        BrandPojo bPojo= bDao.selectByBrandCategory(p.getBrand(),p.getCategory());
         if(bPojo==null){
             throw new ApiException(p.getBrand() + " - " + p.getCategory() + " brand-category does not exist");
         }
@@ -90,7 +90,7 @@ public class ProductServices {
                 errorList.add("Error : row -> " + (i+1) + " barcode " + p.getBarcode() + " already exists");
                 continue;
             }
-            BrandPojo bPojo = bDao.selectFromBrandCategory(p.getBrand(),p.getCategory());
+            BrandPojo bPojo = bDao.selectByBrandCategory(p.getBrand(),p.getCategory());
             if(bPojo==null){
                 errorList.add("Error : row -> " + (i+1) + " " + p.getBrand() + " - " + p.getCategory() +
                         " brand-category does not exist");
@@ -113,7 +113,7 @@ public class ProductServices {
         }
         if(errorList.size()==0) {
             for (ProductForm p : bulkP) {
-                int brandPojoId = bDao.selectFromBrandCategory(p.getBrand(),p.getCategory()).getId();
+                int brandPojoId = bDao.selectByBrandCategory(p.getBrand(),p.getCategory()).getId();
                 ProductPojo ex = new ProductPojo();
                 ex.setBrandId(brandPojoId);
                 ex.setBrand(p.getBrand());
@@ -184,7 +184,7 @@ public class ProductServices {
     private void updateUtil(ProductUpdateForm p) throws ApiException {
         ProductPojo ex = getCheckInPojo(p.getId());
 
-        BrandPojo bPojo = bDao.selectFromBrandCategory(p.getBrand(),p.getCategory());
+        BrandPojo bPojo = bDao.selectByBrandCategory(p.getBrand(),p.getCategory());
         if(bPojo==null){
             throw new ApiException(p.getBrand() + " - " + p.getCategory() + " brand-category does not exist");
         }
@@ -195,7 +195,7 @@ public class ProductServices {
             throw new ApiException("mrp "  + p.getMrp() +  " not valid, mrp should be a positive number");
         }
 
-        if(iDao.selectFromBarcode(ex.getBarcode()) != null & ex.getBarcode() != p.getBarcode()){
+        if(iDao.selectByBarcode(ex.getBarcode()) != null & ex.getBarcode() != p.getBarcode()){
             throw new ApiException("cannot change barcode as Inventory exist for this");
         }
         ex.setBrandId(brandId);

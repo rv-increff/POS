@@ -29,7 +29,7 @@ public class InventoryServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(InventoryForm p) throws ApiException {
-        if(dao.selectFromBarcode(p.getBarcode())!=null){
+        if(dao.selectByBarcode(p.getBarcode())!=null){
             throw new ApiException("Inventory data already exist update the record instead");
         }
         ProductPojo pPojo = bDao.selectFromBarcode(p.getBarcode());
@@ -68,7 +68,7 @@ public class InventoryServices {
                 continue;
             }
 
-            if(dao.selectFromBarcode(p.getBarcode())!=null){
+            if(dao.selectByBarcode(p.getBarcode())!=null){
                 errorList.add("Error : row -> " + (i+1) +
                         " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead");
                 continue;

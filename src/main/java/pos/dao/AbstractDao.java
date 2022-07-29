@@ -13,7 +13,7 @@ public abstract class AbstractDao {
 	@PersistenceContext
 	protected EntityManager em;
 
-	protected <T> void addAbs(T pojoObject){
+	protected <T> void add(T pojoObject){
 		em.persist(pojoObject);
 	}
 	protected <T> List<T> selectAll(Class<T> pojo){

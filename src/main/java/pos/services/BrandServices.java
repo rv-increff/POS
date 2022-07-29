@@ -27,7 +27,7 @@ public class BrandServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
-        if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
+        if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException("Brand and category pair should be unique");
         }
         BrandPojo bPojo = new BrandPojo();
@@ -47,7 +47,7 @@ public class BrandServices {
             BrandForm p = brandPojoList.get(i);
             if(checkNotNullBulkUtil(p)) {
                 normalizeUtil(p);
-                if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null) {
+                if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null) {
                     errorList.add("Error : row -> " + (i+1) + " "  + p.getBrand() +
                             " - " +  p.getCategory() + " pair should be unique");
                 }
@@ -102,7 +102,7 @@ public class BrandServices {
         if(pDao.selectFromBrand(p.getId()).size()>0){
             throw new ApiException("cannot update " + p.getBrand() + " - " +  p.getCategory() + " as product for this exist");
         }
-        if(dao.selectFromBrandCategory(p.getBrand(),p.getCategory())!=null){
+        if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException(p.getBrand() + " - " +  p.getCategory() + " pair should be unique");
         }
         updateUtil(p);
