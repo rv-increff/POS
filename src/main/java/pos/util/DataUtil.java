@@ -41,7 +41,9 @@ public class DataUtil {
             for (Field m : fields) {
                 if (m.getGenericType().getTypeName().equals("java.lang.String") & m.getName() != "barcode") {
                     m.setAccessible(true);
-                    m.set(form,m.get(form).toString().toLowerCase().trim());
+                    if(m.get(form)!=null) {
+                        m.set(form, m.get(form).toString().toLowerCase().trim());
+                    }
                 }
             }
         } catch (IllegalAccessException err) {

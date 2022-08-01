@@ -13,8 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static pos.util.DataUtil.checkNotNullUtil;
-import static pos.util.DataUtil.normalizeUtil;
+import static pos.util.DataUtil.*;
 
 @Service
 public class BrandDto {
@@ -34,12 +33,20 @@ public class BrandDto {
     public void add(BrandForm p) throws ApiException{
         checkNotNullUtil(p,"brand or category cannot be null");
         normalizeUtil(p);
-        service.add(p);
+        service.add(convertBrandFormToPojo(p));
     }
 
     public void bulkAdd(List<BrandForm> brandFormList) throws ApiException{
-        validBrandListCheck(brandFormList);
-        service.bulkAdd(brandFormList);
+        if(brandFormList.size()==0){
+            throw new ApiException("Empty data");
+        }
+        checkValidBrandList(brandFormList);
+        checkAlreadyExistInBrandPojo(brandFormList);
+        List<BrandPojo> brandPojoList = new ArrayList<>();
+        for(BrandForm brandForm : brandFormList){
+            brandPojoList.add(convertBrandFormToPojo(brandForm));
+        }
+        service.bulkAdd(brandPojoList);
     }
 
     public BrandData get(int id) throws ApiException{
@@ -57,23 +64,64 @@ public class BrandDto {
         b.setCategory(p.getCategory());
         return b;
     }
+    private BrandPojo convertBrandFormToPojo(BrandForm p){
+        BrandPojo b = new BrandPojo();
+        b.setBrand(p.getBrand());
+        b.setCategory(p.getCategory());
+        return b;
+    }
 
-    private void validBrandListCheck(List<BrandForm> brandFormList) throws ApiException {
+    private void checkValidBrandList(List<BrandForm> brandFormList) throws ApiException {
         Set<String> brandSet = new HashSet<>();
-        List<String> errorList = new ArrayList<>();
+        List<String> errorList = checkNotNullAndNormalize(brandFormList);
 
         for(int i=0;i<brandFormList.size();i++) {
             BrandForm brandForm = brandFormList.get(i);
             if (brandSet.contains(brandForm.getBrand() + brandForm.getCategory())) {
-                errorList.add("Error : row -> " + (i + 1)
-                        + " Brand-Category should not be repeated, Brand-category : "  //TODO shift to dto form check for duplicatu
+                errorList.add("Error : row -> " + (i + 1) + " Brand-Category should not be repeated, Brand-category : "  //TODO shift to dto form check for duplicatu
                         + brandForm.getBrand() + "-" + brandForm.getCategory());
                 continue;
             } else {
                 brandSet.add(brandForm.getBrand() + brandForm.getCategory());
             }
         }
-        if(errorList.size()==0){
+
+        if(errorList.size()!=0){
+            String errorStr = "";
+            for(String e : errorList){
+                errorStr += e + "\n";
+            }
+            throw new ApiException(errorStr);
+        }
+    }
+    private List<String> checkNotNullAndNormalize(List<BrandForm> brandFormList){
+        List<String> errorList = new ArrayList<>();
+        for(int i=0;i<brandFormList.size();i++){
+            BrandForm brandForm = brandFormList.get(i);
+            if(!checkNotNullBulkUtil(brandForm)){
+                errorList.add("Error : row -> " + (i + 1) + " Brand-Category should not be null" );
+            }
+            normalizeUtil(brandForm);
+        }
+        return errorList;
+    }
+
+    private void checkAlreadyExistInBrandPojo(List<BrandForm> brandFormList) throws ApiException {
+        List<String> errorList = new ArrayList<>();
+        for(int i=0;i<brandFormList.size();i++) {
+            BrandForm p = brandFormList.get(i);
+            if(checkNotNullBulkUtil(p)) {
+                normalizeUtil(p);
+                if(service.selectByBrandCategory(p.getBrand(),p.getCategory())!=null) {
+                    errorList.add("Error : row -> " + (i+1) + " "  + p.getBrand() +
+                            " - " +  p.getCategory() + " pair should be unique");
+                }
+            }
+            else {
+                errorList.add("Error : row -> " + (i+1) + " brand or category cannot be empty");
+            }
+        }
+        if(errorList.size()>0) {
             String errorStr = "";
             for(String e : errorList){
                 errorStr += e + "\n";

@@ -189,7 +189,7 @@ public class BrandDtoTest {
         try{
             dto.bulkAdd(pList);
         }catch (ApiException e){
-            String expErr = "Error : row -> " + (1) + " brand or category cannot be empty\n";
+            String expErr = "Error : row -> " + (1) + " Brand-Category should not be null\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
         Assert.assertEquals(0,dao.selectAll().size());

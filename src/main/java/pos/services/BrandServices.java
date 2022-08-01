@@ -26,7 +26,7 @@ public class BrandServices {
     private ProductDao pDao;  //TODO service should deal with its own entity
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
+    public void add(BrandPojo p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
         if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException("Brand and category pair should be unique");
         }     //TODO service layer response in pojo
@@ -37,41 +37,9 @@ public class BrandServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void bulkAdd(List<BrandForm> brandPojoList) throws ApiException {
-        List<String> errorList = new ArrayList<>();
-
-        if(brandPojoList.size()==0){
-            throw new ApiException("Empty data");
-        }
-        for(int i=0;i<brandPojoList.size();i++) {
-            BrandForm p = brandPojoList.get(i);
-            if(checkNotNullBulkUtil(p)) {
-                normalizeUtil(p);
-                if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null) {
-                    errorList.add("Error : row -> " + (i+1) + " "  + p.getBrand() +
-                            " - " +  p.getCategory() + " pair should be unique");
-                }
-            }
-            else {
-                errorList.add("Error : row -> " + (i+1) + " brand or category cannot be empty");
-            }
-//TODO if lse ladder issue
-            //TODO reduce function size
-        }
-        if(errorList.size()==0) {
-            for (BrandForm p : brandPojoList) {
-                BrandPojo bPojo = new BrandPojo();
-                bPojo.setBrand(p.getBrand());
-                bPojo.setCategory(p.getCategory());
-                dao.add(bPojo);
-            }
-        }
-        else{
-            String errorStr = "";
-            for(String e : errorList){
-                errorStr += e + "\n";
-            }
-            throw new ApiException(errorStr);
+    public void bulkAdd(List<BrandPojo> brandPojoList) throws ApiException {
+        for(BrandPojo brandPojo : brandPojoList){
+            add(brandPojo);
         }
     }
 
