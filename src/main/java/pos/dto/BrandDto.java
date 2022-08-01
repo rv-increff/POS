@@ -54,6 +54,8 @@ public class BrandDto {
     }
 
     public void update(BrandData p) throws ApiException{
+        checkNotNullUtil(p,"brand or category cannot be null");
+        normalizeUtil(p);
         service.update(p);
     }
 

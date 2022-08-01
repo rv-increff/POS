@@ -55,8 +55,7 @@ public class BrandServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(BrandData p) throws ApiException {
-        checkNotNullUtil(p,"brand or category cannot be null");
-        normalizeUtil(p);
+
         if(pDao.selectByBrandId(p.getId()).size()>0){
             throw new ApiException("cannot update " + p.getBrand() + " - " +  p.getCategory() + " as product for this exist");
         }
