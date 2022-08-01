@@ -33,6 +33,7 @@ public class RestControllerAdvice {
         }
         else{
         obj.put("description", e.getMessage());}
+
         obj.put("code", 400);
         String json = new Gson().toJson(obj);
         response.setContentType("application/json");

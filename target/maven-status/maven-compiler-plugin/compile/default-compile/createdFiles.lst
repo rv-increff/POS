@@ -10,6 +10,7 @@ pos/controller/UIController.class
 pos/model/ProductForm.class
 pos/util/StringUtil.class
 pos/services/OrderServices.class
+pos/pojo/AbstractPojo.class
 pos/pojo/OrderItemPojo.class
 pos/controller/OrderApiController.class
 pos/pojo/ProductPojo.class
@@ -27,6 +28,7 @@ pos/dto/InventoryDto.class
 pos/controller/RestControllerAdvice.class
 pos/model/ProductUpdateForm.class
 pos/dto/OrderItemDto.class
+pos/pojo/PojoConstants.class
 pos/dto/ProductDto.class
 pos/model/OrderData.class
 pos/spring/DbConfig.class

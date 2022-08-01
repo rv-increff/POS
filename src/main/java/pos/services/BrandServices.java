@@ -29,7 +29,7 @@ public class BrandServices {
     public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
         if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
             throw new ApiException("Brand and category pair should be unique");
-        }
+        }     //TODO service layer response in pojo
         BrandPojo bPojo = new BrandPojo();
         bPojo.setBrand(p.getBrand());
         bPojo.setCategory(p.getCategory());
@@ -39,7 +39,7 @@ public class BrandServices {
     @Transactional(rollbackOn = ApiException.class)
     public void bulkAdd(List<BrandForm> brandPojoList) throws ApiException {
         List<String> errorList = new ArrayList<>();
-        Set<String> brandSet = new HashSet<>();
+
         if(brandPojoList.size()==0){
             throw new ApiException("Empty data");
         }
@@ -51,16 +51,6 @@ public class BrandServices {
                     errorList.add("Error : row -> " + (i+1) + " "  + p.getBrand() +
                             " - " +  p.getCategory() + " pair should be unique");
                 }
-                if(brandSet.contains(p.getBrand() + p.getCategory())){
-                    errorList.add("Error : row -> " + (i+1)
-                            + " Brand-Category should not be repeated, Brand-category : "  //TODO shift to dto form check for duplicatu
-                            + p.getBrand() + "-"+  p.getCategory());
-                    continue;
-                }
-                else{
-                    brandSet.add(p.getBrand() + p.getCategory());
-                }
-
             }
             else {
                 errorList.add("Error : row -> " + (i+1) + " brand or category cannot be empty");

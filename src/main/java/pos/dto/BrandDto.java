@@ -9,7 +9,9 @@ import pos.services.BrandServices;
 import pos.spring.ApiException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static pos.util.DataUtil.checkNotNullUtil;
 import static pos.util.DataUtil.normalizeUtil;
@@ -26,7 +28,6 @@ public class BrandDto {
         for( BrandPojo pj : p){
             b.add(convertPojoToBrandData(pj));
         }
-
         return b;
     }
 
@@ -36,8 +37,9 @@ public class BrandDto {
         service.add(p);
     }
 
-    public void bulkAdd(List<BrandForm> bulkP) throws ApiException{
-        service.bulkAdd(bulkP);
+    public void bulkAdd(List<BrandForm> brandFormList) throws ApiException{
+        validBrandListCheck(brandFormList);
+        service.bulkAdd(brandFormList);
     }
 
     public BrandData get(int id) throws ApiException{
@@ -54,5 +56,29 @@ public class BrandDto {
         b.setBrand(p.getBrand());
         b.setCategory(p.getCategory());
         return b;
+    }
+
+    private void validBrandListCheck(List<BrandForm> brandFormList) throws ApiException {
+        Set<String> brandSet = new HashSet<>();
+        List<String> errorList = new ArrayList<>();
+
+        for(int i=0;i<brandFormList.size();i++) {
+            BrandForm brandForm = brandFormList.get(i);
+            if (brandSet.contains(brandForm.getBrand() + brandForm.getCategory())) {
+                errorList.add("Error : row -> " + (i + 1)
+                        + " Brand-Category should not be repeated, Brand-category : "  //TODO shift to dto form check for duplicatu
+                        + brandForm.getBrand() + "-" + brandForm.getCategory());
+                continue;
+            } else {
+                brandSet.add(brandForm.getBrand() + brandForm.getCategory());
+            }
+        }
+        if(errorList.size()==0){
+            String errorStr = "";
+            for(String e : errorList){
+                errorStr += e + "\n";
+            }
+            throw new ApiException(errorStr);
+        }
     }
 }
