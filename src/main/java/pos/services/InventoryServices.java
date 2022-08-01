@@ -32,7 +32,7 @@ public class InventoryServices {
         if(dao.selectByBarcode(p.getBarcode())!=null){
             throw new ApiException("Inventory data already exist update the record instead");
         }
-        ProductPojo pPojo = bDao.selectFromBarcode(p.getBarcode());
+        ProductPojo pPojo = bDao.selectByBarcode(p.getBarcode());
         if(pPojo==null){
             throw new ApiException("Product with this barcode does not exist");
         }
@@ -60,7 +60,7 @@ public class InventoryServices {
                 errorList.add("Error : row -> " + (i+1) + " barcode or quantity cannot be NULL");
                 continue;
             }
-            ProductPojo pPojo= bDao.selectFromBarcode(p.getBarcode());
+            ProductPojo pPojo= bDao.selectByBarcode(p.getBarcode());
 
             if(pPojo==null) {
                 errorList.add("Error : row -> " + (i+1) +
@@ -92,7 +92,7 @@ public class InventoryServices {
                 InventoryPojo ex = new InventoryPojo();
                 ex.setBarcode(p.getBarcode());
                 ex.setQuantity(p.getQuantity());
-                int productId = bDao.selectFromBarcode(p.getBarcode()).getId();
+                int productId = bDao.selectByBarcode(p.getBarcode()).getId();
                 ex.setProductId(productId);
                 dao.add(ex);
             }

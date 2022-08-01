@@ -7,7 +7,9 @@ import pos.dao.BrandDao;
 import pos.dao.InventoryDao;
 import pos.dao.OrderItemDao;
 import pos.dto.OrderItemDto;
-import pos.model.*;
+import pos.model.InventoryReport;
+import pos.model.OrderItemData;
+import pos.model.OrderItemDataList;
 import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
@@ -18,9 +20,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -42,63 +41,34 @@ public class InvoiceServices {
 
     private final FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
+
+
     @Transactional(rollbackOn = ApiException.class)
-    public List<SalesReport> getSalesReport(SalesReportForm s) throws ApiException, ParseException {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String from = s.getFrom();
-        String to = s.getTo();
-        if(s.getFrom() != "") {
-            try {
-//                s.setFrom(sdf.parse(s.getFrom()).toString());
-                sdf.parse(from);
-            } catch (ParseException e) {
-                System.out.println(e);
-                throw new ApiException("From Date format not matching it should be like yyyy-MM-dd");
-            }
-        }
-        else{
-            throw new ApiException("From Date cannot be empty");
-        }
-        if(s.getTo() != "") {
-            try {
-//                s.setTo(sdf.parse(s.getTo()).toString());
-               sdf.parse(to);
-            } catch (Exception e) {
-                System.out.println(e);
-                throw new ApiException("To Date format not matching it should be like yyyy-MM-dd" );
-            }
-        }
-        else{
-            throw new ApiException("To Date cannot be empty");
-        }
+    public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException {
+       List<OrderItemData> o = ODto.getOrderItemForOrder(orderId);
 
-        if((((sdf.parse(to).getTime() - sdf.parse(from).getTime())/(1000 * 60 * 60 * 24))% 365) >= 30){
-            throw new ApiException("Date range should not be greater than 30 days");
-        }
+       ZonedDateTime time = oService.get(orderId).getTime();
+       Double total = 0.;
 
-        if((sdf.parse(to).getTime() - sdf.parse(from).getTime())<=0){
-            throw new ApiException("From date should be less than To date");
+        for(OrderItemData i : o){
+            total += i.getQuantity() * i.getSellingPrice();
         }
+       OrderItemDataList oItem = new OrderItemDataList(o,time,total,orderId);
 
-        if(s.getBrand()!="" & s.getCategory()!="" & bDao.selectByBrandCategory(s.getBrand(), s.getCategory())==null) {
-            throw new ApiException(s.getBrand() + " - " +  s.getCategory() +" Brand-category pair does not exist");
-        }
 
-        if(s.getCategory()=="" & s.getBrand()!="" & bDao.selectByBrand(s.getBrand())==null){
-            throw new ApiException("Brand does not exist");
-        }
+        String xml = jaxbObjectToXML(oItem);
+        File xsltFile = new File("src", "invoice.xsl");
+        File pdfFile = new File("src", "invoice.pdf");
+        System.out.println(xml);
+        convertToPDF(oItem,xsltFile,pdfFile,xml);
 
-        if(s.getBrand()=="" & s.getCategory()!="" & bDao.selectByCategory(s.getCategory())==null){
-            throw new ApiException("Brand does not exist");
-        }
-        List<SalesReport> salesReportData = dao.getSalesReport(s);
-        if(salesReportData.size()==0){
-            throw new ApiException("No sales for given range");
-        }
-        return salesReportData;
     }
 
     @Transactional(rollbackOn = ApiException.class)
+    public List<InventoryReport> getInventoryReport(){
+        return iDao.getInventoryReport();
+    }
+
     private static String jaxbObjectToXML(OrderItemDataList orderItemList)
     {
         try
@@ -128,28 +98,7 @@ public class InvoiceServices {
         return "";
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException {
-       List<OrderItemData> o = ODto.getOrderItemForOrder(orderId);
-
-       ZonedDateTime time = oService.get(orderId).getTime();
-       Double total = 0.;
-
-        for(OrderItemData i : o){
-            total += i.getQuantity() * i.getSellingPrice();
-        }
-       OrderItemDataList oItem = new OrderItemDataList(o,time,total,orderId);
-
-
-        String xml = jaxbObjectToXML(oItem);
-        File xsltFile = new File("src", "invoice.xsl");
-        File pdfFile = new File("src", "invoice.pdf");
-        System.out.println(xml);
-        convertToPDF(oItem,xsltFile,pdfFile,xml);
-
-    }
-
-    public void convertToPDF(OrderItemDataList team, File xslt, File pdf,String xml)
+    private void convertToPDF(OrderItemDataList team, File xslt, File pdf,String xml)
             throws IOException, TransformerException{
 
          	        FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
@@ -187,8 +136,5 @@ public class InvoiceServices {
              	        }
          	    }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public List<InventoryReport> getInventoryReport() throws ApiException {
-        return iDao.getInventoryReport();
-    }
+
 }

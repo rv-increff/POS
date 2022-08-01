@@ -23,7 +23,7 @@ public class BrandServices {
     @Autowired
     private BrandDao dao;
     @Autowired
-    private ProductDao pDao;
+    private ProductDao pDao;  //TODO service should deal with its own entity
 
     @Transactional(rollbackOn = ApiException.class)
     public void add(BrandForm p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
@@ -86,7 +86,7 @@ public class BrandServices {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<BrandPojo> getAll() throws ApiException {
+    public List<BrandPojo> getAll() throws ApiException { //TODO will get and getall will be transactional?
         return dao.selectAll();
     }
 
@@ -99,7 +99,7 @@ public class BrandServices {
     public void update(BrandData p) throws ApiException {
         checkNotNullUtil(p,"brand or category cannot be null");
         normalizeUtil(p);
-        if(pDao.selectFromBrand(p.getId()).size()>0){
+        if(pDao.selectByBrandId(p.getId()).size()>0){
             throw new ApiException("cannot update " + p.getBrand() + " - " +  p.getCategory() + " as product for this exist");
         }
         if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
@@ -125,6 +125,22 @@ public class BrandServices {
         }
         return p;
     }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public BrandPojo selectByBrandCategory(String brand, String category){
+        return dao.selectByBrandCategory(brand,category);
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public BrandPojo selectByBrand(String brand){
+        return dao.selectByBrand(brand);
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public BrandPojo selectByCategory(String brand){
+        return dao.selectByCategory(brand);
+    }
+
 
     private void updateUtil(BrandData p) throws ApiException {
         BrandPojo ex = getCheckInPojo(p.getId());

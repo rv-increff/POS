@@ -499,7 +499,7 @@ public class ProductDtoTest {
         p.setName(name);
         p.setBrandId(brandPojoId);
         p.setMrp(mrp);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 

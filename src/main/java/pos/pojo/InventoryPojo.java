@@ -11,8 +11,8 @@ import javax.persistence.*;
 public class InventoryPojo extends AbstractPojo{
 
     @Id
-    @TableGenerator(name=INVENTORY_GENERATOR,initialValue = INVENTORY_INITIAL_VALUE)
-    @GeneratedValue(strategy= GenerationType.TABLE,generator = INVENTORY_GENERATOR)
+    @TableGenerator(name=INVENTORY_GENERATOR, initialValue = INVENTORY_INITIAL_VALUE)
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = INVENTORY_GENERATOR)
     private Integer id;
 
     @Column(nullable = false)

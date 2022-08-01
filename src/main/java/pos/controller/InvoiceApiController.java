@@ -25,18 +25,18 @@ import java.util.List;
 public class InvoiceApiController {
 
     @Autowired
-    private InvoiceDto iDto;
+    private InvoiceDto invetoryDto;
 
     @Autowired
-    private BrandServices bService;
+    private BrandServices brandService;
 
     @Autowired
-    private BrandDto bDto;
+    private BrandDto brandDto;
 
     @ApiOperation(value = "Get order invoice for orderId")
     @RequestMapping(path = "/api/invoices/get-order-invoice/{orderId}", method = RequestMethod.GET)
     public void getOrderInvoice(@PathVariable int orderId,HttpServletResponse response) throws ApiException, IOException, TransformerException {
-        iDto.getOrderInvoice(orderId);
+        invetoryDto.getOrderInvoice(orderId);
         String path = "/Users/rahulverma/Downloads/git/POS/src/invoice.pdf";
         File file = new File(path);
         if (file.exists()) {
@@ -52,20 +52,19 @@ public class InvoiceApiController {
     @ApiOperation(value = "Get Sales report ")
     @RequestMapping(path = "/api/invoices/get-sales", method = RequestMethod.POST)
     public List<SalesReport> getsSalesReport(@RequestBody SalesReportForm s) throws ApiException, ParseException {
-        return iDto.getSalesReport(s);
+        return invetoryDto.getSalesReport(s);
     }
-
 
     @ApiOperation(value = "Get Brand report ")
     @RequestMapping(path = "/api/invoices/get-brand-report", method = RequestMethod.GET)
     public List<BrandData> getsBrandReport() throws ApiException {
-        return bDto.getAll();
+        return brandDto.getAll();
     }
 
     @ApiOperation(value = "Get Inventory report ")
     @RequestMapping(path = "/api/invoices/get-inventory-report", method = RequestMethod.GET)
     public List<InventoryReport> getInventoryReport() throws ApiException {
-        return iDto.getInventoryReport();
+        return invetoryDto.getInventoryReport();
     }
 
 

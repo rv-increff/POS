@@ -11,8 +11,8 @@ import javax.persistence.*;
 public class OrderItemPojo extends AbstractPojo{
 
     @Id
-    @TableGenerator(name=ORDER_ITEM_GENERATOR,initialValue = INVENTORY_INITIAL_VALUE)
-    @GeneratedValue(strategy= GenerationType.TABLE,generator = ORDER_ITEM_GENERATOR)
+    @TableGenerator(name=ORDER_ITEM_GENERATOR, initialValue = ORDER_ITEM_INITIAL_VALUE)
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = ORDER_ITEM_GENERATOR)
     private Integer id;
 
     @Column(nullable = false)

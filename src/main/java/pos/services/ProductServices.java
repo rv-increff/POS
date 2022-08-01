@@ -36,7 +36,7 @@ public class ProductServices {
     @Transactional(rollbackOn = ApiException.class)
     public void add(ProductForm p) throws ApiException {
 
-        if(dao.selectFromBarcode(p.getBarcode())!=null){
+        if(dao.selectByBarcode(p.getBarcode())!=null){
             throw new ApiException("barcode "  + p.getBarcode() +  " already exists");
         }
         BrandPojo bPojo= bDao.selectByBrandCategory(p.getBrand(),p.getCategory());
@@ -62,7 +62,7 @@ public class ProductServices {
         pPojo.setBarcode(p.getBarcode());
         pPojo.setMrp(p.getMrp());
         pPojo.setName(p.getName());
-        dao.insert(pPojo);
+        dao.add(pPojo);
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -86,7 +86,7 @@ public class ProductServices {
                 continue;
             }
             normalizeUtil(p);
-            if(dao.selectFromBarcode(p.getBarcode())!=null) {
+            if(dao.selectByBarcode(p.getBarcode())!=null) {
                 errorList.add("Error : row -> " + (i+1) + " barcode " + p.getBarcode() + " already exists");
                 continue;
             }
@@ -121,7 +121,7 @@ public class ProductServices {
                 ex.setBarcode(p.getBarcode());
                 ex.setMrp(p.getMrp());
                 ex.setName(p.getName());
-                dao.insert(ex);
+                dao.add(ex);
             }
         }
         else{
@@ -146,7 +146,7 @@ public class ProductServices {
     @Transactional(rollbackOn = ApiException.class)
     public void update(ProductUpdateForm p) throws ApiException {
 
-        if(dao.selectFromBarcodeNotEqualId(p.getBarcode(),p.getId())!=null){
+        if(dao.selectByBarcodeNotEqualId(p.getBarcode(),p.getId())!=null){
             throw new ApiException("barcode " + p.getBarcode() + " already exists");
         }
         Pattern pattern = Pattern.compile("^[0-9A-Za-z]+$");
@@ -178,7 +178,17 @@ public class ProductServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public boolean checkIfBrandExist(int brandId){
-        return dao.selectFromBrand(brandId).size()>0;
+        return dao.selectByBrandId(brandId).size()>0;
+    }
+
+    public List<ProductPojo> getByBrand(String brand){
+        return dao.selectByBrand(brand);
+    }
+    public List<ProductPojo> getByCategory(String category){
+        return dao.selectByCategory(category);
+    }
+    public List<ProductPojo> getByBrandAndCategory(String brand, String category){
+        return dao.selectByBrandAndCategory(brand,category);
     }
 
     private void updateUtil(ProductUpdateForm p) throws ApiException {
@@ -206,7 +216,6 @@ public class ProductServices {
         ex.setName(p.getName());
         dao.update(); //symbolic
     }
-
 
 }
 

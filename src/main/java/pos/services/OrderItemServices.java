@@ -22,7 +22,7 @@ import java.util.List;
 
 import static pos.util.DataUtil.checkNotNullUtil;
 
-@Service
+@Service //TODO add transaction on class level
 public class OrderItemServices {
 
     @Autowired
@@ -177,6 +177,10 @@ public class OrderItemServices {
     public boolean checkOrderStatus(int orderId) throws ApiException {
         OrderData p = ODto.get(orderId);
         return p.isOrderPlaced();
+    }
+
+    public List<OrderItemPojo> selectFromOrderIdList(List<Integer> orderIdList){
+        return dao.selectFromOrderIdList(orderIdList);
     }
 
     private void updateUtil(OrderItemUpdateForm p) throws ApiException {

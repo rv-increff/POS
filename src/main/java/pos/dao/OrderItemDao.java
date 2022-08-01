@@ -1,22 +1,14 @@
 package pos.dao;
 
 import org.springframework.stereotype.Repository;
-import pos.model.SalesReport;
-import pos.model.SalesReportForm;
 import pos.pojo.OrderItemPojo;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class OrderItemDao extends AbstractDao{
@@ -28,11 +20,13 @@ public class OrderItemDao extends AbstractDao{
     private final static String QUERY_BUILDER =
             "select new pos.model.SalesReport(p.brand, p.category,sum(oi.quantity) " +
             "as quantity, sum(oi.quantity * oi.sellingPrice) as revenue) " +
-            "from ProductPojo p, OrderItemPojo oi, OrderPojo o where "; //TODO in mem
+            "from ProductPojo p, OrderItemPojo oi, OrderPojo o where "; //TODO in mem ;change date selection as it not taking current date
     private final static String QUERY_BUILDER_SUFFIX =  " group by p.brand,p.category";
 
+    private final static String SELECT_BY_ORDER_ID_LIST = "select p from OrderItemPojo p where orderId in :orderIdList";
+
     public void add(OrderItemPojo p){
-        this.add(p);
+        addAbs(p);
     }
 
     public OrderItemPojo select(int id){
@@ -68,54 +62,58 @@ public class OrderItemDao extends AbstractDao{
         return getSingle(query);
     }
 
-    public List<SalesReport> getSalesReport(SalesReportForm s) throws ParseException {
-        List<String> queryBuilderList = new ArrayList<>();
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        queryBuilderList.add(" oi.productId=p.id and oi.orderId=o.id ");
-        queryBuilderList.add(" o.orderPlaced=1 ");
-        if(!Objects.equals(s.getFrom(), "")){
-            queryBuilderList.add(" o.time>=:fromTime ");
-
-        }
-         if(!Objects.equals(s.getTo(), "")){
-            queryBuilderList.add(" o.time<=:toTime ");
-
-        }
-        if(!Objects.equals(s.getBrand(), "")){
-            queryBuilderList.add(" p.brand=:brand ");
-
-        }
-        if(!Objects.equals(s.getCategory(), "")){
-            queryBuilderList.add(" p.category=:category ");
-
-        }
-        String queryBuilderFinal  = QUERY_BUILDER + String.join(" and ", queryBuilderList) + QUERY_BUILDER_SUFFIX;
-
-        TypedQuery<SalesReport> query = em().createQuery(queryBuilderFinal,SalesReport.class);
-        if(!Objects.equals(s.getTo(), "")){
-//            query.setParameter("toTime",sdf.parse(s.getTo()));
-            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" ); //TODO donot use
-            query.setParameter("toTime", ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getTo())),zoneId));
-        }
-        if(!Objects.equals(s.getFrom(), "")){
-//            query.setParameter("fromTime",sdf.parse(s.getFrom()));
-            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" );
-            query.setParameter("fromTime",ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getFrom())),zoneId));
-        }
-        if(!Objects.equals(s.getBrand(), "")){
-            query.setParameter("brand",s.getBrand());
-        }
-        if(!Objects.equals(s.getCategory(), "")){
-            query.setParameter("category",s.getCategory());
-        }
-        return query.getResultList();
-    }
+//    public List<SalesReport> getSalesReport(SalesReportForm s) throws ParseException {
+//        List<String> queryBuilderList = new ArrayList<>();
+//        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//
+//        queryBuilderList.add(" oi.productId=p.id and oi.orderId=o.id ");
+//        queryBuilderList.add(" o.orderPlaced=1 ");
+//        if(!Objects.equals(s.getFrom(), "")){
+//            queryBuilderList.add(" o.time>=:fromTime ");
+//
+//        }
+//         if(!Objects.equals(s.getTo(), "")){
+//            queryBuilderList.add(" o.time<=:toTime ");
+//
+//        }
+//        if(!Objects.equals(s.getBrand(), "")){
+//            queryBuilderList.add(" p.brand=:brand ");
+//
+//        }
+//        if(!Objects.equals(s.getCategory(), "")){
+//            queryBuilderList.add(" p.category=:category ");
+//
+//        }
+//        String queryBuilderFinal  = QUERY_BUILDER + String.join(" and ", queryBuilderList) + QUERY_BUILDER_SUFFIX;
+//
+//        TypedQuery<SalesReport> query = em().createQuery(queryBuilderFinal,SalesReport.class);
+//        if(!Objects.equals(s.getTo(), "")){
+////            query.setParameter("toTime",sdf.parse(s.getTo()));
+//            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" ); //TODO donot use
+//            query.setParameter("toTime", ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getTo())),zoneId));
+//        }
+//        if(!Objects.equals(s.getFrom(), "")){
+////            query.setParameter("fromTime",sdf.parse(s.getFrom()));
+//            ZoneId zoneId = ZoneId.of( "Asia/Kolkata" );
+//            query.setParameter("fromTime",ZonedDateTime.of(convertToLocalDateViaInstant(sdf.parse(s.getFrom())),zoneId));
+//        }
+//        if(!Objects.equals(s.getBrand(), "")){
+//            query.setParameter("brand",s.getBrand());
+//        }
+//        if(!Objects.equals(s.getCategory(), "")){
+//            query.setParameter("category",s.getCategory());
+//        }
+//        return query.getResultList();
+//    }
 
     public void update(){
             //symbolic
         }
-
+    public List<OrderItemPojo> selectFromOrderIdList(List<Integer> orderIdList){
+        TypedQuery<OrderItemPojo> query = em().createQuery(SELECT_BY_ORDER_ID_LIST, OrderItemPojo.class);
+        query.setParameter("orderIdList",orderIdList);
+        return query.getResultList();
+    }
     public LocalDateTime convertToLocalDateViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())

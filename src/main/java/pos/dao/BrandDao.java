@@ -15,7 +15,7 @@ public class BrandDao extends AbstractDao{
     private final static String SELECT_BY_CATEGORY = "select p from BrandPojo p where category=:category";
 
     public void add(BrandPojo p){
-        this.add(p);
+        addAbs(p);
     }
 
     public BrandPojo select(int id){

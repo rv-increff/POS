@@ -7,12 +7,12 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="pos_product_pojo",uniqueConstraints = { @UniqueConstraint(columnNames = { "barcode" }) })
+@Table(name="pos_product_pojo", uniqueConstraints = { @UniqueConstraint(columnNames = { "barcode" }) })
 public class ProductPojo extends AbstractPojo{
 
-    @TableGenerator(name=PRODUCT_GENERATOR,initialValue = INVENTORY_INITIAL_VALUE)
+    @TableGenerator(name=PRODUCT_GENERATOR, initialValue = PRODUCT_INITIAL_VALUE)
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE,generator = PRODUCT_GENERATOR)
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = PRODUCT_GENERATOR)
     private Integer id;
 
     @Column(nullable = false)

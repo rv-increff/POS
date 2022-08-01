@@ -1,5 +1,7 @@
 package pos.util;
+
 import pos.spring.ApiException;
+
 import java.lang.reflect.Field;
 
 public class DataUtil {

@@ -1,10 +1,11 @@
 package pos.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
-
+import pos.spring.ApiException;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
+
 @Getter
 @Setter
 public class SalesReportForm {
@@ -14,11 +15,28 @@ public class SalesReportForm {
     @NotNull(message = "category cannot be null")
     private String category;
 
-    @NotNull(message = "from date cannot be null")
-    private String from;
+    @NotNull
+    private ZonedDateTime from;
 
-    @NotNull(message = "from date cannot be null")
-    private String to;
+    @NotNull
+    private ZonedDateTime to;
+
+    public void setFrom(String from) throws ApiException {
+
+        try{
+            this.from = ZonedDateTime.parse(from);
+        }catch (Throwable e){
+            throw new ApiException("Invalid date time format must be of ZonedDateTime");
+        }
+    }
+    public void setTo(String to) throws ApiException {
+
+        try{
+            this.to = ZonedDateTime.parse(to);
+        }catch (Throwable e){
+            throw new ApiException("Invalid date time format must be of ZonedDateTime");
+        }
+    }
 
     @Override
     public String toString() {

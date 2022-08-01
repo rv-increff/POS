@@ -120,54 +120,54 @@ public class OrderItemDaoTest {
 //    @Test
     public void daoGetSalesReport() throws ParseException {
         //make product
-        String brand = getRandomString();
-        String category  = getRandomString();
-        ProductPojo pp = new ProductPojo();
-        pp.setCategory(category);
-        pp.setBrand(brand);
-        pp.setMrp((double)getRandomNumber());
-        pp.setName(getRandomString());
-        pp.setBarcode(getRandomString());
-        pp.setBrandId(getRandomNumber());
-        pDao.insert(pp);
-
-        //make order
-        ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
-        OrderPojo op = new OrderPojo();
-        op.setOrderPlaced(true);
-        op.setTime(date);
-        oDao.add(op);
-
-        //orderItem
-        int productId = pDao.selectAll().get(0).getId();
-        int orderId = oDao.selectAll().get(0).getId();
-        OrderItemPojo oi = new OrderItemPojo();
-        oi.setOrderId(orderId);
-        oi.setProductId(productId);
-        oi.setQuantity(getRandomNumber());
-        oi.setSellingPrice((double)getRandomNumber());
-        dao.add(oi);
-
-
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
-        DateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
-        DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-        String to  = now.plusYears(1).toString();
-        String from = now.minusYears(1).toString();
-
-        SalesReportForm sf = new SalesReportForm();
-        sf.setFrom("");
-        sf.setTo("");
-        sf.setBrand("");
-        sf.setCategory("");
-        SalesReport s = dao.getSalesReport(sf).get(0);
-        Assert.assertEquals(1,dao.getSalesReport(sf).size());
-        sf.setFrom(from);
-        sf.setTo(to);
-        sf.setBrand(brand);
-        sf.setCategory(category);
-
-        Assert.assertEquals(1,dao.getSalesReport(sf).size());
+//        String brand = getRandomString();
+//        String category  = getRandomString();
+//        ProductPojo pp = new ProductPojo();
+//        pp.setCategory(category);
+//        pp.setBrand(brand);
+//        pp.setMrp((double)getRandomNumber());
+//        pp.setName(getRandomString());
+//        pp.setBarcode(getRandomString());
+//        pp.setBrandId(getRandomNumber());
+//        pDao.insert(pp);
+//
+//        //make order
+//        ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
+//        OrderPojo op = new OrderPojo();
+//        op.setOrderPlaced(true);
+//        op.setTime(date);
+//        oDao.add(op);
+//
+//        //orderItem
+//        int productId = pDao.selectAll().get(0).getId();
+//        int orderId = oDao.selectAll().get(0).getId();
+//        OrderItemPojo oi = new OrderItemPojo();
+//        oi.setOrderId(orderId);
+//        oi.setProductId(productId);
+//        oi.setQuantity(getRandomNumber());
+//        oi.setSellingPrice((double)getRandomNumber());
+//        dao.add(oi);
+//
+//
+//        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+//        DateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+//        DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//        String to  = now.plusYears(1).toString();
+//        String from = now.minusYears(1).toString();
+//
+//        SalesReportForm sf = new SalesReportForm();
+//        sf.setFrom("");
+//        sf.setTo("");
+//        sf.setBrand("");
+//        sf.setCategory("");
+//        SalesReport s = dao.getSalesReport(sf).get(0);
+//        Assert.assertEquals(1,dao.getSalesReport(sf).size());
+//        sf.setFrom(from);
+//        sf.setTo(to);
+//        sf.setBrand(brand);
+//        sf.setCategory(category);
+//
+//        Assert.assertEquals(1,dao.getSalesReport(sf).size());
 
     }
     @Test

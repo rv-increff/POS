@@ -16,7 +16,7 @@ public class InventoryDao extends AbstractDao{
             "p.id=i.productId";
  //TODO change to inmenmry
     public void add(InventoryPojo p){
-        this.add(p);
+        addAbs(p);
     }
 
     public InventoryPojo select(int id){

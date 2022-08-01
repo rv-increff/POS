@@ -220,7 +220,7 @@ public class InventoryDtoTest {
         p.setName(name);
         p.setBrandId(brandPojoId);
         p.setMrp(mrp+1);
-        pDao.insert(p);
+        pDao.add(p);
         return p;
     }
     private OrderItemPojo daoOrderItemInsertHelper(Integer productId){

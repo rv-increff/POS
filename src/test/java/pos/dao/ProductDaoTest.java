@@ -33,7 +33,7 @@ public class ProductDaoTest {
         p.setName(getRandomString());
         p.setBarcode(getRandomString());
         p.setBrandId(1);
-        dao.insert(p);
+        dao.add(p);
     }
 
     @Test
@@ -57,23 +57,23 @@ public class ProductDaoTest {
     @Test
     public void daoUnique(){
         ProductPojo p = daoInsertHelper();
-        Assert.assertNull(dao.selectFromBarcode(getRandomString()));
-        Assert.assertNotNull(dao.selectFromBarcode(p.getBarcode()));
+        Assert.assertNull(dao.selectByBarcode(getRandomString()));
+        Assert.assertNotNull(dao.selectByBarcode(p.getBarcode()));
     }
     @Test
     public void daoUniqueUpdate(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
 
-        Assert.assertNull(dao.selectFromBarcodeNotEqualId(getRandomString(),0));
-        Assert.assertNotNull(dao.selectFromBarcodeNotEqualId(p.getBarcode(),id+1)); //barcode same but id different
+        Assert.assertNull(dao.selectByBarcodeNotEqualId(getRandomString(),0));
+        Assert.assertNotNull(dao.selectByBarcodeNotEqualId(p.getBarcode(),id+1)); //barcode same but id different
     }
     @Test
     public void daoGetIdFromBarcode(){
         ProductPojo p = daoInsertHelper();
         int id = dao.selectAll().get(0).getId();
-        Assert.assertEquals(id,(int)(dao.selectFromBarcode(p.getBarcode()).getId()));
-        Assert.assertNull(dao.selectFromBarcode(getRandomString()));
+        Assert.assertEquals(id,(int)(dao.selectByBarcode(p.getBarcode()).getId()));
+        Assert.assertNull(dao.selectByBarcode(getRandomString()));
     }
 
     @Test
@@ -93,8 +93,8 @@ public class ProductDaoTest {
     public void daoCheckIfBrandExist(){
         daoInsertHelper();
         int brandId = dao.selectAll().get(0).getBrandId();
-        Assert.assertNotNull(dao.selectFromBrand(brandId));
-        Assert.assertEquals(0,dao.selectFromBrand(brandId+1).size());
+        Assert.assertNotNull(dao.selectByBrandId(brandId));
+        Assert.assertEquals(0,dao.selectByBrandId(brandId+1).size());
     }
 
     private ProductPojo daoInsertHelper(){
@@ -111,7 +111,7 @@ public class ProductDaoTest {
         p.setName(name);
         p.setBrandId(brandId);
         p.setMrp(mrp);
-        dao.insert(p);
+        dao.add(p);
         return p;
     }
 

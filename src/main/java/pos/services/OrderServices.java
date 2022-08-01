@@ -12,12 +12,12 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class OrderServices {
 
     @Autowired
     private OrderDao dao;
 
-    @Transactional(rollbackOn = ApiException.class)
     public void add() throws ApiException {
         OrderPojo ex = new OrderPojo();
         ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
@@ -25,19 +25,15 @@ public class OrderServices {
         dao.add(ex);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public List<OrderPojo> getAll() throws ApiException {
         return  dao.selectAll();
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public OrderPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
 
-
-    @Transactional(rollbackOn = ApiException.class)
     public OrderPojo getCheck(int id) throws ApiException {
         OrderPojo p = dao.select(id);
         if (p== null) {
@@ -46,7 +42,6 @@ public class OrderServices {
         return p;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public void updateOrderStatusPlaced(int id) throws ApiException {
         OrderPojo p = dao.select(id);
         if (p== null) {
@@ -55,6 +50,10 @@ public class OrderServices {
         p.setOrderPlaced(true);
         ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
         p.setTime(date);
+    }
+
+    public List<OrderPojo> selectByFromTODate(ZonedDateTime from, ZonedDateTime to){
+        return dao.selectByFromTODate(from,to);
     }
 
 }

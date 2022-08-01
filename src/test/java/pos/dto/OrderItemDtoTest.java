@@ -324,7 +324,7 @@ public class OrderItemDtoTest {
         p.setName(name);
         p.setBrandId(brandPojoId);
         p.setMrp(mrp);
-        pDao.insert(p);
+        pDao.add(p);
         return p;
     }
     private InventoryPojo daoInventoryInsertHelper(int productId,int qty){
