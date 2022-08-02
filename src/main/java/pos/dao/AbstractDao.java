@@ -13,10 +13,10 @@ public abstract class AbstractDao {
 	@PersistenceContext
 	protected EntityManager em;
 
-	protected <T> void addAbs(T pojoObject){
+	public <T> void addAbs(T pojoObject){
 		em.persist(pojoObject);
 	}
-	protected <T> List<T> selectAll(Class<T> pojo){
+	public <T> List<T> selectAll(Class<T> pojo){
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cr = cb.createQuery(pojo);
 		Root<T> root = cr.from(pojo);
@@ -26,7 +26,7 @@ public abstract class AbstractDao {
 		List<T> results = query.getResultList();
 		return results;
 	}
-	protected <T> T select(Class<T> pojo,Integer id){
+	public <T> T select(Class<T> pojo,Integer id){
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cr = cb.createQuery(pojo);
 		Root<T> root = cr.from(pojo);

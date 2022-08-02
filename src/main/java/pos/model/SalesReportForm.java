@@ -3,6 +3,7 @@ package pos.model;
 import lombok.Getter;
 import lombok.Setter;
 import pos.spring.ApiException;
+
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 

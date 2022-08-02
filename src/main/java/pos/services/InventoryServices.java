@@ -141,6 +141,10 @@ public class InventoryServices {
         return p;
     }
 
+    public InventoryPojo selectByBarcode(String barcode){
+        return dao.selectByBarcode(barcode);
+    }
+
     private void updateUtil(InventoryUpdateForm p) {
         InventoryPojo ex = dao.select(p.getId());
         ex.setQuantity(p.getQuantity());

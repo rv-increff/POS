@@ -12,7 +12,7 @@ import pos.spring.ApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static pos.util.DataUtil.checkNotNullUtil;
+import static pos.util.DataUtil.validate;
 
 @Service
 public class InventoryDto {
@@ -30,7 +30,7 @@ public class InventoryDto {
     }
 
     public void add(InventoryForm p) throws ApiException{
-        checkNotNullUtil(p,"Barcode or quantity cannot be NULL");
+        validate(p,"Barcode or quantity cannot be NULL");
         service.add(p);
     }
 
@@ -43,7 +43,7 @@ public class InventoryDto {
     }
 
     public void update(InventoryUpdateForm p) throws ApiException{
-        checkNotNullUtil(p,"Quantity cannot be NULL");
+        validate(p,"Quantity cannot be NULL");
         service.update(p);
     }
 

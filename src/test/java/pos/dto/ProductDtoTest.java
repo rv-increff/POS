@@ -109,11 +109,18 @@ public class ProductDtoTest {
 
     @Test
     public void addUniqueError(){
+
         ProductPojo pojo = daoInsertHelper();
         ProductForm p = new ProductForm();
         String category = getRandomString();
         String brand = getRandomString();
         String name = getRandomString();
+
+        BrandPojo brandPojo = new BrandPojo();
+        brandPojo.setBrand(brand);
+        brandPojo.setCategory(category);
+        bDao.add(brandPojo);
+
 
         double mrp = Math.random()*100%(20);
         p.setCategory(category);
@@ -195,6 +202,8 @@ public class ProductDtoTest {
             dto.bulkAdd(pList);
         } catch (ApiException e) {
             String err = "Error : row -> " + 1 + " parameters in the Insert form cannot be null\n";
+            err += "Error : row -> " + 1 + " " + p.getBrand() + " - " + p.getCategory()
+                    + " brand-category does not exist\n";
             Assert.assertEquals(err,e.getMessage());
         }
 
@@ -359,14 +368,18 @@ public class ProductDtoTest {
     public void updateBarcodeUniqueError() throws ApiException {
 
         String category = getRandomString().toLowerCase();
-        String brand = getRandomString().toLowerCase(Locale.ROOT);
+        String brand = getRandomString().toLowerCase();
+        BrandPojo brandPojo =  new BrandPojo();
+        brandPojo.setBrand(brand);
+        brandPojo.setCategory(category);
+        bDao.add(brandPojo);
 
         ProductPojo p = daoInsertHelper();
-        ProductPojo p1= daoInsertHelper();
+        ProductPojo p1 = daoInsertHelper();
         ProductUpdateForm pUpdate = new ProductUpdateForm();
         pUpdate.setName(getRandomString());
-        pUpdate.setBrand(p.getBrand());
-        pUpdate.setCategory(p.getCategory());
+        pUpdate.setBrand(brand);
+        pUpdate.setCategory(category);
         pUpdate.setBarcode(p1.getBarcode());
         pUpdate.setMrp(p.getMrp());
         pUpdate.setId(p.getId());
@@ -431,7 +444,7 @@ public class ProductDtoTest {
         try{
             dto.update(pUpdate);
         }catch (ApiException e){
-            String err = "product with given id does not exist, id : " + id;
+            String err = "Product with given id does not exist, id : " + id;
             Assert.assertEquals(err,e.getMessage());
         }
 
@@ -461,7 +474,7 @@ public class ProductDtoTest {
 
     @Test
     public void checkIfBrandExist(){
-        Assert.assertTrue(!service.checkIfBrandExist(0));
+        Assert.assertTrue(!service.checkBrandExist(0));
         String category = getRandomString().toLowerCase();
         String brand = getRandomString().toLowerCase(Locale.ROOT);
 
@@ -480,7 +493,7 @@ public class ProductDtoTest {
         pUpdate.setMrp(p.getMrp());
         pUpdate.setId(p.getId());
 
-        Assert.assertTrue(service.checkIfBrandExist(dao.selectAll().get(0).getBrandId()));
+        Assert.assertTrue(service.checkBrandExist(dao.selectAll().get(0).getBrandId()));
 
 
     }

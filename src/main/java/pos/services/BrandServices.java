@@ -3,78 +3,65 @@ package pos.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
-import pos.dao.ProductDao;
-import pos.model.BrandData;
 import pos.model.BrandForm;
 import pos.pojo.BrandPojo;
 import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static pos.util.DataUtil.*;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class BrandServices {
 
     @Autowired
     private BrandDao dao;
-    @Autowired
-    private ProductDao pDao;  //TODO service should deal with its own entity
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void add(BrandPojo p) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
-        if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
-            throw new ApiException("Brand and category pair should be unique");
-        }     //TODO service layer response in pojo
-        BrandPojo bPojo = new BrandPojo();
-        bPojo.setBrand(p.getBrand());
-        bPojo.setCategory(p.getCategory());
-        dao.add(bPojo);
+    //TODO service should deal with its own entity
+//TODO general check file / validation check on dto and service specific on service
+    //normalize in service
+
+    public void add(BrandPojo brandPojo) throws ApiException {  //TODO add dto for conversion only pojo not form check on dto and service layer
+        //TODO service layer response in pojo
+        normalize(brandPojo);
+        checkUnique(brandPojo);
+        dao.add(brandPojo);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public void bulkAdd(List<BrandPojo> brandPojoList) throws ApiException {
+        normalizeList(brandPojoList);
+        checkAlreadyExistInBrandPojo(brandPojoList);
         for(BrandPojo brandPojo : brandPojoList){
             add(brandPojo);
         }
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public List<BrandPojo> getAll() throws ApiException { //TODO will get and getall will be transactional?
         return dao.selectAll();
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public BrandPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void update(BrandData p) throws ApiException {
-
-        if(pDao.selectByBrandId(p.getId()).size()>0){
-            throw new ApiException("cannot update " + p.getBrand() + " - " +  p.getCategory() + " as product for this exist");
-        }
-        if(dao.selectByBrandCategory(p.getBrand(),p.getCategory())!=null){
-            throw new ApiException(p.getBrand() + " - " +  p.getCategory() + " pair should be unique");
-        }
-        updateUtil(p);
+    public void update(BrandPojo brandPojo) throws ApiException {
+        validate(brandPojo,"brand or category cannot be null");
+        normalize(brandPojo);
+        checkUnique(brandPojo);
+        updateUtil(brandPojo);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public BrandPojo getCheck(int id) throws ApiException {
-            BrandPojo p = dao.select(id);
-            if (p== null) {
+            BrandPojo brandPojo = dao.select(id);
+            if (brandPojo == null) {
                 throw new ApiException("Brand with given id does not exist ,id : " + id);
             }
-            return p;
+            return brandPojo;
         }
 
-    @Transactional(rollbackOn = ApiException.class)
     public BrandPojo getCheckInPojo(int id) throws ApiException {
         BrandPojo p = dao.select(id);
         if (p== null) {
@@ -83,29 +70,54 @@ public class BrandServices {
         return p;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public BrandPojo selectByBrandCategory(String brand, String category){
         return dao.selectByBrandCategory(brand,category);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public BrandPojo selectByBrand(String brand){
         return dao.selectByBrand(brand);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public BrandPojo selectByCategory(String brand){
         return dao.selectByCategory(brand);
     }
 
-
-    private void updateUtil(BrandData p) throws ApiException {
-        BrandPojo ex = getCheckInPojo(p.getId());
-        ex.setBrand(p.getBrand());
-        ex.setCategory(p.getCategory());
+    private void updateUtil(BrandPojo brandPojo) throws ApiException {
+        BrandPojo brandPojoExist = getCheckInPojo(brandPojo.getId());
+        brandPojoExist.setBrand(brandPojo.getBrand());
+        brandPojoExist.setCategory(brandPojo.getCategory());
         dao.update(); //symbolic
     }
 
+    private void checkUnique(BrandPojo brandPojo) throws ApiException {
+        if(selectByBrandCategory(brandPojo.getBrand(),brandPojo.getCategory())!=null){
+            throw new ApiException(brandPojo.getBrand() + " - " +  brandPojo.getCategory() + " pair already exist");
+        }
+    }
 
+    private void checkAlreadyExistInBrandPojo(List<BrandPojo> brandPojoList) throws ApiException {
+        List<String> errorList = new ArrayList<>();
+        Integer row =1;
+        for(BrandPojo brandPojo : brandPojoList) {
+                if(selectByBrandCategory(brandPojo.getBrand(),brandPojo.getCategory())!=null) {
+                    errorList.add("Error : row -> " + (row) + " "  + brandPojo.getBrand() +
+                            " - " +  brandPojo.getCategory() + " pair already exist");
+                }
+            row++;
+        }
+        if(errorList.size()>0) {
+            String errorStr = "";
+            for(String e : errorList){
+                errorStr += e + "\n";
+            }
+            throw new ApiException(errorStr);
+        }
+    }
+
+    private void normalizeList(List<BrandPojo> brandPojoList){
+        for(BrandPojo brandPojo : brandPojoList){
+            normalize(brandPojo);
+        }
+    }
 
 }

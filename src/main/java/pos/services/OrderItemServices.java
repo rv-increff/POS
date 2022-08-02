@@ -20,7 +20,7 @@ import pos.spring.ApiException;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static pos.util.DataUtil.checkNotNullUtil;
+import static pos.util.DataUtil.validate;
 
 @Service //TODO add transaction on class level
 public class OrderItemServices {
@@ -45,7 +45,8 @@ public class OrderItemServices {
     @Transactional(rollbackOn = ApiException.class)
     public void add(OrderItemForm p) throws ApiException {
 
-        checkNotNullUtil(p,"body values cannot be null");
+        validate(p,"body values cannot be null");
+
         if(dao.selectFromOrderIdProductId(p.getOrderId(),p.getProductId())!=null){
             throw new ApiException("OrderItem already exist update that instead");
         }
@@ -126,7 +127,7 @@ public class OrderItemServices {
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(OrderItemUpdateForm p) throws ApiException {
-        checkNotNullUtil(p,"Body values cannot be null");
+        validate(p,"Body values cannot be null");
         getCheck(p.getId());
         if(p.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 1");

@@ -99,7 +99,7 @@ public class BrandDtoTest {
         try{
             dto.add(p);
         }catch (ApiException e){
-            Assert.assertEquals("Brand and category pair should be unique",e.getMessage());
+            Assert.assertEquals(brand.toLowerCase() + " - " + category.toLowerCase() +  " pair already exist",e.getMessage());
         }
 
     }
@@ -121,7 +121,7 @@ public class BrandDtoTest {
             p.setCategory(p.getCategory().toLowerCase(Locale.ROOT));
             dto.add(p);
         }catch (ApiException e){
-            Assert.assertEquals("Brand and category pair should be unique",e.getMessage());
+            Assert.assertEquals(p.getBrand() + " - " + p.getCategory() + " pair already exist",e.getMessage());
         }
 
     }
@@ -166,7 +166,7 @@ public class BrandDtoTest {
         try{
             dto.bulkAdd(pList);
         }catch (ApiException e){
-            String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair should be unique\n";
+            String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair already exist\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
         Assert.assertEquals(1,dao.selectAll().size());
@@ -189,7 +189,7 @@ public class BrandDtoTest {
         try{
             dto.bulkAdd(pList);
         }catch (ApiException e){
-            String expErr = "Error : row -> " + (1) + " Brand-Category should not be null\n";
+            String expErr = "Error : row -> " + (1) + " brand or category cannot be empty\n";
             Assert.assertEquals(expErr,e.getMessage());
         }
         Assert.assertEquals(0,dao.selectAll().size());
