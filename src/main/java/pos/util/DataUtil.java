@@ -6,6 +6,9 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.isNull;
+import static org.hibernate.criterion.Restrictions.isNotNull;
+
 public class DataUtil {
     public static <T> void validate(T form, String e) throws ApiException {
         try {
@@ -14,7 +17,7 @@ public class DataUtil {
             for (Field m : fields) {
                 m.setAccessible(true);
                 System.out.println(m.get(form));
-                if(m.get(form) == null){
+                if(isNull(m.get(form))){
                     throw new ApiException(e);
                 }
             }
@@ -28,8 +31,10 @@ public class DataUtil {
             Field[] fields = form.getClass().getDeclaredFields();
             for (Field m : fields) {
                     m.setAccessible(true);
-                    if(m.get(form) == null)
+                    if(isNull(m.get(form))) {
+                        System.out.println(m.get(form) + " " + isNull(m.get(form)) + " " + m.getName());
                         return false;
+                    }
             }
         } catch (IllegalAccessException err) {
             System.out.println(err);
@@ -43,7 +48,7 @@ public class DataUtil {
             for (Field m : fields) {
                 if (m.getGenericType().getTypeName().equals("java.lang.String") & m.getName() != "barcode") {
                     m.setAccessible(true);
-                    if(m.get(form)!=null) {
+                    if(!isNull(m.get(form))) {
                         m.set(form, m.get(form).toString().toLowerCase().trim());
                     }
                 }

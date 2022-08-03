@@ -1,6 +1,8 @@
+import {ZonedDateTime} from '@js-joda/root/packages/core/src/ZonedDateTime.js'
+
 function salesReport(){
-let toDate = document.getElementById("toDate").value.trim();
-let fromDate = document.getElementById("fromDate").value.trim();
+let toDate = ZonedDateTime.of2(document.getElementById("toDate").value.trim(),ZonedDateTime.zone());
+let fromDate = ZonedDateTime.of2(document.getElementById("fromDate").value.trim(),ZonedDateTime.zone());
 let categoryInput = document.getElementById("categoryInputReports").value.trim();
 let brandInput = document.getElementById("brandInputReports").value.trim();
 console.log(toDate,fromDate,categoryInput,brandInput)

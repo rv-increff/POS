@@ -3,7 +3,6 @@ package pos.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pos.dao.BrandDao;
-import pos.model.BrandForm;
 import pos.pojo.BrandPojo;
 import pos.spring.ApiException;
 
@@ -11,7 +10,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static pos.util.DataUtil.*;
+import static pos.util.DataUtil.normalize;
+import static pos.util.DataUtil.validate;
 
 @Service
 @Transactional(rollbackOn = ApiException.class)
@@ -43,7 +43,7 @@ public class BrandServices {
         return dao.selectAll();
     }
 
-    public BrandPojo get(int id) throws ApiException {
+    public BrandPojo get(Integer id) throws ApiException {
         return getCheck(id);
     }
 
@@ -54,7 +54,7 @@ public class BrandServices {
         updateUtil(brandPojo);
     }
 
-    public BrandPojo getCheck(int id) throws ApiException {
+    public BrandPojo getCheck(Integer id) throws ApiException {
             BrandPojo brandPojo = dao.select(id);
             if (brandPojo == null) {
                 throw new ApiException("Brand with given id does not exist ,id : " + id);
@@ -62,7 +62,7 @@ public class BrandServices {
             return brandPojo;
         }
 
-    public BrandPojo getCheckInPojo(int id) throws ApiException {
+    public BrandPojo getCheckInPojo(Integer id) throws ApiException {
         BrandPojo p = dao.select(id);
         if (p== null) {
             throw new ApiException("Brand with given id does not exist ,id : " + id);

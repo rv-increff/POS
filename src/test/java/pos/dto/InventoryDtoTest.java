@@ -80,6 +80,15 @@ public class InventoryDtoTest {
         InventoryPojo in = daoInsertHelper();
         InventoryForm p = new InventoryForm();
 
+        ProductPojo productPojo = new ProductPojo();
+        productPojo.setBarcode(in.getBarcode());
+        productPojo.setBrandId(getRandomNumber());
+        productPojo.setBrand(getRandomString());
+        productPojo.setCategory(getRandomString());
+        productPojo.setName(getRandomString());
+        productPojo.setMrp((double)getRandomNumber());
+        pDao.add(productPojo);
+
         p.setBarcode(in.getBarcode());
         p.setQuantity(in.getQuantity());
 

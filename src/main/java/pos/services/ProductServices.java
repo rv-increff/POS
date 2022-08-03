@@ -2,25 +2,14 @@ package pos.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pos.dao.BrandDao;
-import pos.dao.InventoryDao;
 import pos.dao.ProductDao;
-import pos.model.ProductForm;
-import pos.model.ProductUpdateForm;
-import pos.pojo.BrandPojo;
 import pos.pojo.ProductPojo;
 import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static pos.util.DataUtil.*;
-import static pos.util.DataUtil.validateMRP;
 
 @Service
 @Transactional(rollbackOn = ApiException.class)
@@ -62,7 +51,7 @@ public class ProductServices {
         updateUtil(productPojo);
     }
 
-    public ProductPojo getCheck(int id) throws ApiException {
+    public ProductPojo getCheck(Integer id) throws ApiException {
         ProductPojo productPojo = dao.select(id);
         if (productPojo == null) {
             throw new ApiException("Product with given id does not exist, id : " + id);
@@ -70,7 +59,7 @@ public class ProductServices {
         return productPojo;
     }
 
-    public ProductPojo getCheckInPojo(int id) throws ApiException {
+    public ProductPojo getCheckInPojo(Integer id) throws ApiException {
         ProductPojo productPojo = dao.select(id);
         if (productPojo == null) {
             throw new ApiException("product with given id does not exist, id : " + id);
@@ -78,7 +67,7 @@ public class ProductServices {
         return productPojo;
     }
 
-    public boolean checkBrandExist(int brandId){
+    public boolean checkBrandExist(Integer brandId){
         return dao.selectByBrandId(brandId).size()>0;
     }
 

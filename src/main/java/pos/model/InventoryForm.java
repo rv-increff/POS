@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class InventoryForm {
 
-    @NotNull(message = "barcode cannot be null")
+    @NotNull
     private String barcode;
 
-    @NotNull(message = "quantity cannot be null")
+    @NotNull
     private Integer quantity;
 
 }

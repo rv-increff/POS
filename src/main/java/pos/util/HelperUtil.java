@@ -2,6 +2,7 @@ package pos.util;
 
 import pos.model.*;
 import pos.pojo.BrandPojo;
+import pos.pojo.InventoryPojo;
 import pos.pojo.ProductPojo;
 import pos.spring.ApiException;
 
@@ -12,15 +13,15 @@ import static pos.util.DataUtil.checkNotNullBulkUtil;
 
 public class HelperUtil {
     public static ProductData convertPojoToProductData(ProductPojo p){  //TODO put all static function to util
-        ProductData b = new ProductData();
-        b.setId(p.getId());
-        b.setBrand(p.getBrand());
-        b.setCategory(p.getCategory());
-        b.setBrandPojoId(p.getBrandId());
-        b.setBarcode(p.getBarcode());
-        b.setMrp(p.getMrp());
-        b.setName(p.getName());
-        return b;
+        ProductData productData = new ProductData();
+        productData.setId(p.getId());
+        productData.setBrand(p.getBrand());
+        productData.setCategory(p.getCategory());
+        productData.setBrandPojoId(p.getBrandId());
+        productData.setBarcode(p.getBarcode());
+        productData.setMrp(p.getMrp());
+        productData.setName(p.getName());
+        return productData;
     }
     public static ProductPojo convertFormToProductPojo(ProductForm p){
         ProductPojo productPojo = new ProductPojo();
@@ -59,11 +60,11 @@ public class HelperUtil {
         }
     }
     public static BrandData convertPojoToBrandData(BrandPojo brandPojo){
-        BrandData b = new BrandData();
-        b.setId(brandPojo.getId());
-        b.setBrand(brandPojo.getBrand());
-        b.setCategory(brandPojo.getCategory());
-        return b;
+        BrandData brandData = new BrandData();
+        brandData.setId(brandPojo.getId());
+        brandData.setBrand(brandPojo.getBrand());
+        brandData.setCategory(brandPojo.getCategory());
+        return brandData;
     }
     public static BrandPojo convertBrandFormToPojo(BrandForm brandForm){
         BrandPojo brandPojo = new BrandPojo();
@@ -72,10 +73,25 @@ public class HelperUtil {
         return brandPojo;
     }
     public static BrandPojo convertBrandDataToPojo(BrandData brandData){
-        BrandPojo b = new BrandPojo();
-        b.setId(brandData.getId());
-        b.setBrand(brandData.getBrand());
-        b.setCategory(brandData.getCategory());
-        return b;
+        BrandPojo brandPojo = new BrandPojo();
+        brandPojo.setId(brandData.getId());
+        brandPojo.setBrand(brandData.getBrand());
+        brandPojo.setCategory(brandData.getCategory());
+        return brandPojo;
+    }
+    public static InventoryData convertPojoToInventoryForm(InventoryPojo p){
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setId(p.getId());
+        inventoryData.setBarcode(p.getBarcode());
+        inventoryData.setQuantity(p.getQuantity());
+        inventoryData.setProductId(p.getProductId());
+        return inventoryData;
+    }
+
+    public static InventoryPojo convertInventoryFormToInventoryPojo(InventoryForm inventoryForm){
+        InventoryPojo inventoryPojo = new InventoryPojo();
+        inventoryPojo.setBarcode(inventoryForm.getBarcode());
+        inventoryPojo.setQuantity(inventoryForm.getQuantity());
+        return inventoryPojo;
     }
 }

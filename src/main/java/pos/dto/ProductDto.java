@@ -67,7 +67,7 @@ public class ProductDto {
         service.bulkAdd(productPojoList);
     }
 
-    public ProductData get(int id) throws ApiException{
+    public ProductData get(Integer id) throws ApiException{
         return convertPojoToProductData(service.get(id));
     }
 
@@ -84,7 +84,7 @@ public class ProductDto {
 
     private Integer getBrandIdByBrandCategory(String brand, String category) throws ApiException {
         BrandPojo brandPojo = brandService.selectByBrandCategory(brand,category);
-        if(brandPojo==null){
+        if(brandPojo == null){
             throw new ApiException(brand + " - " + category + " brand-category does not exist");
         }
         return brandPojo.getId();

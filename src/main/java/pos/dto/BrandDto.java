@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static pos.util.DataUtil.*;
+import static pos.util.DataUtil.validate;
 import static pos.util.HelperUtil.*;
 
 @Service
