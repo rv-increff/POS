@@ -9,7 +9,7 @@ import javax.persistence.Version;
 @Getter
 @Setter
 @MappedSuperclass
-public class AbstractPojo extends PojoConstants{
+public class AbstractPojo extends TableConstants {
 
     @Version
     private Integer version;

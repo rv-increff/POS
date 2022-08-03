@@ -21,7 +21,7 @@ function createOrder() {
     },
     processData: false,
     type: 'POST',
-    url: 'http://localhost:9000/pos/api/order/insert'
+    url: 'http://localhost:9000/pos/api/orders/insert'
   });
 }
 
@@ -73,7 +73,7 @@ function loadOrder() {
     },
     processData: false,
     type: 'GET',
-    url: 'http://localhost:9000/pos/api/order/get-all'
+    url: 'http://localhost:9000/pos/api/orders/get-all'
   });
 }
 function invoice(orderId) {
@@ -125,7 +125,7 @@ function placeOrder(id) {
     },
     processData: false,
     type: 'GET',
-    url: `http://localhost:9000/pos/api/order-item/get-all/${id}`
+    url: `http://localhost:9000/pos/api/order-items/get-all/${id}`
   });
   
 }
@@ -404,7 +404,7 @@ function addOrderItemUtil(orderId) {
       },
       processData: false,
       type: 'POST',
-      url: 'http://localhost:9000/pos/api/order-item/insert'
+      url: 'http://localhost:9000/pos/api/order-items/insert'
     });
 
   }

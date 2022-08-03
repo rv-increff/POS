@@ -51,7 +51,11 @@ public class BrandServices {
         validate(brandPojo,"brand or category cannot be null");
         normalize(brandPojo);
         checkUnique(brandPojo);
-        updateUtil(brandPojo);
+
+        BrandPojo exists = getCheck(brandPojo.getId());   //TODO do not make 1 use method
+        exists.setBrand(brandPojo.getBrand());
+        exists.setCategory(brandPojo.getCategory());
+        dao.update(); //symbolic
     }
 
     public BrandPojo getCheck(Integer id) throws ApiException {
@@ -62,13 +66,7 @@ public class BrandServices {
             return brandPojo;
         }
 
-    public BrandPojo getCheckInPojo(Integer id) throws ApiException {
-        BrandPojo p = dao.select(id);
-        if (p== null) {
-            throw new ApiException("Brand with given id does not exist ,id : " + id);
-        }
-        return p;
-    }
+
 
     public BrandPojo selectByBrandCategory(String brand, String category){
         return dao.selectByBrandCategory(brand,category);
@@ -80,13 +78,6 @@ public class BrandServices {
 
     public BrandPojo selectByCategory(String brand){
         return dao.selectByCategory(brand);
-    }
-
-    private void updateUtil(BrandPojo brandPojo) throws ApiException {
-        BrandPojo brandPojoExist = getCheckInPojo(brandPojo.getId());
-        brandPojoExist.setBrand(brandPojo.getBrand());
-        brandPojoExist.setCategory(brandPojo.getCategory());
-        dao.update(); //symbolic
     }
 
     private void checkUnique(BrandPojo brandPojo) throws ApiException {

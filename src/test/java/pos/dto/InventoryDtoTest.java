@@ -75,7 +75,7 @@ public class InventoryDtoTest {
     }
 
     @Test
-    public void addInventoryExistError(){
+    public void addInventoryExistError(){ //TODO TestAddInventoryIfAlreadyExits
 
         InventoryPojo in = daoInsertHelper();
         InventoryForm p = new InventoryForm();

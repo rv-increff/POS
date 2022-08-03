@@ -73,7 +73,7 @@ $("#ProductDelete").modal('show');
 function deleteProduct(id){
   $.ajax({
                   type: "DELETE",
-                  url: `http://localhost:9000/pos/api/product/delete/${id}`,
+                  url: `http://localhost:9000/pos/api/products/delete/${id}`,
 
                   success: function (data) {
                      loadProduct()
@@ -154,7 +154,7 @@ else if(BarcodeInput!==Barcode|| BrandInput!==Brand || CategoryInput!==Category 
      },
      processData: false,
      type: 'PUT',
-     url: 'http://localhost:9000/pos/api/product/update'
+     url: 'http://localhost:9000/pos/api/products/update'
  });
 
 }
@@ -216,7 +216,7 @@ else{
      },
      processData: false,
      type: 'POST',
-     url: 'http://localhost:9000/pos/api/product/insert'
+     url: 'http://localhost:9000/pos/api/products/insert'
  });
  event.preventDefault();
 }}
@@ -322,7 +322,7 @@ function bulkAddProductUtil(data) {
                    },
                    processData: false,
                    type: 'POST',
-                   url: 'http://localhost:9000/pos/api/product/bulk-insert'
+                   url: 'http://localhost:9000/pos/api/products/bulk-insert'
                });
         }
         }

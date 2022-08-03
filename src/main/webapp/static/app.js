@@ -76,7 +76,7 @@ function deleteBrand(id){
 //          xhr.open("DELETE",`http://localhost:9000/pos/api/brand/delete/${id}`, true);
   $.ajax({
                   type: "DELETE",
-                  url: `http://localhost:9000/pos/api/brand/delete/${id}`,
+                  url: `http://localhost:9000/pos/api/brands/delete/${id}`,
 
                   success: function (result, status, xhr) {
                      loadBrand()
@@ -153,7 +153,7 @@ else if(brandInput!==brand || categoryInput!==category){
      },
      processData: false,
      type: 'PUT',
-     url: 'http://localhost:9000/pos/api/brand/update'
+     url: 'http://localhost:9000/pos/api/brands/update'
  });
 
 }
@@ -203,7 +203,7 @@ else{
      },
      processData: false,
      type: 'POST',
-     url: 'http://localhost:9000/pos/api/brand/insert'
+     url: 'http://localhost:9000/pos/api/brands/insert'
  });
  event.preventDefault();
 }}
@@ -296,7 +296,7 @@ function bulkAddUtil(data) {
                    },
                    processData: false,
                    type: 'POST',
-                   url: 'http://localhost:9000/pos/api/brand/bulk-insert'
+                   url: 'http://localhost:9000/pos/api/brands/bulk-insert'
                });
         }
 

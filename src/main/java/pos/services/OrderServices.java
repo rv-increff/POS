@@ -19,32 +19,32 @@ public class OrderServices {
     private OrderDao dao;
 
     public void add() throws ApiException {
-        OrderPojo ex = new OrderPojo();
+        OrderPojo orderPojo = new OrderPojo();
         ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
-        ex.setTime(date);
-        dao.add(ex);
+        orderPojo.setTime(date);
+        dao.add(orderPojo);
     }
 
     public List<OrderPojo> getAll() throws ApiException {
         return  dao.selectAll();
     }
 
-    public OrderPojo get(int id) throws ApiException {
+    public OrderPojo get(Integer id) throws ApiException {
         return getCheck(id);
     }
 
 
-    public OrderPojo getCheck(int id) throws ApiException {
+    public OrderPojo getCheck(Integer id) throws ApiException {
         OrderPojo p = dao.select(id);
-        if (p== null) {
+        if (p == null) {
             throw new ApiException("Order with given id does not exist, id : " + id);
         }
         return p;
     }
 
-    public void updateOrderStatusPlaced(int id) throws ApiException {
+    public void updateOrderStatusPlaced(Integer id) throws ApiException {
         OrderPojo p = dao.select(id);
-        if (p== null) {
+        if (p == null) {
             throw new ApiException("Order with given id does not exist, id : " + id);
         }
         p.setOrderPlaced(true);
@@ -52,7 +52,7 @@ public class OrderServices {
         p.setTime(date);
     }
 
-    public List<OrderPojo> selectByFromTODate(ZonedDateTime from, ZonedDateTime to){
+    public List<OrderPojo> selectByFromToDate(ZonedDateTime from, ZonedDateTime to){
         return dao.selectByFromTODate(from,to);
     }
 

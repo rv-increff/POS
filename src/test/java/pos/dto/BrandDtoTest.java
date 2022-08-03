@@ -34,7 +34,7 @@ public class BrandDtoTest {
     private BrandDao dao;
 
     @Test
-    public void brandGetAll() throws ApiException {
+    public void brandGetAllTest() throws ApiException {
         for(Integer i=0;i<5;i++)daoInsertHelper();
 
         List<BrandData> plist = dto.getAll();
@@ -42,7 +42,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandGet() throws ApiException {
+    public void brandGetTest() throws ApiException {
         for(Integer i=0;i<5;i++)daoInsertHelper();
 
         List<BrandPojo> brandPojoList = dao.selectAll();
@@ -58,7 +58,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandAdd() throws ApiException, IllegalAccessException {
+    public void brandAddTest() throws ApiException, IllegalAccessException {
         BrandForm p = new BrandForm();
 
         Integer prevSize = dao.selectAll().size();
@@ -74,7 +74,7 @@ public class BrandDtoTest {
 
     }
     @Test
-    public void brandAddEmptyObject() {
+    public void brandAddEmptyObjectTest() {
         BrandForm p = new BrandForm();
         try {
             dto.add(p);
@@ -85,7 +85,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandAddErrorUnique() throws ApiException, IllegalAccessException {
+    public void brandAddErrorUniqueTest() throws ApiException, IllegalAccessException {
         BrandForm p = new BrandForm();
 
         Integer prevSize = dao.selectAll().size();
@@ -105,7 +105,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandAddErrorUniqueNormalize() throws ApiException {
+    public void brandAddErrorUniqueNormalizeTest() throws ApiException {
         BrandForm p = new BrandForm();
 
         Integer prevSize = dao.selectAll().size();
@@ -127,7 +127,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void bulkAdd() throws ApiException {
+    public void bulkAddTest() throws ApiException {
         List<BrandForm> pList = new ArrayList<>();
         Integer n = 5;
         for(Integer i=0;i<n;i++){
@@ -142,7 +142,7 @@ public class BrandDtoTest {
         Assert.assertEquals(n,i);
     }
     @Test
-    public void bulkAddErrorUnique() throws ApiException {
+    public void bulkAddErrorUniqueTest() throws ApiException {
         List<BrandForm> pList = new ArrayList<>();
 
         String brand = getRandomString().toLowerCase();
@@ -174,7 +174,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void bulkAddErrorEmpty() throws ApiException {
+    public void bulkAddErrorEmptyTest() throws ApiException {
         List<BrandForm> pList = new ArrayList<>();
 
         BrandForm p = new BrandForm();
@@ -197,7 +197,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandUpdate() throws ApiException {
+    public void brandUpdateTest() throws ApiException {
         BrandPojo p = daoInsertHelper();
         Integer id = dao.selectAll().get(0).getId();
 
@@ -210,7 +210,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandUpdateErrorUnique(){
+    public void brandUpdateErrorUniqueTest(){
         BrandPojo p = daoInsertHelper();
         Integer id = dao.selectAll().get(0).getId();
 
@@ -223,12 +223,12 @@ public class BrandDtoTest {
         try{
             dto.update(brandData);
         } catch (ApiException e) {
-            Assert.assertEquals(p.getBrand() + " - " +  p.getCategory() + " pair should be unique",e.getMessage());
+            Assert.assertEquals(p.getBrand() + " - " +  p.getCategory() + " pair should be unique", e.getMessage());
         }
     }
 
     @Test
-    public void brandUpdateErrorEmptyObject(){
+    public void brandUpdateErrorEmptyObjectTest(){
         BrandPojo p = daoInsertHelper();
         Integer id = dao.selectAll().get(0).getId();
 
@@ -246,7 +246,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandUpdateErrorWrongId(){
+    public void brandUpdateErrorWrongIdTest(){
         Integer id = 1;
         String brand = getRandomString();
         BrandData brandData = new BrandData();
@@ -269,5 +269,5 @@ public class BrandDtoTest {
         p.setBrand(brand);
         dao.add(p);
         return p;
-    }
+    } //TODO add all common function to abs test class
 }

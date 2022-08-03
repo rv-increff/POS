@@ -1,11 +1,10 @@
 package pos.dto;
 
 import javafx.util.Pair;
+import org.apache.fop.apps.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pos.model.InventoryReport;
-import pos.model.SalesReport;
-import pos.model.SalesReportForm;
+import pos.model.*;
 import pos.pojo.OrderItemPojo;
 import pos.pojo.OrderPojo;
 import pos.pojo.ProductPojo;
@@ -13,8 +12,13 @@ import pos.services.*;
 import pos.spring.ApiException;
 
 import javax.transaction.Transactional;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.transform.*;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -22,11 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static pos.util.HelperUtil.convertPojoToOrderData;
+
 @Service
 public class InvoiceDto {
-
-    @Autowired
-    InvoiceServices invoiceServices;
     @Autowired
     BrandServices brandServices;
     @Autowired
@@ -35,10 +38,29 @@ public class InvoiceDto {
     OrderItemServices orderItemServices;
     @Autowired
     ProductServices productServices;
+    @Autowired
+    InventoryServices inventoryServices;
+
+    private final FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
     public void getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException{
 
-        invoiceServices.getOrderInvoice(orderId);
+        List<OrderItemData> o = getOrderItemForOrder(orderId);
+
+        ZonedDateTime time = orderServices.get(orderId).getTime();
+        Double total = 0.;
+
+        for(OrderItemData i : o){
+            total += i.getQuantity() * i.getSellingPrice();
+        }
+        OrderItemDataList oItem = new OrderItemDataList(o,time,total,orderId);
+
+
+        String xml = jaxbObjectToXML(oItem);
+        File xsltFile = new File("src", "invoice.xsl");
+        File pdfFile = new File("src", "invoice.pdf");
+        System.out.println(xml);
+        convertToPDF(oItem,xsltFile,pdfFile,xml);
     }
     @Transactional(rollbackOn = ApiException.class)
     public List<SalesReport> getSalesReport(SalesReportForm s) throws ApiException{
@@ -75,7 +97,7 @@ public class InvoiceDto {
 
     public List<SalesReport> getSalesReportUtil(SalesReportForm s) throws ApiException {
         //get order
-        List<OrderPojo> orderList = orderServices.selectByFromTODate(s.getFrom(),s.getTo());
+        List<OrderPojo> orderList = orderServices.selectByFromToDate(s.getFrom(),s.getTo());
         List<Integer> orderIdList = getOrderIdList(orderList);
         List<OrderItemPojo> orderItemList;
         if(orderIdList.size()>0) {
@@ -154,6 +176,92 @@ public class InvoiceDto {
         return orderIdList;
     }
     public List<InventoryReport> getInventoryReport() {
-        return invoiceServices.getInventoryReport();
+        return inventoryServices.getInventoryReport();
+    }
+
+    private static String jaxbObjectToXML(OrderItemDataList orderItemList)
+    {
+        try
+        {
+            //Create JAXB Context
+            JAXBContext jaxbContext = JAXBContext.newInstance(OrderItemDataList.class);
+
+            //Create Marshaller
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            //Required formatting??
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            //Print XML String to Console
+            StringWriter sw = new StringWriter();
+
+            //Write XML to StringWriter
+            jaxbMarshaller.marshal(orderItemList, sw);
+
+            //Verify XML Content
+            String xmlContent = sw.toString();
+            return xmlContent;
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private void convertToPDF(OrderItemDataList team, File xslt, File pdf,String xml)
+            throws IOException, TransformerException{
+
+        FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+        // configure foUserAgent as desired
+
+        // Setup output
+        OutputStream out = new java.io.FileOutputStream(pdf);
+        out = new java.io.BufferedOutputStream(out);
+        try {
+            // Construct fop with desired output format
+            Fop fop = null;
+            try {
+                fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
+            } catch (FOPException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Setup XSLT
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer(new StreamSource(xslt));
+
+            // Setup input for XSLT transformation
+            Source src = new StreamSource(new StringReader(xml));
+//                        Source src = new StreamSource(new FileInputStream(xml));
+//
+            // Resulting SAX events (the generated FO) must be piped through to FOP
+            Result res = new SAXResult(fop.getDefaultHandler());
+
+            // Start XSLT transformation and FOP processing
+            transformer.transform(src, res);
+        } catch (FOPException e) {
+            throw new RuntimeException(e);
+        } finally {
+            out.close();
+        }
+    }
+
+    public List<OrderItemData> getOrderItemForOrder(Integer orderId) throws ApiException{
+        List<OrderItemPojo> orderItemPojoList = getOrderItemForOrderUtil(orderId);
+        List<OrderItemData> orderItemDataList = new ArrayList<>();
+        for(OrderItemPojo i : orderItemPojoList){
+            OrderItemData j = convertPojoToOrderData(i);
+            orderItemDataList.add(j);
+        }
+        return orderItemDataList;
+    }
+    @Transactional(rollbackOn = ApiException.class)
+    private List<OrderItemPojo> getOrderItemForOrderUtil(Integer orderId) throws ApiException {
+        OrderPojo oPojo = orderServices.get(orderId);
+        if (oPojo == null) {
+            throw new ApiException("Order with this id does not exist, id : " + orderId);
+        }
+        return orderItemServices.selectFromOrderId(orderId);
+
     }
 }

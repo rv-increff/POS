@@ -12,8 +12,8 @@ import javax.persistence.*;
 public class BrandPojo extends AbstractPojo {
 
     @Id
-    @TableGenerator(name=BRAND_GENERATOR, initialValue = BRAND_INITIAL_VALUE)
-    @GeneratedValue(strategy= GenerationType.TABLE, generator = BRAND_GENERATOR) //TODO table
+    @TableGenerator(name = BRAND_GENERATOR, initialValue = BRAND_INITIAL_VALUE)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = BRAND_GENERATOR) //TODO table
     private Integer id;  //TODO add locking
 
     @Column(nullable = false)

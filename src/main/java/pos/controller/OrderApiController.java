@@ -25,26 +25,26 @@ public class OrderApiController {
     private OrderDto dto;
 
     @ApiOperation(value = "Gives all Order data")
-    @RequestMapping(path = "/api/order/get-all", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/orders", method = RequestMethod.GET)
     public List<OrderData> getAllOrderDetails() throws ApiException {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Insert Order data")
-    @RequestMapping(path = "/api/order/insert", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/orders", method = RequestMethod.POST)
     public void insertOrder(HttpServletResponse response) throws ApiException, IOException {
         dto.add();
         success(response);
     }
 
     @ApiOperation(value = "get a Order")
-    @RequestMapping(path = "/api/order/get/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/orders/{id}", method = RequestMethod.GET)
     public OrderData getOrder(@PathVariable int id) throws ApiException {
         return dto.get(id);
 
     }
     @ApiOperation(value = "set order status placed")
-    @RequestMapping(path = "/api/order/placed/{id}", method = RequestMethod.PUT)
+    @RequestMapping(path = "/api/orders/{id}/place-order", method = RequestMethod.PUT)
     public void setOrderStatusPlaced(@PathVariable int id,HttpServletResponse response) throws ApiException, IOException {
         dto.updateOrderStatusPlaced(id);
         success(response);

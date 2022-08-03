@@ -17,7 +17,7 @@ public class ProductServices {
 
     @Autowired
     private ProductDao dao;
-
+//TODO format code
     public void add(ProductPojo productPojo) throws ApiException {
         normalize(productPojo);
         validateBarcode(productPojo.getBarcode());
@@ -59,7 +59,7 @@ public class ProductServices {
         return productPojo;
     }
 
-    public ProductPojo getCheckInPojo(Integer id) throws ApiException {
+    public ProductPojo getCheckInPojo(Integer id) throws ApiException { //TODO
         ProductPojo productPojo = dao.select(id);
         if (productPojo == null) {
             throw new ApiException("product with given id does not exist, id : " + id);
@@ -67,9 +67,9 @@ public class ProductServices {
         return productPojo;
     }
 
-    public boolean checkBrandExist(Integer brandId){
-        return dao.selectByBrandId(brandId).size()>0;
-    }
+//    public boolean checkBrandExist(Integer brandId){
+//        return dao.selectByBrandId(brandId).size()>0;
+//    }
 
     public List<ProductPojo> getByBrand(String brand){
         return dao.selectByBrand(brand);

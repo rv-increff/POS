@@ -24,16 +24,13 @@ public class OrderDto {
         return b;
     }
 
-
     public void add() throws ApiException{
         services.add();
     }
 
-
     public OrderData get(int id) throws ApiException{
         return convertPojoToOrderData(services.get(id));
     }
-
 
     public void updateOrderStatusPlaced(int id) throws ApiException{
         services.updateOrderStatusPlaced(id);

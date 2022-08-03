@@ -41,11 +41,13 @@ public class BrandDto {
     }
 
     public void bulkAdd(List<BrandForm> brandFormList) throws ApiException{
-        if(brandFormList.size()==0){
+        if(brandFormList.size()==0){ //TODO use collection
             throw new ApiException("Empty data");
         }
+
         validateList(brandFormList);
         checkDuplicates(brandFormList);
+
         List<BrandPojo> brandPojoList = new ArrayList<>();
         for(BrandForm brandForm : brandFormList){
             brandPojoList.add(convertBrandFormToPojo(brandForm));

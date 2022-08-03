@@ -25,7 +25,7 @@ import java.util.List;
 public class InvoiceApiController {
 
     @Autowired
-    private InvoiceDto invetoryDto;
+    private InvoiceDto inventoryDto;
 
     @Autowired
     private BrandServices brandService;
@@ -34,9 +34,9 @@ public class InvoiceApiController {
     private BrandDto brandDto;
 
     @ApiOperation(value = "Get order invoice for orderId")
-    @RequestMapping(path = "/api/invoices/get-order-invoice/{orderId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/orders/{orderId}/invoices", method = RequestMethod.GET)
     public void getOrderInvoice(@PathVariable int orderId,HttpServletResponse response) throws ApiException, IOException, TransformerException {
-        invetoryDto.getOrderInvoice(orderId);
+        inventoryDto.getOrderInvoice(orderId);
         String path = "/Users/rahulverma/Downloads/git/POS/src/invoice.pdf";
         File file = new File(path);
         if (file.exists()) {
@@ -50,21 +50,21 @@ public class InvoiceApiController {
     }
 
     @ApiOperation(value = "Get Sales report ")
-    @RequestMapping(path = "/api/invoices/get-sales", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/orders/sales-reports/invoices", method = RequestMethod.POST) //no entity in sales
     public List<SalesReport> getsSalesReport(@RequestBody SalesReportForm s) throws ApiException, ParseException {
-        return invetoryDto.getSalesReport(s);
+        return inventoryDto.getSalesReport(s);
     }
 
     @ApiOperation(value = "Get Brand report ")
-    @RequestMapping(path = "/api/invoices/get-brand-report", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/brands/brand-reports/invoices", method = RequestMethod.GET)
     public List<BrandData> getsBrandReport() throws ApiException {
         return brandDto.getAll();
     }
 
     @ApiOperation(value = "Get Inventory report ")
-    @RequestMapping(path = "/api/invoices/get-inventory-report", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/inventory/inventory-reports/invoices", method = RequestMethod.GET)
     public List<InventoryReport> getInventoryReport() throws ApiException {
-        return invetoryDto.getInventoryReport();
+        return inventoryDto.getInventoryReport();
     }
 
 

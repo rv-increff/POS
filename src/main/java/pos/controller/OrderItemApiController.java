@@ -24,33 +24,33 @@ public class OrderItemApiController {
     private OrderItemDto dto;
 
     @ApiOperation(value = "Gives all OrderItem data")
-    @RequestMapping(path = "/api/order-item/get-all", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/orders/order-items", method = RequestMethod.GET)
     public List<OrderItemData> getAllProductDetails() throws ApiException {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Gives all OrderItem data for an order")
-    @RequestMapping(path = "/api/order-item/get-all/{orderId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/orders/{orderId}/order-items", method = RequestMethod.GET)
     public List<OrderItemData> getOrderItemForOrder(@PathVariable int orderId) throws ApiException {
         return dto.getOrderItemForOrder(orderId);
     }
 
     @ApiOperation(value = "Insert OrderItem data")
-    @RequestMapping(path = "/api/order-item/insert", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/orders/order-items", method = RequestMethod.POST)
     public void insertOrderItem(@RequestBody OrderItemForm p, HttpServletResponse response) throws ApiException, IOException {
         dto.add(p);
         success(response);
     }
 
     @ApiOperation(value = "Update OrderItem data")
-    @RequestMapping(path = "/api/order-item/update", method = RequestMethod.PUT)
+    @RequestMapping(path = "/api/orders/order-items", method = RequestMethod.PUT)
     public void updateOrderItem(@RequestBody OrderItemUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
         dto.update(p);
         success(response);
     }
 
     @ApiOperation(value = "Update OrderItem data")
-    @RequestMapping(path = "/api/order-item/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/api/orders/order-items/{id}", method = RequestMethod.DELETE)
     public void deleteOrderItem(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
         dto.delete(id);
         success(response);

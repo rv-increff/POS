@@ -2,7 +2,9 @@ package pos.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import pos.dao.InventoryDao;
+import pos.model.InventoryReport;
 import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
 import pos.spring.ApiException;
@@ -10,6 +12,8 @@ import pos.spring.ApiException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+
+import static pos.util.ErrorUtil.throwError;
 
 @Transactional(rollbackOn = ApiException.class)
 @Service
@@ -19,7 +23,7 @@ public class InventoryServices {
 
     public void add(InventoryPojo inventoryPojo) throws ApiException {
         if(inventoryDao.selectByBarcode(inventoryPojo.getBarcode())!=null){
-            throw new ApiException("Inventory data already exist update the record instead");
+            throw new ApiException("Inventory data already exist ");
         }
         if(inventoryPojo.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 0");
@@ -34,30 +38,25 @@ public class InventoryServices {
         for(InventoryPojo inventoryPojo : inventoryPojoList) {
             if(inventoryDao.selectByBarcode(inventoryPojo.getBarcode())!=null){
                 errorList.add("Error : row -> " + row +
-                        " Inventory data already exist for barcode "+ inventoryPojo.getBarcode() +" update the record instead");
+                        " Inventory already exist for barcode "+ inventoryPojo.getBarcode() );
             }
-            else if(inventoryPojo.getQuantity()<=0){
+
+            if(inventoryPojo.getQuantity()<=0){
                 errorList.add("Error : row -> " + row +
                         " Quantity must be greater than 0, quantity : " + inventoryPojo.getQuantity());
-                continue;
             }
             row++;
         }
+        if(!CollectionUtils.isEmpty(errorList)){
+            throwError(errorList);
+        }
 
-        if(errorList.size()==0) {
-            for (InventoryPojo inventoryPojo : inventoryPojoList) {
-                inventoryDao.add(inventoryPojo);
-            }
+        for (InventoryPojo inventoryPojo : inventoryPojoList) {
+            inventoryDao.add(inventoryPojo);
         }
-        else{
-            String errorStr = "";
-            for(String e : errorList){
-                errorStr += e + "\n";
-            }
-            throw new ApiException(errorStr);
-        }
+
     }
-
+    //TODO use collectList from size=0 reduce if else
     public List<InventoryPojo> getAll() throws ApiException {
         return inventoryDao.selectAll();
     }
@@ -89,11 +88,16 @@ public class InventoryServices {
     public InventoryPojo selectByProductId(Integer productId){
         return inventoryDao.selectByProductId(productId);
     }
+
+    public List<InventoryReport> getInventoryReport(){
+        return inventoryDao.getInventoryReport();
+    }
     private void updateUtil(InventoryUpdateForm p) {
         InventoryPojo inventoryPojo = inventoryDao.select(p.getId());
         inventoryPojo.setQuantity(p.getQuantity());
         inventoryDao.update(); //symbolic
     }
+
 
 
 }
