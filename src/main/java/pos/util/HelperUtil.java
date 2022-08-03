@@ -3,6 +3,7 @@ package pos.util;
 import pos.model.*;
 import pos.pojo.BrandPojo;
 import pos.pojo.InventoryPojo;
+import pos.pojo.OrderItemPojo;
 import pos.pojo.ProductPojo;
 import pos.spring.ApiException;
 
@@ -93,5 +94,29 @@ public class HelperUtil {
         inventoryPojo.setBarcode(inventoryForm.getBarcode());
         inventoryPojo.setQuantity(inventoryForm.getQuantity());
         return inventoryPojo;
+    }
+    public static OrderItemPojo convertOrderItemFormToPojo(OrderItemForm orderItemForm){
+        OrderItemPojo orderItemPojo = new OrderItemPojo();
+        orderItemPojo.setQuantity(orderItemForm.getQuantity());
+        orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
+        orderItemPojo.setProductId(orderItemForm.getProductId());
+        orderItemPojo.setOrderId(orderItemForm.getOrderId());
+        return orderItemPojo;
+    }
+    public static OrderItemPojo convertOrderItemFormToPojo(OrderItemUpdateForm orderItemUpdateForm){
+        OrderItemPojo orderItemPojo = new OrderItemPojo();
+        orderItemPojo.setQuantity(orderItemUpdateForm.getQuantity());
+        orderItemPojo.setSellingPrice(orderItemUpdateForm.getSellingPrice());
+        orderItemPojo.setId(orderItemUpdateForm.getId());
+        return orderItemPojo;
+    }
+    public static OrderItemData convertPojoToOrderData(OrderItemPojo p){
+        OrderItemData b = new OrderItemData();
+        b.setId(p.getId());
+        b.setQuantity(p.getQuantity());
+        b.setSellingPrice(p.getSellingPrice());
+        b.setProductId(p.getProductId());
+        b.setOrderId(p.getOrderId());
+        return b;
     }
 }

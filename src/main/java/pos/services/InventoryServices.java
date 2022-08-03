@@ -17,14 +17,14 @@ public class InventoryServices {
     @Autowired
     private InventoryDao inventoryDao;
 
-    public void add(InventoryPojo p) throws ApiException {
-        if(inventoryDao.selectByBarcode(p.getBarcode())!=null){
+    public void add(InventoryPojo inventoryPojo) throws ApiException {
+        if(inventoryDao.selectByBarcode(inventoryPojo.getBarcode())!=null){
             throw new ApiException("Inventory data already exist update the record instead");
         }
-        if(p.getQuantity()<=0){
+        if(inventoryPojo.getQuantity()<=0){
             throw new ApiException("Quantity must be greater than 0");
         }
-        inventoryDao.add(p);
+        inventoryDao.add(inventoryPojo);
     }
 
     public void bulkAdd(List<InventoryPojo> inventoryPojoList) throws ApiException {
@@ -86,6 +86,9 @@ public class InventoryServices {
         return inventoryDao.selectByBarcode(barcode);
     }
 
+    public InventoryPojo selectByProductId(Integer productId){
+        return inventoryDao.selectByProductId(productId);
+    }
     private void updateUtil(InventoryUpdateForm p) {
         InventoryPojo inventoryPojo = inventoryDao.select(p.getId());
         inventoryPojo.setQuantity(p.getQuantity());

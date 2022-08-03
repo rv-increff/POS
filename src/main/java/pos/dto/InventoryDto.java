@@ -45,7 +45,7 @@ public class InventoryDto {
     }
 
     public void bulkAdd(List<InventoryForm> inventoryFormList) throws ApiException{
-        if(inventoryFormList.size()==0){
+        if(inventoryFormList.size() == 0){
             throw new ApiException("Empty data");
         }
         validateInventoryList(inventoryFormList);

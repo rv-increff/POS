@@ -66,7 +66,7 @@ public class OrderItemDtoTest {
         OrderItemData p = dto.get(index);
         Assert.assertEquals(Optional.of(index),Optional.of(p.getId()));
         try {
-            services.get(index+1);
+            dto.get(index+1);
         }catch (ApiException e){
             Assert.assertEquals("OrderItem with given id does not exist ,id : " + (index+1),e.getMessage());
         }
@@ -80,7 +80,7 @@ public class OrderItemDtoTest {
         p.setQuantity(getRandomNumber());
         p.setProductId(oi.getProductId());
         try {
-        services.add(p);
+        dto.add(p);
         }catch (ApiException e){
             Assert.assertEquals("OrderItem already exist update that instead",e.getMessage());
         }
@@ -94,9 +94,9 @@ public class OrderItemDtoTest {
         p.setQuantity(getRandomNumber());
         p.setProductId(getRandomNumber());
         try {
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
-            Assert.assertEquals("Order with this id does not exist, id : " + p.getOrderId(),e.getMessage());
+            Assert.assertEquals("Order with given id does not exist, id : " + p.getOrderId(),e.getMessage());
         }
     }
     @Test
@@ -109,9 +109,9 @@ public class OrderItemDtoTest {
         p.setQuantity(getRandomNumber());
         p.setProductId(getRandomNumber());
         try {
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
-            Assert.assertEquals("Product with this id does not exist, id : " + p.getProductId(),e.getMessage());
+            Assert.assertEquals("Product with given id does not exist, id : " + p.getProductId(),e.getMessage());
         }
     }
     @Test
@@ -127,7 +127,7 @@ public class OrderItemDtoTest {
         p.setQuantity(getRandomNumber());
         p.setProductId(productId);
         try {
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             Assert.assertEquals("Product with this id does not exist in the inventory, id : " + p.getProductId(),e.getMessage());
         }
@@ -149,7 +149,7 @@ public class OrderItemDtoTest {
         p.setQuantity(qty+2);
         p.setProductId(productId);
         try {
-            services.add(p);
+            dto.add(p);
         }catch (ApiException e){
             Assert.assertEquals("Selected quantity more than available quantity, available quantity only " + qty ,e.getMessage());
         }
@@ -158,7 +158,7 @@ public class OrderItemDtoTest {
         p.setOrderId(orderId);
         p.setQuantity(qty-2);
         p.setProductId(productId);
-        services.add(p);
+        dto.add(p);
     }
 
     @Test
@@ -173,9 +173,9 @@ public class OrderItemDtoTest {
         Assert.assertEquals(n,oList.size());
 
         try{
-        services.getOrderItemForOrder(orderId+1);
+        dto.getOrderItemForOrder(orderId+1);
         }catch (ApiException e){
-        Assert.assertEquals("Order with this id does not exist, id : " + (orderId+1),e.getMessage());
+        Assert.assertEquals("Order with given id does not exist, id : " + (orderId+1),e.getMessage());
         }
     }
 
@@ -224,7 +224,7 @@ public class OrderItemDtoTest {
         up.setQuantity(getRandomNumber());
         up.setSellingPrice((double) getRandomNumber());
         try{
-            services.update(up);
+            dto.update(up);
         }catch(ApiException e){
             Assert.assertEquals("OrderItem with given id does not exist ,id : " + 1,e.getMessage());
         }
@@ -239,9 +239,9 @@ public class OrderItemDtoTest {
         up.setQuantity(p.getQuantity() + 5);
         up.setSellingPrice((double) getRandomNumber());
         try{
-            services.update(up);
+            dto.update(up);
         }catch(ApiException e){
-            Assert.assertEquals("Product with given product id does not exist in the inventory, product id : " + p.getProductId(),e.getMessage());
+            Assert.assertEquals("Product associated with given orderItem id does not exist in the inventory, product id : " + p.getProductId(),e.getMessage());
         }
     }
 
@@ -258,7 +258,7 @@ public class OrderItemDtoTest {
         up.setSellingPrice((double) getRandomNumber());
 
         try{
-            services.update(up);
+            dto.update(up);
         }catch(ApiException e){
             Assert.assertEquals("Selected quantity more than available quantity, available quantity only " + invP.getQuantity(),e.getMessage() );
         }
@@ -276,7 +276,7 @@ public class OrderItemDtoTest {
         //add in inv
         daoInventoryInsertHelper(p.getProductId(),p.getQuantity());
 
-        services.update(up);
+        dto.update(up);
 
     }
     @Test
