@@ -2,6 +2,7 @@ package pos.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import pos.dao.BrandDao;
 import pos.pojo.BrandPojo;
 import pos.spring.ApiException;
@@ -10,8 +11,10 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static pos.util.DataUtil.normalize;
 import static pos.util.DataUtil.validate;
+import static pos.util.ErrorUtil.throwError;
 
 @Service
 @Transactional(rollbackOn = ApiException.class)
@@ -32,9 +35,22 @@ public class BrandServices {
     }
 
     public void bulkAdd(List<BrandPojo> brandPojoList) throws ApiException {
-        normalizeList(brandPojoList);
-        checkAlreadyExistInBrandPojo(brandPojoList);
-        for(BrandPojo brandPojo : brandPojoList){
+        for (BrandPojo brandPojo : brandPojoList) {
+            normalize(brandPojo);
+        }
+        List<String> errorList = new ArrayList<>();
+        Integer row = 1;
+        for (BrandPojo brandPojo : brandPojoList) {
+            if (!isNull(selectByBrandCategory(brandPojo.getBrand(), brandPojo.getCategory()))) {
+                errorList.add("Error : row -> " + (row) + " " + brandPojo.getBrand() + " - " + brandPojo.getCategory() + " pair already exist");
+            }
+            row++;
+        }
+        if (CollectionUtils.isEmpty(errorList)) {
+            throwError(errorList);
+        }
+
+        for (BrandPojo brandPojo : brandPojoList) {
             add(brandPojo);
         }
     }
@@ -48,7 +64,7 @@ public class BrandServices {
     }
 
     public void update(BrandPojo brandPojo) throws ApiException {
-        validate(brandPojo,"brand or category cannot be null");
+        validate(brandPojo, "brand or category cannot be null");
         normalize(brandPojo);
         checkUnique(brandPojo);
 
@@ -59,55 +75,28 @@ public class BrandServices {
     }
 
     public BrandPojo getCheck(Integer id) throws ApiException {
-            BrandPojo brandPojo = dao.select(id);
-            if (brandPojo == null) {
-                throw new ApiException("Brand with given id does not exist ,id : " + id);
-            }
-            return brandPojo;
+        BrandPojo brandPojo = dao.select(id);
+        if (isNull(brandPojo)) {
+            throw new ApiException("Brand with given id does not exist ,id : " + id);
         }
-
-
-
-    public BrandPojo selectByBrandCategory(String brand, String category){
-        return dao.selectByBrandCategory(brand,category);
+        return brandPojo;
     }
 
-    public BrandPojo selectByBrand(String brand){
+    public BrandPojo selectByBrandCategory(String brand, String category) {
+        return dao.selectByBrandCategory(brand, category);
+    }
+
+    public BrandPojo selectByBrand(String brand) {
         return dao.selectByBrand(brand);
     }
 
-    public BrandPojo selectByCategory(String brand){
+    public BrandPojo selectByCategory(String brand) {
         return dao.selectByCategory(brand);
     }
 
     private void checkUnique(BrandPojo brandPojo) throws ApiException {
-        if(selectByBrandCategory(brandPojo.getBrand(),brandPojo.getCategory())!=null){
-            throw new ApiException(brandPojo.getBrand() + " - " +  brandPojo.getCategory() + " pair already exist");
-        }
-    }
-
-    private void checkAlreadyExistInBrandPojo(List<BrandPojo> brandPojoList) throws ApiException {
-        List<String> errorList = new ArrayList<>();
-        Integer row =1;
-        for(BrandPojo brandPojo : brandPojoList) {
-                if(selectByBrandCategory(brandPojo.getBrand(),brandPojo.getCategory())!=null) {
-                    errorList.add("Error : row -> " + (row) + " "  + brandPojo.getBrand() +
-                            " - " +  brandPojo.getCategory() + " pair already exist");
-                }
-            row++;
-        }
-        if(errorList.size()>0) {
-            String errorStr = "";
-            for(String e : errorList){
-                errorStr += e + "\n";
-            }
-            throw new ApiException(errorStr);
-        }
-    }
-
-    private void normalizeList(List<BrandPojo> brandPojoList){
-        for(BrandPojo brandPojo : brandPojoList){
-            normalize(brandPojo);
+        if (selectByBrandCategory(brandPojo.getBrand(), brandPojo.getCategory()) != null) {
+            throw new ApiException(brandPojo.getBrand() + " - " + brandPojo.getCategory() + " pair already exist");
         }
     }
 

@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
-import static org.hibernate.criterion.Restrictions.isNotNull;
 
 public class DataUtil {
     public static <T> void validate(T form, String e) throws ApiException {

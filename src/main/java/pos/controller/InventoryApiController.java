@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pos.dto.InventoryDto;
 import pos.model.InventoryData;
 import pos.model.InventoryForm;
+import pos.model.InventoryReport;
 import pos.model.InventoryUpdateForm;
 import pos.spring.ApiException;
 
@@ -31,38 +32,32 @@ public class InventoryApiController {
 
     @ApiOperation(value = "Insert Inventory data")
     @RequestMapping(path = "/api/inventory", method = RequestMethod.POST) //TODO remove insert as its post
-    public void insertInventory(@RequestBody InventoryForm p, HttpServletResponse response) throws ApiException, IOException {
-        dto.add(p);
-        success(response);
+    public InventoryForm insertInventory(@RequestBody InventoryForm inventoryForm) throws ApiException{
+        return dto.add(inventoryForm);
     }
 
     @ApiOperation(value = "Insert bulk Inventory data")
-    @RequestMapping(path = "/api/inventory/bulk-upload", method = RequestMethod.POST) //TODO upload not bulk-
-    public void bulkInsertInventory(@RequestBody List<InventoryForm> p, HttpServletResponse response) throws ApiException, IOException {
-        dto.bulkAdd(p);
-        success(response);
+    @RequestMapping(path = "/api/inventory/upload", method = RequestMethod.POST) //TODO upload not bulk-
+    public Integer bulkInsertInventory(@RequestBody List<InventoryForm> inventoryFormList) throws ApiException{
+       return dto.bulkAdd(inventoryFormList);
+
     }
 
     @ApiOperation(value = "get a Inventory")
     @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET) //TODO remove get read REST conventions
-    public InventoryData getInventory(@PathVariable int id) throws ApiException {
+    public InventoryData getInventory(@PathVariable Integer id) throws ApiException {
         return dto.get(id);
-
     }
 
     @ApiOperation(value = "update a Inventory")
-    @RequestMapping(path = "/api/inventory", method = RequestMethod.PUT)
-    public void updateInventory(@RequestBody InventoryUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
-        dto.update(p);
-        success(response);
+    @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.PUT)
+    public InventoryUpdateForm updateInventory(@RequestBody InventoryUpdateForm inventoryUpdateForm) throws ApiException{
+        return dto.update(inventoryUpdateForm);  //TODO return inv data
+    }
+    @ApiOperation(value = "Get Inventory report ")
+    @RequestMapping(path = "/api/inventory/inventory-reports", method = RequestMethod.GET)
+    public List<InventoryReport> getInventoryReport() {
+        return dto.getInventoryReport();
     }
 
-    protected void success(HttpServletResponse response) throws IOException {
-        JSONObject obj=new JSONObject();
-        obj.put("message", "success");
-        String json = new Gson().toJson(obj);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-    }
 }

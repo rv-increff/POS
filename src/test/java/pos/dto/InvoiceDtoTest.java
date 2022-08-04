@@ -38,8 +38,8 @@ import static pos.util.RandomUtil.getRandomString;
 @Transactional
 public class InvoiceDtoTest {
 
-    @Autowired
-    InvoiceDto dto;
+//    @Autowired
+//    InvoiceDto dto;
 
     @Autowired
     OrderItemDao dao;
@@ -126,9 +126,5 @@ public class InvoiceDtoTest {
 //        dto.getOrderInvoice(id);
     }
 
-    @Test
-    public void getInventoryReport() throws ApiException {
-        dto.getInventoryReport();
-    }
 
 }

@@ -2,8 +2,10 @@ package pos.dto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import pos.model.InventoryData;
 import pos.model.InventoryForm;
+import pos.model.InventoryReport;
 import pos.model.InventoryUpdateForm;
 import pos.pojo.InventoryPojo;
 import pos.pojo.ProductPojo;
@@ -16,8 +18,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
 import static pos.util.DataUtil.checkNotNullBulkUtil;
 import static pos.util.DataUtil.validate;
+import static pos.util.ErrorUtil.throwError;
 import static pos.util.HelperUtil.convertInventoryFormToInventoryPojo;
 import static pos.util.HelperUtil.convertPojoToInventoryForm;
 
@@ -29,85 +33,86 @@ public class InventoryDto {
     @Autowired
     private ProductServices productService;
 
-    public List<InventoryData> getAll() throws ApiException{
-        List<InventoryPojo> inventoryPojoList =  service.getAll();
+    public List<InventoryData> getAll() throws ApiException {
+        List<InventoryPojo> inventoryPojoList = service.getAll();
         List<InventoryData> inventoryData = new ArrayList<>();
-        for( InventoryPojo pj : inventoryPojoList){
+        for (InventoryPojo pj : inventoryPojoList) {
             inventoryData.add(convertPojoToInventoryForm(pj));
         }
+
         return inventoryData;
     }
 
-    public void add(InventoryForm inventoryForm) throws ApiException{
-        validate(inventoryForm,"Barcode or quantity cannot be NULL");
-        InventoryPojo inventoryPojo= convertInventoryFormToInventoryPojo(inventoryForm);
+    public InventoryForm add(InventoryForm inventoryForm) throws ApiException {
+        validate(inventoryForm, "Barcode or quantity cannot be NULL");
+        InventoryPojo inventoryPojo = convertInventoryFormToInventoryPojo(inventoryForm);
+
         service.add(addProductId(inventoryPojo));
+        return inventoryForm;
     }
 
-    public void bulkAdd(List<InventoryForm> inventoryFormList) throws ApiException{
-        if(inventoryFormList.size() == 0){
+    public Integer bulkAdd(List<InventoryForm> inventoryFormList) throws ApiException {
+        if (CollectionUtils.isEmpty(inventoryFormList)) {
             throw new ApiException("Empty data");
         }
         validateInventoryList(inventoryFormList);
         List<InventoryPojo> inventoryPojoList = new ArrayList<>();
-        for(InventoryForm inventoryForm : inventoryFormList){
+        for (InventoryForm inventoryForm : inventoryFormList) {
             InventoryPojo inventoryPojo = convertInventoryFormToInventoryPojo(inventoryForm);
             inventoryPojoList.add(addProductId(inventoryPojo));
         }
+
         service.bulkAdd(inventoryPojoList);
+
+        return inventoryPojoList.size();
     }
 
-    public InventoryData get(Integer id) throws ApiException{
+    public InventoryData get(Integer id) throws ApiException {
         return convertPojoToInventoryForm(service.get(id));
     }
 
-    public void update(InventoryUpdateForm inventoryUpdateForm) throws ApiException{
-        validate(inventoryUpdateForm,"Quantity cannot be NULL");
+    public InventoryUpdateForm update(InventoryUpdateForm inventoryUpdateForm) throws ApiException {
+        validate(inventoryUpdateForm, "Quantity cannot be NULL");
         service.update(inventoryUpdateForm);
+
+        return inventoryUpdateForm;
     }
 
-
+    public List<InventoryReport> getInventoryReport() {
+        return service.getInventoryReport();
+    }
 
     private void validateInventoryList(List<InventoryForm> inventoryFormList) throws ApiException {
         List<String> errorList = new ArrayList<>();
         Set<String> barcodeSet = new HashSet<>();
         Integer row = 1;
-        for(InventoryForm inventoryForm : inventoryFormList) {
+        for (InventoryForm inventoryForm : inventoryFormList) {
 
-            if(!checkNotNullBulkUtil(inventoryForm)){
+            if (!checkNotNullBulkUtil(inventoryForm)) {
                 errorList.add("Error : row -> " + (row) + " barcode or quantity cannot be NULL");
                 continue;
             }
-            ProductPojo pPojo= productService.selectByBarcode(inventoryForm.getBarcode());
+            ProductPojo productPojo = productService.selectByBarcode(inventoryForm.getBarcode());
 
-            if(pPojo==null) {
-                errorList.add("Error : row -> " + (row) +
-                        " product with the barcode " + inventoryForm.getBarcode() + " does not exist");
-                continue;
+            if (isNull(productPojo)) {
+                errorList.add("Error : row -> " + (row) + " product with the barcode " + inventoryForm.getBarcode() + " does not exist");
             } //TODO extra call made should be optimized?
 
-            if(barcodeSet.contains(inventoryForm.getBarcode())){
-                errorList.add("Error : row -> " + (row) +
-                        " Barcode should not be repeated, barcode : " + inventoryForm.getBarcode());
-                continue;
-            }else{
+            if (barcodeSet.contains(inventoryForm.getBarcode())) {
+                errorList.add("Error : row -> " + (row) + " Barcode should not be repeated, barcode : " + inventoryForm.getBarcode());
+            } else {
                 barcodeSet.add(inventoryForm.getBarcode());
             }
         }
-        if(errorList.size()>0)
-        {
-            String errorStr = "";
-            for(String e : errorList){
-                errorStr += e + "\n";
-            }
-            throw new ApiException(errorStr);
-        }
+
+        if (!CollectionUtils.isEmpty(errorList)) throwError(errorList);
+
     }
 
     private InventoryPojo addProductId(InventoryPojo inventoryPojo) throws ApiException {
         ProductPojo productPojo = productService.selectByBarcode(inventoryPojo.getBarcode());
 
-        if(productPojo == null){
+        if (isNull(productPojo)) {
             throw new ApiException("Product with this barcode does not exist");
         }
         int productId = productPojo.getId();

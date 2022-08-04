@@ -11,6 +11,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Service
 @Transactional(rollbackOn = ApiException.class)
 public class OrderServices {
@@ -18,42 +20,43 @@ public class OrderServices {
     @Autowired
     private OrderDao dao;
 
-    public void add() throws ApiException {
+    public ZonedDateTime add() throws ApiException {
         OrderPojo orderPojo = new OrderPojo();
         ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
         orderPojo.setTime(date);
         dao.add(orderPojo);
+
+        return date;
     }
 
     public List<OrderPojo> getAll() throws ApiException {
-        return  dao.selectAll();
+        return dao.selectAll();
     }
 
     public OrderPojo get(Integer id) throws ApiException {
         return getCheck(id);
     }
 
-
     public OrderPojo getCheck(Integer id) throws ApiException {
-        OrderPojo p = dao.select(id);
-        if (p == null) {
+        OrderPojo orderPojo = dao.select(id);
+        if (isNull(orderPojo)) {
             throw new ApiException("Order with given id does not exist, id : " + id);
         }
-        return p;
+        return orderPojo;
     }
 
     public void updateOrderStatusPlaced(Integer id) throws ApiException {
-        OrderPojo p = dao.select(id);
-        if (p == null) {
+        OrderPojo orderPojo = dao.select(id);
+        if (isNull(orderPojo)) {
             throw new ApiException("Order with given id does not exist, id : " + id);
         }
-        p.setOrderPlaced(true);
+        orderPojo.setOrderPlaced(true);
         ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
-        p.setTime(date);
+        orderPojo.setTime(date);
     }
 
-    public List<OrderPojo> selectByFromToDate(ZonedDateTime from, ZonedDateTime to){
-        return dao.selectByFromTODate(from,to);
+    public List<OrderPojo> selectByFromToDate(ZonedDateTime from, ZonedDateTime to) {
+        return dao.selectByFromTODate(from, to);
     }
 
 }

@@ -23,12 +23,6 @@ public class ProductApiController {
     @Autowired
     private ProductDto dto;
 
-    @ApiOperation(value = "say hi")
-    @RequestMapping(path = "/api/products/smoke", method = RequestMethod.GET)
-    public String hi() throws ApiException {
-        return "smoke test";
-    }
-
     @ApiOperation(value = "Gives all Product data")
     @RequestMapping(path = "/api/products", method = RequestMethod.GET)
     public List<ProductData> getAllProductDetails() throws ApiException {
@@ -37,37 +31,25 @@ public class ProductApiController {
 
     @ApiOperation(value = "Insert Product data")
     @RequestMapping(path = "/api/products", method = RequestMethod.POST)
-    public void insertProduct(@RequestBody ProductForm p, HttpServletResponse response) throws ApiException, IOException {
-        dto.add(p);
-        success(response);
+    public ProductForm insertProduct(@RequestBody ProductForm p) throws ApiException{
+        return dto.add(p);
     }
 
     @ApiOperation(value = "Insert bulk Product data")
     @RequestMapping(path = "/api/products/bulk-upload", method = RequestMethod.POST)
-    public void bulkInsertProduct(@RequestBody List< @Valid ProductForm> p, HttpServletResponse response) throws ApiException, IOException {
-        dto.bulkAdd(p);
-        success(response);
+    public Integer bulkInsertProduct(@RequestBody List< @Valid ProductForm> p) throws ApiException, IOException {
+        return dto.bulkAdd(p);
     }
 
     @ApiOperation(value = "get a Product")
     @RequestMapping(path = "/api/products/{id}", method = RequestMethod.GET)
     public ProductData getProduct(@PathVariable int id) throws ApiException {
         return dto.get(id);
-
     }
     @ApiOperation(value = "update a Product")
     @RequestMapping(path = "/api/products", method = RequestMethod.PUT)
-    public void updateProduct( @RequestBody ProductUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
-        dto.update(p);
-        success(response);
+    public ProductUpdateForm updateProduct( @RequestBody ProductUpdateForm productUpdateForm) throws ApiException, IOException {
+        return dto.update(productUpdateForm);
     }
 
-    protected void success(HttpServletResponse response) throws IOException {
-        JSONObject obj=new JSONObject();
-        obj.put("message", "success");
-        String json = new Gson().toJson(obj);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-    }
 }

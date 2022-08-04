@@ -1,20 +1,20 @@
 package pos.controller;
 
-import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pos.dto.OrderDto;
 import pos.model.OrderData;
+import pos.model.SalesReport;
+import pos.model.SalesReportForm;
 import pos.spring.ApiException;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerException;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Api
@@ -32,9 +32,8 @@ public class OrderApiController {
 
     @ApiOperation(value = "Insert Order data")
     @RequestMapping(path = "/api/orders", method = RequestMethod.POST)
-    public void insertOrder(HttpServletResponse response) throws ApiException, IOException {
-        dto.add();
-        success(response);
+    public ZonedDateTime insertOrder() throws ApiException {
+        return dto.add();
     }
 
     @ApiOperation(value = "get a Order")
@@ -43,20 +42,23 @@ public class OrderApiController {
         return dto.get(id);
 
     }
+
     @ApiOperation(value = "set order status placed")
     @RequestMapping(path = "/api/orders/{id}/place-order", method = RequestMethod.PUT)
-    public void setOrderStatusPlaced(@PathVariable int id,HttpServletResponse response) throws ApiException, IOException {
-        dto.updateOrderStatusPlaced(id);
-        success(response);
+    public Integer setOrderStatusPlaced(@PathVariable int id) throws ApiException {
+        return dto.updateOrderStatusPlaced(id);
     }
 
-    protected void success(HttpServletResponse response) throws IOException {
-        JSONObject obj=new JSONObject();
-        obj.put("message", "success");
-        String json = new Gson().toJson(obj);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
+    @ApiOperation(value = "Get order invoice for orderId")
+    @RequestMapping(path = "/api/orders/{orderId}/invoices", method = RequestMethod.GET)
+    public BufferedInputStream getOrderInvoice(@PathVariable int orderId) throws ApiException, IOException, TransformerException {
+        return dto.getOrderInvoice(orderId);
+    }
+
+    @ApiOperation(value = "Get Sales report ")
+    @RequestMapping(path = "/api/orders/sales-reports", method = RequestMethod.POST) //no entity in sales
+    public List<SalesReport> getsSalesReport(@RequestBody SalesReportForm s) throws ApiException {
+        return dto.getSalesReport(s);
     }
 
 }

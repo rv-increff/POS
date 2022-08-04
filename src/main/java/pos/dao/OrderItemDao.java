@@ -5,9 +5,6 @@ import pos.pojo.OrderItemPojo;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 @Repository

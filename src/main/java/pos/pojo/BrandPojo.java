@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import static pos.pojo.TableConstants.BRAND_GENERATOR;
+import static pos.pojo.TableConstants.BRAND_INITIAL_VALUE;
+
 @Getter
 @Setter
 @Entity

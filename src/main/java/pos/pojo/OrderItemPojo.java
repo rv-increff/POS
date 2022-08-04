@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import static pos.pojo.TableConstants.ORDER_ITEM_GENERATOR;
+import static pos.pojo.TableConstants.ORDER_ITEM_INITIAL_VALUE;
+
 @Getter
 @Setter
 @Entity

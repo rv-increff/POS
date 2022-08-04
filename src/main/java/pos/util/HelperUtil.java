@@ -7,6 +7,10 @@ import pos.pojo.OrderItemPojo;
 import pos.pojo.ProductPojo;
 import pos.spring.ApiException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +114,7 @@ public class HelperUtil {
         orderItemPojo.setId(orderItemUpdateForm.getId());
         return orderItemPojo;
     }
-    public static OrderItemData convertPojoToOrderData(OrderItemPojo p){
+    public static OrderItemData convertPojoToOrderItemData(OrderItemPojo p){
         OrderItemData b = new OrderItemData();
         b.setId(p.getId());
         b.setQuantity(p.getQuantity());
@@ -118,6 +122,40 @@ public class HelperUtil {
         b.setProductId(p.getProductId());
         b.setOrderId(p.getOrderId());
         return b;
+    }
+    public static String jaxbObjectToXML(OrderItemDataList orderItemList) {
+        try {
+            //Create JAXB Context
+            JAXBContext jaxbContext = JAXBContext.newInstance(OrderItemDataList.class);
+
+            //Create Marshaller
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            //Required formatting??
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            //Print XML String to Console
+            StringWriter sw = new StringWriter();
+
+            //Write XML to StringWriter
+            jaxbMarshaller.marshal(orderItemList, sw);
+
+            //Verify XML Content
+            String xmlContent = sw.toString();
+            return xmlContent;
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    public static BufferedInputStream returnFileStream() throws FileNotFoundException {
+        String path = "/Users/rahulverma/Downloads/git/POS/src/invoice.pdf";
+        File file = new File(path);
+        if (file.exists()) {
+            return new BufferedInputStream(new FileInputStream(file));
+        }
+        return null;
     }
 
 }

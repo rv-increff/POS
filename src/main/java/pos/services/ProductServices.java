@@ -9,6 +9,7 @@ import pos.spring.ApiException;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static pos.util.DataUtil.*;
 
 @Service
@@ -48,12 +49,21 @@ public class ProductServices {
         if(dao.selectByBarcodeNotEqualId(productPojo.getBarcode(),productPojo.getId())!=null){ //TODO change this function
             throw new ApiException("barcode " + productPojo.getBarcode() + " already exists");
         }
-        updateUtil(productPojo);
+
+        ProductPojo productPojoUpdate = getCheckInPojo(productPojo.getId());
+        productPojoUpdate.setBrandId(productPojo.getBrandId());
+        productPojoUpdate.setBrand(productPojo.getBrand());
+        productPojoUpdate.setCategory(productPojo.getCategory());
+        productPojoUpdate.setBarcode(productPojo.getBarcode());
+        productPojoUpdate.setMrp(productPojo.getMrp());
+        productPojoUpdate.setName(productPojo.getName());
+
+        dao.update(); //symbolic
     }
 
     public ProductPojo getCheck(Integer id) throws ApiException {
         ProductPojo productPojo = dao.select(id);
-        if (productPojo == null) {
+        if (isNull(productPojo)) {
             throw new ApiException("Product with given id does not exist, id : " + id);
         }
         return productPojo;
@@ -66,10 +76,6 @@ public class ProductServices {
         }
         return productPojo;
     }
-
-//    public boolean checkBrandExist(Integer brandId){
-//        return dao.selectByBrandId(brandId).size()>0;
-//    }
 
     public List<ProductPojo> getByBrand(String brand){
         return dao.selectByBrand(brand);
@@ -85,20 +91,9 @@ public class ProductServices {
     }
 
     public ProductPojo selectByBarcode(String barcode){ return dao.selectByBarcode(barcode);}
-    private void updateUtil(ProductPojo productPojo) throws ApiException {
 
-        ProductPojo productPojoUpdate = getCheckInPojo(productPojo.getId());
-        productPojoUpdate.setBrandId(productPojo.getBrandId());
-        productPojoUpdate.setBrand(productPojo.getBrand());
-        productPojoUpdate.setCategory(productPojo.getCategory());
-        productPojoUpdate.setBarcode(productPojo.getBarcode());
-        productPojoUpdate.setMrp(productPojo.getMrp());
-        productPojoUpdate.setName(productPojo.getName());
-
-        dao.update(); //symbolic
-    }
     private void checkBarcodeExist(String barcode) throws ApiException {
-        if(dao.selectByBarcode(barcode)!=null){
+        if(!isNull(dao.selectByBarcode(barcode))){
             throw new ApiException("barcode "  + barcode +  " already exists");
         }
     }

@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static pos.util.ErrorUtil.throwError;
 
 @Transactional(rollbackOn = ApiException.class)
@@ -22,10 +23,10 @@ public class InventoryServices {
     private InventoryDao inventoryDao;
 
     public void add(InventoryPojo inventoryPojo) throws ApiException {
-        if(inventoryDao.selectByBarcode(inventoryPojo.getBarcode())!=null){
+        if (isNull(inventoryDao.selectByBarcode(inventoryPojo.getBarcode()))) {
             throw new ApiException("Inventory data already exist ");
         }
-        if(inventoryPojo.getQuantity()<=0){
+        if (inventoryPojo.getQuantity() <= 0) {
             throw new ApiException("Quantity must be greater than 0");
         }
         inventoryDao.add(inventoryPojo);
@@ -35,19 +36,19 @@ public class InventoryServices {
         List<String> errorList = new ArrayList<>();
 
         Integer row = 1;
-        for(InventoryPojo inventoryPojo : inventoryPojoList) {
-            if(inventoryDao.selectByBarcode(inventoryPojo.getBarcode())!=null){
-                errorList.add("Error : row -> " + row +
-                        " Inventory already exist for barcode "+ inventoryPojo.getBarcode() );
+        for (InventoryPojo inventoryPojo : inventoryPojoList) {
+            if (isNull(inventoryDao.selectByBarcode(inventoryPojo.getBarcode()))) {
+                errorList.add("Error : row -> " + row + " Inventory already exist for barcode " +
+                        inventoryPojo.getBarcode());
             }
 
-            if(inventoryPojo.getQuantity()<=0){
-                errorList.add("Error : row -> " + row +
-                        " Quantity must be greater than 0, quantity : " + inventoryPojo.getQuantity());
+            if (inventoryPojo.getQuantity() <= 0) {
+                errorList.add("Error : row -> " + row + " Quantity must be greater than 0, quantity : " +
+                        inventoryPojo.getQuantity());
             }
             row++;
         }
-        if(!CollectionUtils.isEmpty(errorList)){
+        if (!CollectionUtils.isEmpty(errorList)) {
             throwError(errorList);
         }
 
@@ -56,6 +57,7 @@ public class InventoryServices {
         }
 
     }
+
     //TODO use collectList from size=0 reduce if else
     public List<InventoryPojo> getAll() throws ApiException {
         return inventoryDao.selectAll();
@@ -67,37 +69,33 @@ public class InventoryServices {
 
     public void update(InventoryUpdateForm inventoryUpdateForm) throws ApiException {
         getCheck(inventoryUpdateForm.getId());
-        if(inventoryUpdateForm.getQuantity()<0){
+        if (inventoryUpdateForm.getQuantity() < 0) {
             throw new ApiException("Quantity must be greater than 0");
         }
-        updateUtil(inventoryUpdateForm);
-    }
 
-    public InventoryPojo getCheck(Integer id) throws ApiException {
-        InventoryPojo p = inventoryDao.select(id);
-        if (p == null) {
-            throw new ApiException("Inventory with given id does not exist, id : " + id);
-        }
-        return p;
-    }
-
-    public InventoryPojo selectByBarcode(String barcode){
-        return inventoryDao.selectByBarcode(barcode);
-    }
-
-    public InventoryPojo selectByProductId(Integer productId){
-        return inventoryDao.selectByProductId(productId);
-    }
-
-    public List<InventoryReport> getInventoryReport(){
-        return inventoryDao.getInventoryReport();
-    }
-    private void updateUtil(InventoryUpdateForm p) {
-        InventoryPojo inventoryPojo = inventoryDao.select(p.getId());
-        inventoryPojo.setQuantity(p.getQuantity());
+        InventoryPojo inventoryPojo = inventoryDao.select(inventoryUpdateForm.getId());
+        inventoryPojo.setQuantity(inventoryUpdateForm.getQuantity());
         inventoryDao.update(); //symbolic
     }
 
+    public InventoryPojo getCheck(Integer id) throws ApiException {
+        InventoryPojo inventoryPojo = inventoryDao.select(id);
+        if (isNull(inventoryPojo)) {
+            throw new ApiException("Inventory with given id does not exist, id : " + id);
+        }
+        return inventoryPojo;
+    }
 
+    public InventoryPojo selectByBarcode(String barcode) {
+        return inventoryDao.selectByBarcode(barcode);
+    }
+
+    public InventoryPojo selectByProductId(Integer productId) {
+        return inventoryDao.selectByProductId(productId);
+    }
+
+    public List<InventoryReport> getInventoryReport() {
+        return inventoryDao.getInventoryReport();
+    }
 
 }

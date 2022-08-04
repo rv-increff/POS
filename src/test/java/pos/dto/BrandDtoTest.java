@@ -35,25 +35,25 @@ public class BrandDtoTest {
 
     @Test
     public void brandGetAllTest() throws ApiException {
-        for(Integer i=0;i<5;i++)daoInsertHelper();
+        for (Integer i = 0; i < 5; i++) daoInsertHelper();
 
         List<BrandData> plist = dto.getAll();
-        Assert.assertEquals(5,plist.size());
+        Assert.assertEquals(5, plist.size());
     }
 
     @Test
     public void brandGetTest() throws ApiException {
-        for(Integer i=0;i<5;i++)daoInsertHelper();
+        for (Integer i = 0; i < 5; i++) daoInsertHelper();
 
         List<BrandPojo> brandPojoList = dao.selectAll();
-        Integer index  = brandPojoList.get(4).getId();
+        Integer index = brandPojoList.get(4).getId();
         BrandData p = dto.get(index);
-        Assert.assertEquals(index,p.getId());
+        Assert.assertEquals(index, p.getId());
 
         try {
-            dto.get(index+1);
-        }catch (ApiException e){
-            Assert.assertEquals("Brand with given id does not exist ,id : " + (index+1),e.getMessage());
+            dto.get(index + 1);
+        } catch (ApiException e) {
+            Assert.assertEquals("Brand with given id does not exist ,id : " + (index + 1), e.getMessage());
         }
     }
 
@@ -69,23 +69,24 @@ public class BrandDtoTest {
         p.setCategory(category);
         dto.add(p);
 
-        Integer curSize =  dao.selectAll().size();
-        Assert.assertEquals(Optional.of(prevSize + 1),Optional.of(curSize));
+        Integer curSize = dao.selectAll().size();
+        Assert.assertEquals(Optional.of(prevSize + 1), Optional.of(curSize));
 
     }
+
     @Test
     public void brandAddEmptyObjectTest() {
         BrandForm p = new BrandForm();
         try {
             dto.add(p);
-        }catch (ApiException e){
-            Assert.assertEquals("brand or category cannot be null",e.getMessage());
+        } catch (ApiException e) {
+            Assert.assertEquals("brand or category cannot be null", e.getMessage());
         }
 
     }
 
     @Test
-    public void brandAddErrorUniqueTest() throws ApiException, IllegalAccessException {
+    public void brandAddErrorUniqueTest() throws ApiException {
         BrandForm p = new BrandForm();
 
         Integer prevSize = dao.selectAll().size();
@@ -96,10 +97,10 @@ public class BrandDtoTest {
         p.setCategory(category);
         dto.add(p);
 
-        try{
+        try {
             dto.add(p);
-        }catch (ApiException e){
-            Assert.assertEquals(brand.toLowerCase() + " - " + category.toLowerCase() +  " pair already exist",e.getMessage());
+        } catch (ApiException e) {
+            Assert.assertEquals(brand.toLowerCase() + " - " + category.toLowerCase() + " pair already exist", e.getMessage());
         }
 
     }
@@ -116,12 +117,12 @@ public class BrandDtoTest {
         p.setCategory(category);
         dto.add(p);
 
-        try{
+        try {
             p.setBrand(p.getBrand().toLowerCase(Locale.ROOT));
             p.setCategory(p.getCategory().toLowerCase(Locale.ROOT));
             dto.add(p);
-        }catch (ApiException e){
-            Assert.assertEquals(p.getBrand() + " - " + p.getCategory() + " pair already exist",e.getMessage());
+        } catch (ApiException e) {
+            Assert.assertEquals(p.getBrand() + " - " + p.getCategory() + " pair already exist", e.getMessage());
         }
 
     }
@@ -130,7 +131,7 @@ public class BrandDtoTest {
     public void bulkAddTest() throws ApiException {
         List<BrandForm> pList = new ArrayList<>();
         Integer n = 5;
-        for(Integer i=0;i<n;i++){
+        for (Integer i = 0; i < n; i++) {
             BrandForm p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
@@ -139,8 +140,9 @@ public class BrandDtoTest {
 
         dto.bulkAdd(pList);
         Integer i = dao.selectAll().size();
-        Assert.assertEquals(n,i);
+        Assert.assertEquals(n, i);
     }
+
     @Test
     public void bulkAddErrorUniqueTest() throws ApiException {
         List<BrandForm> pList = new ArrayList<>();
@@ -157,19 +159,19 @@ public class BrandDtoTest {
         p.setCategory(category);
         pList.add(p);
         Integer n = 5;
-        for(Integer i=0;i<n;i++){
+        for (Integer i = 0; i < n; i++) {
             p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
             pList.add(p);
         }
-        try{
+        try {
             dto.bulkAdd(pList);
-        }catch (ApiException e){
-            String expErr = "Error : row -> " + (1) + " "  + brand + " - " +  category + " pair already exist\n";
-            Assert.assertEquals(expErr,e.getMessage());
+        } catch (ApiException e) {
+            String expErr = "Error : row -> " + (1) + " " + brand + " - " + category + " pair already exist\n";
+            Assert.assertEquals(expErr, e.getMessage());
         }
-        Assert.assertEquals(1,dao.selectAll().size());
+        Assert.assertEquals(1, dao.selectAll().size());
 
     }
 
@@ -180,19 +182,19 @@ public class BrandDtoTest {
         BrandForm p = new BrandForm();
         pList.add(p);
         Integer n = 5;
-        for(Integer i=0;i<n;i++){
+        for (Integer i = 0; i < n; i++) {
             p = new BrandForm();
             p.setBrand(getRandomString());
             p.setCategory(getRandomString());
             pList.add(p);
         }
-        try{
+        try {
             dto.bulkAdd(pList);
-        }catch (ApiException e){
+        } catch (ApiException e) {
             String expErr = "Error : row -> " + (1) + " brand or category cannot be empty\n";
-            Assert.assertEquals(expErr,e.getMessage());
+            Assert.assertEquals(expErr, e.getMessage());
         }
-        Assert.assertEquals(0,dao.selectAll().size());
+        Assert.assertEquals(0, dao.selectAll().size());
 
     }
 
@@ -210,7 +212,7 @@ public class BrandDtoTest {
     }
 
     @Test
-    public void brandUpdateErrorUniqueTest(){
+    public void brandUpdateErrorUniqueTest() {
         BrandPojo p = daoInsertHelper();
         Integer id = dao.selectAll().get(0).getId();
 
@@ -220,15 +222,15 @@ public class BrandDtoTest {
         brandData.setCategory(p.getCategory());
         brandData.setId(id);
 
-        try{
+        try {
             dto.update(brandData);
         } catch (ApiException e) {
-            Assert.assertEquals(p.getBrand() + " - " +  p.getCategory() + " pair should be unique", e.getMessage());
+            Assert.assertEquals(p.getBrand() + " - " + p.getCategory() + " pair should be unique", e.getMessage());
         }
     }
 
     @Test
-    public void brandUpdateErrorEmptyObjectTest(){
+    public void brandUpdateErrorEmptyObjectTest() {
         BrandPojo p = daoInsertHelper();
         Integer id = dao.selectAll().get(0).getId();
 
@@ -238,15 +240,15 @@ public class BrandDtoTest {
         brandData.setCategory(null);
         brandData.setId(id);
 
-        try{
+        try {
             dto.update(brandData);
         } catch (ApiException e) {
-            Assert.assertEquals("brand or category cannot be null",e.getMessage());
+            Assert.assertEquals("brand or category cannot be null", e.getMessage());
         }
     }
 
     @Test
-    public void brandUpdateErrorWrongIdTest(){
+    public void brandUpdateErrorWrongIdTest() {
         Integer id = 1;
         String brand = getRandomString();
         BrandData brandData = new BrandData();
@@ -254,14 +256,14 @@ public class BrandDtoTest {
         brandData.setCategory(brand);
         brandData.setId(id);
 
-        try{
+        try {
             dto.update(brandData);
         } catch (ApiException e) {
-            Assert.assertEquals("Brand with given id does not exist ,id : " + id,e.getMessage());
+            Assert.assertEquals("Brand with given id does not exist ,id : " + id, e.getMessage());
         }
     }
 
-    private BrandPojo daoInsertHelper(){
+    private BrandPojo daoInsertHelper() {
         BrandPojo p = new BrandPojo();
         String category = getRandomString();
         String brand = getRandomString();

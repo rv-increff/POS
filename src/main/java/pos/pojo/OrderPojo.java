@@ -5,6 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+
+import static pos.pojo.TableConstants.ORDER_GENERATOR;
+import static pos.pojo.TableConstants.ORDER_INITIAL_VALUE;
+
 @Getter
 @Setter
 @Entity

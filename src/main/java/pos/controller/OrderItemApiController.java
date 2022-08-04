@@ -37,31 +37,20 @@ public class OrderItemApiController {
 
     @ApiOperation(value = "Insert OrderItem data")
     @RequestMapping(path = "/api/orders/order-items", method = RequestMethod.POST)
-    public void insertOrderItem(@RequestBody OrderItemForm p, HttpServletResponse response) throws ApiException, IOException {
-        dto.add(p);
-        success(response);
+    public OrderItemForm insertOrderItem(@RequestBody OrderItemForm p, HttpServletResponse response) throws ApiException, IOException {
+        return dto.add(p);
     }
 
     @ApiOperation(value = "Update OrderItem data")
-    @RequestMapping(path = "/api/orders/order-items", method = RequestMethod.PUT)
-    public void updateOrderItem(@RequestBody OrderItemUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
-        dto.update(p);
-        success(response);
+    @RequestMapping(path = "/api/orders/order-items/{id}", method = RequestMethod.PUT)
+    public OrderItemUpdateForm updateOrderItem(@RequestBody OrderItemUpdateForm p, HttpServletResponse response) throws ApiException, IOException {
+        return dto.update(p);
     }
 
     @ApiOperation(value = "Update OrderItem data")
     @RequestMapping(path = "/api/orders/order-items/{id}", method = RequestMethod.DELETE)
-    public void deleteOrderItem(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
-        dto.delete(id);
-        success(response);
+    public Integer deleteOrderItem(@PathVariable int id, HttpServletResponse response) throws ApiException, IOException {
+        return dto.delete(id);
     }
 
-    protected void success(HttpServletResponse response) throws IOException {
-        JSONObject obj=new JSONObject();
-        obj.put("message", "success");
-        String json = new Gson().toJson(obj);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-    }
 }

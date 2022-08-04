@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import static pos.pojo.TableConstants.INVENTORY_GENERATOR;
+import static pos.pojo.TableConstants.INVENTORY_INITIAL_VALUE;
+
 @Getter
 @Setter
 @Entity
