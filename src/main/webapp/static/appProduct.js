@@ -33,7 +33,7 @@ function loadProduct(){
 
         // Open an obejct (GET/POST, PATH,
         // ASYN-TRUE/FALSE)
-        xhr.open("GET","http://localhost:9000/pos/api/product/get-all", true);
+        xhr.open("GET","http://localhost:9000/pos/products", true);
         // When response is ready
         xhr.onload = function () {
             if (this.status === 200) {
@@ -73,7 +73,7 @@ $("#ProductDelete").modal('show');
 function deleteProduct(id){
   $.ajax({
                   type: "DELETE",
-                  url: `http://localhost:9000/pos/api/products/delete/${id}`,
+                  url: `http://localhost:9000/pos/products/${id}`,
 
                   success: function (data) {
                      loadProduct()
@@ -154,7 +154,7 @@ else if(BarcodeInput!==Barcode|| BrandInput!==Brand || CategoryInput!==Category 
      },
      processData: false,
      type: 'PUT',
-     url: 'http://localhost:9000/pos/api/products/update'
+     url: 'http://localhost:9000/pos/products'
  });
 
 }
@@ -216,7 +216,7 @@ else{
      },
      processData: false,
      type: 'POST',
-     url: 'http://localhost:9000/pos/api/products/insert'
+     url: 'http://localhost:9000/pos/products'
  });
  event.preventDefault();
 }}
@@ -322,7 +322,7 @@ function bulkAddProductUtil(data) {
                    },
                    processData: false,
                    type: 'POST',
-                   url: 'http://localhost:9000/pos/api/products/bulk-insert'
+                   url: 'http://localhost:9000/pos/products/upload'
                });
         }
         }

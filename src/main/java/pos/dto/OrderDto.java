@@ -70,7 +70,7 @@ public class OrderDto {
         return id;
     }
 
-    public BufferedInputStream getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException { //TODO move to its own dto
+    public byte[] getOrderInvoice(int orderId) throws ApiException, IOException, TransformerException { //TODO move to its own dto
         List<OrderItemPojo> orderItemPojoList = getOrderItemForOrderUtil(orderId); //TODO remove invoice controller
         List<OrderItemData> orderItemDataList = new ArrayList<>();
         for (OrderItemPojo i : orderItemPojoList) {

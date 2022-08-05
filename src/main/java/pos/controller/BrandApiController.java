@@ -19,38 +19,38 @@ public class BrandApiController {
     private BrandDto dto;
 
     @ApiOperation(value = "Gives all brand data")
-    @RequestMapping(path = "/api/brands", method = RequestMethod.GET)
+    @RequestMapping(path = "/brands", method = RequestMethod.GET)
     public List<BrandData> getAllBrandDetails() throws ApiException {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Insert brand data")
-    @RequestMapping(path = "/api/brands", method = RequestMethod.POST)
+    @RequestMapping(path = "/brands", method = RequestMethod.POST)
     public BrandForm insertBrand(@RequestBody BrandForm brandForm) throws ApiException {
         return dto.add(brandForm);
     }
 
     @ApiOperation(value = "Insert bulk brand data")
-    @RequestMapping(path = "/api/brands/upload", method = RequestMethod.POST)
+    @RequestMapping(path = "/brands/upload", method = RequestMethod.POST)
     public Integer bulkInsertBrand(@RequestBody List<BrandForm> brandFormList) throws ApiException {
         return dto.bulkAdd(brandFormList);
     }
 
     @ApiOperation(value = "get a brand")
-    @RequestMapping(path = "/api/brands/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/brands/{id}", method = RequestMethod.GET)
     public BrandData getBrand(@PathVariable Integer id) throws ApiException {
         return dto.get(id);
     }
 
     @ApiOperation(value = "update a brand")
-    @RequestMapping(path = "/api/brands/{id}", method = RequestMethod.PUT)
-    public BrandData updateBrand(@RequestBody BrandData brandData) throws ApiException {
+    @RequestMapping(path = "/brands/{id}", method = RequestMethod.PUT)
+    public BrandData updateBrand(@RequestBody BrandData brandData,@PathVariable Integer id) throws ApiException {
         return dto.update(brandData);
         //TODO do not use this  return brand data and take form and id
     }
 
     @ApiOperation(value = "Get Brand report ")
-    @RequestMapping(path = "/api/brands/brand-reports", method = RequestMethod.GET)
+    @RequestMapping(path = "/brands/brand-reports", method = RequestMethod.GET)
     public List<BrandData> getsBrandReport() throws ApiException {
         return dto.getAll();
     }

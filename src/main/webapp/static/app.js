@@ -36,7 +36,7 @@ function loadBrand(){
 
         // Open an obejct (GET/POST, PATH,
         // ASYN-TRUE/FALSE)
-        xhr.open("GET","http://localhost:9000/pos/api/brand/get-all", true);
+        xhr.open("GET","http://localhost:9000/pos/brands", true);
         // When response is ready
         xhr.onload = function () {
             if (this.status === 200) {
@@ -73,10 +73,10 @@ $("#brandDelete").modal('show');
 }
 function deleteBrand(id){
   const xhr = new XMLHttpRequest();
-//          xhr.open("DELETE",`http://localhost:9000/pos/api/brand/delete/${id}`, true);
+//          xhr.open("DELETE",`http://localhost:9000/pos/brand/delete/${id}`, true);
   $.ajax({
                   type: "DELETE",
-                  url: `http://localhost:9000/pos/api/brands/delete/${id}`,
+                  url: `http://localhost:9000/pos/brands/delete/${id}`,
 
                   success: function (result, status, xhr) {
                      loadBrand()
@@ -153,7 +153,7 @@ else if(brandInput!==brand || categoryInput!==category){
      },
      processData: false,
      type: 'PUT',
-     url: 'http://localhost:9000/pos/api/brands/update'
+     url: `http://localhost:9000/pos/brands/${id}`
  });
 
 }
@@ -203,7 +203,7 @@ else{
      },
      processData: false,
      type: 'POST',
-     url: 'http://localhost:9000/pos/api/brands/insert'
+     url: 'http://localhost:9000/pos/brands'
  });
  event.preventDefault();
 }}
@@ -296,7 +296,7 @@ function bulkAddUtil(data) {
                    },
                    processData: false,
                    type: 'POST',
-                   url: 'http://localhost:9000/pos/api/brands/bulk-insert'
+                   url: 'http://localhost:9000/pos/brands/upload'
                });
         }
 

@@ -7,10 +7,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class BrandForm {
-    @NotNull(message = "brand cannot be null")
+    @NotNull
     private String brand;
 
-    @NotNull(message = "category cannot be null")
+    @NotNull
     private String category;
 
 }

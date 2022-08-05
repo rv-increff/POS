@@ -18,7 +18,6 @@
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/pojo/InventoryPojo.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/pojo/OrderPojo.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/model/ProductUpdateForm.java
-/Users/rahulverma/Downloads/git/POS/src/main/java/pos/controller/InvoiceApiController.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/dto/ProductDto.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/pojo/ProductPojo.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/spring/ApiException.java
@@ -41,7 +40,6 @@
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/dao/AbstractDao.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/model/ProductData.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/controller/BrandApiController.java
-/Users/rahulverma/Downloads/git/POS/src/main/java/pos/dto/InvoiceDto.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/model/OrderItemForm.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/dao/InventoryDao.java
 /Users/rahulverma/Downloads/git/POS/src/main/java/pos/util/ErrorUtil.java

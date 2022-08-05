@@ -95,7 +95,7 @@ public class InventoryDtoTest {
         try{
             dto.add(p);
         }catch (ApiException e){
-            Assert.assertEquals("Inventory data already exist update the record instead",e.getMessage());
+            Assert.assertEquals("Inventory data already exist ",e.getMessage());
         }
     }
 
@@ -167,7 +167,7 @@ public class InventoryDtoTest {
         try {
             dto.bulkAdd(pList);
         }catch (ApiException e){
-            Assert.assertEquals("Error : row -> " + 1 + " Inventory data already exist for barcode "+ p.getBarcode() +" update the record instead\n",e.getMessage());
+            Assert.assertEquals("Error : row -> " + 1 + " Inventory already exist for barcode "+ p.getBarcode() +"\n",e.getMessage());
         }
     }
 

@@ -23,7 +23,7 @@ public class InventoryServices {
     private InventoryDao inventoryDao;
 
     public void add(InventoryPojo inventoryPojo) throws ApiException {
-        if (isNull(inventoryDao.selectByBarcode(inventoryPojo.getBarcode()))) {
+        if (!isNull(inventoryDao.selectByBarcode(inventoryPojo.getBarcode()))) {
             throw new ApiException("Inventory data already exist ");
         }
         if (inventoryPojo.getQuantity() <= 0) {
@@ -37,7 +37,7 @@ public class InventoryServices {
 
         Integer row = 1;
         for (InventoryPojo inventoryPojo : inventoryPojoList) {
-            if (isNull(inventoryDao.selectByBarcode(inventoryPojo.getBarcode()))) {
+            if (!isNull(inventoryDao.selectByBarcode(inventoryPojo.getBarcode()))) {
                 errorList.add("Error : row -> " + row + " Inventory already exist for barcode " +
                         inventoryPojo.getBarcode());
             }
@@ -68,12 +68,12 @@ public class InventoryServices {
     }
 
     public void update(InventoryUpdateForm inventoryUpdateForm) throws ApiException {
-        getCheck(inventoryUpdateForm.getId());
+
         if (inventoryUpdateForm.getQuantity() < 0) {
             throw new ApiException("Quantity must be greater than 0");
         }
 
-        InventoryPojo inventoryPojo = inventoryDao.select(inventoryUpdateForm.getId());
+        InventoryPojo inventoryPojo = getCheck(inventoryUpdateForm.getId());
         inventoryPojo.setQuantity(inventoryUpdateForm.getQuantity());
         inventoryDao.update(); //symbolic
     }

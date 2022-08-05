@@ -123,6 +123,7 @@ public class ProductDto {
             normalize(productForm);
             if (!checkNotNullBulkUtil(productForm)) {
                 errorList.add("Error : row -> " + row + " parameters in the Insert form cannot be null");
+                continue;
             }
             if (!validateMRPBulk(productForm.getMrp())) {
                 errorList.add("Error : row -> " + row + " mrp " + productForm.getMrp() + " not valid, mrp should be a positive number");
@@ -139,7 +140,7 @@ public class ProductDto {
             }
             row++;
         }
-        if (CollectionUtils.isEmpty(errorList)) {
+        if (!CollectionUtils.isEmpty(errorList)) {
             throwError(errorList);
         }
     }

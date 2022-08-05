@@ -37,7 +37,7 @@ function loadInventory(){
 
         // Open an obejct (GET/POST, PATH,
         // ASYN-TRUE/FALSE)
-        xhr.open("GET","http://localhost:9000/pos/api/inventory/get-all", true);
+        xhr.open("GET","http://localhost:9000/pos/inventory", true);
         // When response is ready
         xhr.onload = function () {
             if (this.status === 200) {
@@ -73,10 +73,10 @@ $("#inventoryDelete").modal('show');
 }
 function deleteInventory(id){
   const xhr = new XMLHttpRequest();
-//          xhr.open("DELETE",`http://localhost:9000/pos/api/inventory/delete/${id}`, true);
+//          xhr.open("DELETE",`http://localhost:9000/pos/inventory/delete/${id}`, true);
   $.ajax({
                   type: "DELETE",
-                  url: `http://localhost:9000/pos/api/inventory/delete/${id}`,
+                  url: `http://localhost:9000/pos/inventory/delete/${id}`,
 
                   success: function (result, status, xhr) {
                      loadInventory()
@@ -138,7 +138,7 @@ else if(parseInt(quantityInput)!==parseInt(quantity)){
      },
      processData: false,
      type: 'PUT',
-     url: 'http://localhost:9000/pos/api/inventory/update'
+     url: `http://localhost:9000/pos/inventory/${id}`
  });
 
 }
@@ -201,7 +201,7 @@ else{
      },
      processData: false,
      type: 'POST',
-     url: 'http://localhost:9000/pos/api/inventory/insert'
+     url: 'http://localhost:9000/pos/inventory'
  });
  event.preventDefault();
 }}
@@ -299,7 +299,7 @@ function bulkAddInventryUtil(data) {
                    },
                    processData: false,
                    type: 'POST',
-                   url: 'http://localhost:9000/pos/api/inventory/bulk-insert'
+                   url: 'http://localhost:9000/pos/inventory/upload'
                });
         }
 

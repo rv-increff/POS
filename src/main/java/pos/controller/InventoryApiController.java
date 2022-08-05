@@ -25,37 +25,37 @@ public class InventoryApiController {
     private InventoryDto dto;
 
     @ApiOperation(value = "Gives all Inventory data")
-    @RequestMapping(path = "/api/inventory", method = RequestMethod.GET) //TODO only get remove all
+    @RequestMapping(path = "/inventory", method = RequestMethod.GET) //TODO only get remove all
     public List<InventoryData> getAllInventoryDetails() throws ApiException {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Insert Inventory data")
-    @RequestMapping(path = "/api/inventory", method = RequestMethod.POST) //TODO remove insert as its post
+    @RequestMapping(path = "/inventory", method = RequestMethod.POST) //TODO remove insert as its post
     public InventoryForm insertInventory(@RequestBody InventoryForm inventoryForm) throws ApiException{
         return dto.add(inventoryForm);
     }
 
     @ApiOperation(value = "Insert bulk Inventory data")
-    @RequestMapping(path = "/api/inventory/upload", method = RequestMethod.POST) //TODO upload not bulk-
+    @RequestMapping(path = "/inventory/upload", method = RequestMethod.POST) //TODO upload not bulk-
     public Integer bulkInsertInventory(@RequestBody List<InventoryForm> inventoryFormList) throws ApiException{
        return dto.bulkAdd(inventoryFormList);
 
     }
 
     @ApiOperation(value = "get a Inventory")
-    @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET) //TODO remove get read REST conventions
+    @RequestMapping(path = "/inventory/{id}", method = RequestMethod.GET) //TODO remove get read REST conventions
     public InventoryData getInventory(@PathVariable Integer id) throws ApiException {
         return dto.get(id);
     }
 
     @ApiOperation(value = "update a Inventory")
-    @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.PUT)
-    public InventoryUpdateForm updateInventory(@RequestBody InventoryUpdateForm inventoryUpdateForm) throws ApiException{
+    @RequestMapping(path = "/inventory/{id}", method = RequestMethod.PUT)
+    public InventoryUpdateForm updateInventory(@RequestBody InventoryUpdateForm inventoryUpdateForm,@PathVariable Integer id) throws ApiException{
         return dto.update(inventoryUpdateForm);  //TODO return inv data
     }
     @ApiOperation(value = "Get Inventory report ")
-    @RequestMapping(path = "/api/inventory/inventory-reports", method = RequestMethod.GET)
+    @RequestMapping(path = "/inventory/inventory-reports", method = RequestMethod.GET)
     public List<InventoryReport> getInventoryReport() {
         return dto.getInventoryReport();
     }

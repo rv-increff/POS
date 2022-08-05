@@ -21,7 +21,7 @@ function createOrder() {
     },
     processData: false,
     type: 'POST',
-    url: 'http://localhost:9000/pos/api/orders/insert'
+    url: 'http://localhost:9000/pos/orders'
   });
 }
 
@@ -73,7 +73,7 @@ function loadOrder() {
     },
     processData: false,
     type: 'GET',
-    url: 'http://localhost:9000/pos/api/orders/get-all'
+    url: 'http://localhost:9000/pos/orders'
   });
 }
 function invoice(orderId) {
@@ -84,14 +84,13 @@ function invoice(orderId) {
       return xhr;
     },
     success: function (data) {
-      var blob = new Blob([data], {
-        type: 'application/pdf'
-      });
+      // data.append("pdf", blob, "invoice.pdf");
       console.log(data)
-      var file = new Blob([data], { type: 'application/pdf' });
+      var file = new Blob([data], { type: 'application/octet-stream' },);
+      file.name = "invoice.pdf"
       var fileURL = URL.createObjectURL(file);
       setTimeout(() => {
-        window.open(fileURL);
+        window.open(fileURL,'_blank');
       })
       console.log(fileURL);
     },
@@ -102,7 +101,7 @@ function invoice(orderId) {
     },
     processData: false,
     type: 'GET',
-    url: `http://localhost:9000/pos/api/invoices/get-order-invoice/${orderId}`
+    url: `http://localhost:9000/pos/orders/${orderId}/invoices`
   });
 }
 function placeOrder(id) {
@@ -125,7 +124,7 @@ function placeOrder(id) {
     },
     processData: false,
     type: 'GET',
-    url: `http://localhost:9000/pos/api/order-items/get-all/${id}`
+    url: `http://localhost:9000/pos/orders/${id}/order-items`
   });
   
 }
@@ -146,7 +145,7 @@ function placeOrderUtil(id) {
     },
     processData: false,
     type: 'PUT',
-    url: `http://localhost:9000/pos/api/order/placed/${id}`
+    url: `http://localhost:9000/pos//orders/${id}/place-order`
   });
 }
 
@@ -233,7 +232,7 @@ function ViewOrder(orderId, orderStatus) {
     },
     processData: false,
     type: 'GET',
-    url: `http://localhost:9000/pos/api/order-item/get-all/${orderId}`
+    url: `http://localhost:9000/pos/orders/${orderId}/order-items`
   });
 
 
@@ -312,7 +311,7 @@ function editOrderItemUtil(id, quantity, sellingPrice, orderId) {
       },
       processData: false,
       type: 'PUT',
-      url: 'http://localhost:9000/pos/api/order-item/update'
+      url: `http://localhost:9000/pos/order-items/${id}`
     });
   }
 }
@@ -337,7 +336,7 @@ function deleteOrderItemUtil(id, orderId) {
     },
     processData: false,
     type: 'DELETE',
-    url: `http://localhost:9000/pos/api/order-item/delete/${id}`
+    url: `http://localhost:9000/pos/order-items/${id}`
   });
 }
 
@@ -404,7 +403,7 @@ function addOrderItemUtil(orderId) {
       },
       processData: false,
       type: 'POST',
-      url: 'http://localhost:9000/pos/api/order-items/insert'
+      url: 'http://localhost:9000/pos/order-items'
     });
 
   }

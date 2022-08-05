@@ -1,7 +1,7 @@
 package pos.pojo;
 
 public class TableConstants {
-    public final static String BRAND_GENERATOR = "brand_gen"; //TODO donot extend make public
+    public final static String BRAND_GENERATOR = "brand_gen";
     public final static String INVENTORY_GENERATOR = "inventory_gen";
     public final static String ORDER_ITEM_GENERATOR = "order_item_gen";
     public final static String ORDER_GENERATOR = "order_gen";

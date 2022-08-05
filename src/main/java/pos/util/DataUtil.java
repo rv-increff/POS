@@ -77,7 +77,7 @@ public class DataUtil {
             throw new ApiException("mrp "  + MRP +  " not valid, mrp should be a positive number");
         }
     }
-    public static Boolean validateMRPBulk(Double MRP) throws ApiException {
+    public static Boolean validateMRPBulk(Double MRP) {
         Pattern numP = Pattern.compile("^[0-9]+$|^[0-9]+\\.[0-9]*$");
         Matcher matcher = numP.matcher(MRP.toString());
         return matcher.find();

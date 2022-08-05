@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static pos.util.DataUtil.validate;
+import static pos.util.ErrorUtil.throwError;
 import static pos.util.HelperUtil.*;
 
 @Service
@@ -40,12 +41,8 @@ public class BrandDto {
             }
             row++;
         }
-        if (errorList.size() != 0) {
-            String errorStr = "";
-            for (String e : errorList) {
-                errorStr += e + "\n";
-            }
-            throw new ApiException(errorStr);
+        if (!CollectionUtils.isEmpty(errorList)) {
+            throwError(errorList);
         }
     }
 

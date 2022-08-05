@@ -46,7 +46,7 @@ public class BrandServices {
             }
             row++;
         }
-        if (CollectionUtils.isEmpty(errorList)) {
+        if (!CollectionUtils.isEmpty(errorList)) {
             throwError(errorList);
         }
 

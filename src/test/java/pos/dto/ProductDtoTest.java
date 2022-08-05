@@ -202,8 +202,6 @@ public class ProductDtoTest {
             dto.bulkAdd(pList);
         } catch (ApiException e) {
             String err = "Error : row -> " + 1 + " parameters in the Insert form cannot be null\n";
-            err += "Error : row -> " + 1 + " " + p.getBrand() + " - " + p.getCategory()
-                    + " brand-category does not exist\n";
             Assert.assertEquals(err,e.getMessage());
         }
 

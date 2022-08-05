@@ -22,7 +22,6 @@ pos/model/ProductData.class
 pos/services/InventoryServices.class
 pos/services/BrandServices.class
 pos/model/InventoryUpdateForm.class
-pos/dto/InvoiceDto.class
 pos/dao/OrderItemDao.class
 pos/services/ProductServices.class
 pos/controller/BrandApiController.class
@@ -36,7 +35,6 @@ pos/spring/DbConfig.class
 pos/model/SalesReport.class
 pos/dao/ProductDao.class
 pos/pojo/InventoryPojo.class
-pos/controller/InvoiceApiController.class
 pos/spring/WebInitializer.class
 pos/model/OrderItemForm.class
 pos/dao/BrandDao.class
